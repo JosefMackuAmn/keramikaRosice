@@ -1,16 +1,8 @@
 const mongoose = require('mongoose');
 
-const Category = require('../models/Category');
-const Subcategory = require('../models/Subcategory');
-const Product = require('../models/product');
-
-//////////////////////
-///// Index
-exports.getIndex = (req, res, next) => {
-    res.render('admin/index', {
-        title: 'Admin index'
-    })
-}
+const Category = require('../../models/Category');
+const Subcategory = require('../../models/Subcategory');
+const Product = require('../../models/product');
 
 //////////////////////
 ///// Categories
@@ -153,35 +145,5 @@ exports.putSubcategory = async (req, res, next) => {
     return res.status(200).json({
         msg: "Category successfully updated",
         category: updatedCategory
-    })
-}
-
-///////////////////////
-///// Products
-exports.getProducts = (req, res, next) => {
-    res.render('admin/products', {
-        title: 'Products'
-    });
-}
-exports.deleteProduct = (req, res, next) => {
-    res.render('admin/products', {
-        title: 'Products'
-    });
-}
-
-// Add or edit products
-exports.getEditProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        title: 'Edit product'
-    })
-}
-exports.postEditProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        title: 'Edit product'
-    })
-}
-exports.putEditProduct = (req, res, next) => {
-    res.render('admin/edit-product', {
-        title: 'Edit product'
     })
 }
