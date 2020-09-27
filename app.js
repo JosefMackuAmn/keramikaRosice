@@ -4,6 +4,7 @@ const path = require('path');
 // Library imports
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 // Custom imports
 const eshopRoutes = require('./routes/eshop');
@@ -26,6 +27,13 @@ app.use(eshopRoutes);
 app.use(pagesRoutes);
 app.use('/admin', adminRoutes);
 
+// Handling 500 case
+app.get('/500', (req, res, next) => {
+    res.status(500).render('500', {
+        title: '500'
+    })
+})
+
 // Handling 404 case
 app.use((req, res, next) => {
     res.status(404).render('404', {
@@ -33,5 +41,23 @@ app.use((req, res, next) => {
     });
 })
 
-// Listening to requests
-app.listen(process.env.PORT || 8080);
+// Handling 500 case
+app.use((error, req, res, next) => {
+    console.log(error);
+    res.status(500).render('500', {
+        title: '500'
+    })
+})
+
+// Connect to MongoDB
+mongoose
+    .connect(
+        `${process.env.MONGO_CONN_STRING}`,
+        { useNewUrlParser: true, useUnifiedTopology: true }
+    )
+    .then(result => {
+        app.listen(process.env.PORT || 8080);
+    })
+    .catch(err => {
+        console.log(err);
+    })

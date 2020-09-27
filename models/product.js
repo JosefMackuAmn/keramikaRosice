@@ -12,12 +12,14 @@ const productSchema = new Schema({
         required: true
     },
     categoryId: {
-        type: String,
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: false
     },
-    // Product doesnt have to have a subcategoryId
     subcategoryId: {
-        type: String
+        type: Schema.Types.ObjectId,
+        ref: 'Subcategory',
+        required: false
     },
     price: {
         type: String,
