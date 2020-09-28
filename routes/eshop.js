@@ -1,17 +1,17 @@
 // Library imports
 const router = require('express').Router();
+const ash = require('express-async-handler');
 
 // Custom imports
 const eshopController = require('../controllers/eshop');
 
-router.get('/shop', eshopController.getShop);
-router.get('/shop/:category', eshopController.getCategory);
+router.get('/shop', ash(eshopController.getShop));
+router.get('/shop/:category/:subcategory', ash(eshopController.getSubcategory)); // Development note: category name has to be unique
+router.get('/shop/:category', ash(eshopController.getCategory)); // Development note: subcategory name has to be unique
 
 router.get('/kosik', eshopController.getCart);
-// Add to cart route
-router.post('/kosik', eshopController.postCart);
-// Delete from cart route
-router.delete('/kosik/:productId', eshopController.deleteCart);
+// Update cart route
+router.post('/kosik', ash(eshopController.postCart)); // Expecting { productId: String, amount: Number || false, action: 'ADD' || 'REMOVE' }
 
 router.get('/objednavka', eshopController.getOrder);
 // Place an order

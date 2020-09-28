@@ -20,7 +20,7 @@ exports.getCategories = async (req, res, next) => {
 // Posting new categories and subcategories
 exports.postCategories = async (req, res, next) => {
     const categoryId = req.body.categoryId || false;
-    const name = req.body.categoryName;
+    const name = req.body.categoryName.toLowerCase();
 
     // If categoryId has been passed, subcategory will be created
     if (categoryId) {
@@ -89,7 +89,7 @@ exports.deleteCategory = async (req, res, next) => {
 // Update category
 exports.putCategory = async (req, res, next) => {
     const categoryId = req.body.categoryId;
-    const newName = req.body.newCategoryName;
+    const newName = req.body.newCategoryName.toLowerCase();
 
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
         return res.status(422).json({
@@ -132,7 +132,7 @@ exports.deleteSubcategory = async (req, res, next) => {
 // Update subcategory
 exports.putSubcategory = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
-    const newName = req.body.newCategoryName;
+    const newName = req.body.newCategoryName.toLowerCase();
 
     if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
         return res.status(422).json({

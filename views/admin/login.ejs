@@ -5,6 +5,11 @@
     <main>
         <%= title %>
     </main>
+    <form action="/admin/login" method="POST">
+        <input type="text" name="password" value="123">
+        <input type="text" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit">Login</button>
+    </form>
 
     <%- include('../includes/footer.ejs') %>
 <%- include('../includes/end.ejs') %>
