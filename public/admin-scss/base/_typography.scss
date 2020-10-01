@@ -1,0 +1,29 @@
+.heading-1 {
+    font-family: 'Charm', cursive;
+    font-weight: 300;
+    font-size: $font-largest;
+    letter-spacing: .4rem;
+}
+
+.heading-2 {
+    font-size: $font-big;
+    letter-spacing: .2rem;
+    font-weight: 400;
+}
+
+.heading-3 {
+    font-size: $font-big;
+    text-transform: uppercase;
+    letter-spacing: .3rem;
+}
+
+.paragraph {
+    &-small {
+        font-size: $font-regular;
+    }
+    &-normal {
+        font-size: $font-big;
+        font-weight: 400;
+        letter-spacing: .2rem;
+    }
+}

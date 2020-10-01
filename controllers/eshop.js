@@ -119,7 +119,7 @@ exports.postCart = async (req, res, next) => {
 
     req.session.cart = updatedCart;
     return req.session.save(err => {
-        err && console.log(err);
+        if (err) return next(err);
         return res.status(200).json({
             msg: "Product added",
             cart: updatedCart

@@ -1,0 +1,39 @@
+.header {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    &__logout {
+        border: 3px solid $color-black;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        & a {
+            width: 100%;
+            height: 100%;
+            padding: 1rem 2rem;
+
+            font-weight: 600;
+
+            display: inline-block;
+
+            transition: all .2s;
+
+            &:hover {
+                background-color: $color-black;
+                color: $color-white;
+            }
+        }
+    }
+}

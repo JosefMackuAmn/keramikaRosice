@@ -9,11 +9,13 @@ const helmet = require('helmet');
 const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
+const multer = require('multer');
 
 // Custom imports
 const eshopRoutes = require('./routes/eshop');
 const pagesRoutes = require('./routes/pages');
 const adminRoutes = require('./routes/admin');
+const { db } = require('./models/product');
 
 /////////////////
 
@@ -28,6 +30,16 @@ const store = new MongoDBStore({
 // Adding CSRF protection
 const csrfProtection = csrf();
 
+// Define file storage for multer
+/* const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'images');
+    },
+    filename: (req, file, cb) => {
+        cb(null, new Date().toISOString() + '-' + file.originalname);
+    }
+}) */
+
 // Setting view engine
 app.set('view engine', 'ejs');
 
@@ -35,6 +47,8 @@ app.set('view engine', 'ejs');
 app.use(helmet());
 // Parsing url encoded body
 app.use(bodyParser.urlencoded({ extended: false }));
+// Parsing binary data
+/* app.use(multer({storage: fileStorage}).single('image')); */
 // Serving static public folder
 app.use(express.static(path.join(__dirname, 'public')));
 // Using session middleware

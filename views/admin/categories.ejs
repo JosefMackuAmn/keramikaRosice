@@ -1,10 +1,24 @@
-<%- include('../includes/head.ejs') %>
+<%- include('./includes/head.ejs')) %>
 </head>
 <body>
-    
-    <main>
-        <%= title %>
-    </main>
 
-    <%- include('../includes/footer.ejs') %>
-<%- include('../includes/end.ejs') %>
+    <%- include('./includes/navigation.ejs') %>
+    
+    <div class="wrapper wrapper--login">
+        
+        <%- include('./includes/header.ejs', { logout: true }) %>
+
+        <main class="main main--index">
+
+            <div class="visiting-card">
+                <h3 class="heading-3">AmnioN Web</h3>
+                <p class="paragraph-normal">team@amnionweb.cz</p>
+                <p class="paragraph-normal">+420 735 044 114</p>
+                <a target="_blank" rel="noopener" href="https://amnionweb.cz"><p class="paragraph-normal">www.amnionweb.cz</p></a>
+            </div>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>

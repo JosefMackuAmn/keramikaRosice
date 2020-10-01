@@ -1,0 +1,40 @@
+.navigation {
+    height: 100vh;
+    width: 8rem;
+    background-color: $color-black;
+    cursor: pointer;
+
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+
+    transition: all .2s;
+
+    &:hover {
+        width: 10rem;
+
+        .navigation__heading {
+            letter-spacing: 1rem;
+        }
+    }
+
+    &__heading {
+        color: $color-white;
+        letter-spacing: .3rem;
+
+        transition: all .2s;
+    }
+    &__list {
+        display: none;
+    }
+    &__item {
+
+    }
+}

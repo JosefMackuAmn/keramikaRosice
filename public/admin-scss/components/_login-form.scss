@@ -1,0 +1,41 @@
+.login-form {
+    width: 100%;
+    margin-top: 24vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__input {
+        width: 30%;
+        min-width: 30rem;
+        height: 5rem;
+        padding: 1rem;
+        margin-bottom: 3rem;
+        border: 2px solid $color-black;
+
+        font-size: $font-regular;
+        letter-spacing: .2rem;
+
+        &--hidden {
+            display: none;
+        }
+
+        &:focus {
+            border-radius: none;
+            outline: none;
+        }
+    }
+    &__submit {
+        border: none;
+        outline: none;
+        background-color: $color-white;
+        background-image: none;
+        cursor: pointer;
+
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: .2rem;
+        font-size: $font-regular;
+    }
+}

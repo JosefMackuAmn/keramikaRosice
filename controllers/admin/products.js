@@ -55,6 +55,7 @@ exports.postAddProduct = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
     const amountInStock = req.body.amountInStock;
     const shippingCostId = req.body.shippingCostId;
+    //const image = req.file;
 
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
         return res.status(422).json({

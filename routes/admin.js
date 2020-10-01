@@ -28,7 +28,8 @@ router.post('/products/add', isAuth, ash(adminController.postAddProduct)); /* Ex
     categoryId: String,
     subcategoryId: String || null,
     amountInStock: Number,
-    shippingCostId: Number
+    shippingCostId: Number,
+    image: File
 } */
 
 router.get('/products/edit/:productId', isAuth, ash(adminController.getEditProduct));
@@ -40,7 +41,8 @@ router.put('/products/edit', isAuth, ash(adminController.putEditProduct));  /* E
     categoryId: String,
     subcategoryId: String || null,
     amountInStock: Number,
-    shippingCostId: Number
+    shippingCostId: Number,
+    image: File || null
 } */
 
 // Handling 404 case in admin section

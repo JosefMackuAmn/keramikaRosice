@@ -3,7 +3,7 @@ const productsAdminController = require('./products');
 
 const getIndex = (req, res, next) => {
     res.render('admin/index', {
-        title: 'Admin index'
+        title: 'Administration'
     })
 }
 
