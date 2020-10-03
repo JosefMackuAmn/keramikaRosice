@@ -1,3 +1,9 @@
+@keyframes showMenuList {
+  from {
+    transform: translateX(-50rem); }
+  to {
+    transform: translateX(0); } }
+
 *, *::after, *::before {
   margin: 0;
   padding: 0;
@@ -24,7 +30,7 @@ a:link {
   letter-spacing: .4rem; }
 
 .heading-2 {
-  font-size: 2.2rem;
+  font-size: 1.8rem;
   letter-spacing: .2rem;
   font-weight: 400; }
 
@@ -96,6 +102,12 @@ a:link {
     flex-direction: column;
     justify-content: space-between;
     align-items: center; }
+  .wrapper--error {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center; }
 
 .main {
   width: 100%;
@@ -104,6 +116,13 @@ a:link {
     display: flex;
     justify-content: center;
     align-items: flex-start; }
+  .main--error {
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
+    .main--error .heading-3 {
+      margin-top: 25vh;
+      margin-bottom: 2rem; }
 
 .footer {
   width: 100%;
@@ -142,6 +161,7 @@ a:link {
   width: 8rem;
   background-color: black;
   cursor: pointer;
+  transform-style: preserve-3d;
   writing-mode: vertical-rl;
   text-orientation: upright;
   display: flex;
@@ -150,7 +170,8 @@ a:link {
   position: fixed;
   left: 0;
   top: 0;
-  transition: all .2s; }
+  z-index: 5000;
+  transition: width .2s; }
   .navigation:hover {
     width: 10rem; }
     .navigation:hover .navigation__heading {
@@ -161,3 +182,45 @@ a:link {
     transition: all .2s; }
   .navigation__list {
     display: none; }
+  .navigation.opened {
+    width: 65rem;
+    cursor: default; }
+    .navigation.opened .navigation__background {
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.5);
+      transform: translateZ(-1rem);
+      backdrop-filter: blur(10px);
+      position: absolute;
+      top: 0;
+      left: 0; }
+    .navigation.opened .navigation__heading {
+      opacity: 0; }
+    .navigation.opened .navigation__list {
+      list-style: none;
+      writing-mode: horizontal-tb;
+      text-orientation: upright;
+      text-transform: uppercase;
+      animation: showMenuList .1s ease-out; }
+    .navigation.opened .navigation__item {
+      color: white;
+      font-size: 2.2rem;
+      font-weight: 500;
+      line-height: 200%;
+      position: relative; }
+      .navigation.opened .navigation__item a {
+        height: 4rem;
+        display: flex;
+        align-items: center;
+        transition: all .2s; }
+      .navigation.opened .navigation__item.active::after {
+        content: "";
+        display: block;
+        width: 100rem;
+        height: 4rem;
+        background-color: white;
+        position: absolute;
+        left: -106rem;
+        top: calc(50% - 2rem); }
+      .navigation.opened .navigation__item.active a {
+        height: 15rem; }

@@ -45,10 +45,19 @@ router.put('/products/edit', isAuth, ash(adminController.putEditProduct));  /* E
     image: File || null
 } */
 
+// Handling error cases in admin section
+router.use(isAuth, (error, req, res, next) => {
+    res.status(500).render('admin/error', {
+        title: 'Error 500',
+        message: 'An error occured on the server side. Please try again or contact AmnioN Web.'
+    })
+})
+
 // Handling 404 case in admin section
 router.use(isAuth, (req, res, next) => {
-    res.status(404).render('admin/404', {
-        title: 'Admin 404'
+    res.status(404).render('admin/error', {
+        title: 'Error 404',
+        message: 'This site does not exist.'
     })
 })
 

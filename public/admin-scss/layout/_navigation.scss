@@ -3,6 +3,7 @@
     width: 8rem;
     background-color: $color-black;
     cursor: pointer;
+    transform-style: preserve-3d;
 
     writing-mode: vertical-rl;
     text-orientation: upright;
@@ -14,8 +15,9 @@
     position: fixed;
     left: 0;
     top: 0;
+    z-index: 5000;
 
-    transition: all .2s;
+    transition: width .2s;
 
     &:hover {
         width: 10rem;
@@ -34,7 +36,70 @@
     &__list {
         display: none;
     }
-    &__item {
 
+    &.opened {
+        width: 65rem;
+        cursor: default;
+
+        .navigation {
+            &__background {
+                width: 100vw;
+                height: 100vh;
+                background-color: $color-black-overlay;
+                transform: translateZ(-1rem);
+                backdrop-filter: blur(10px);
+    
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            &__heading {
+                opacity: 0;
+            }
+            &__list {
+                list-style: none;
+
+                writing-mode: horizontal-tb;
+                text-orientation: upright;
+                text-transform: uppercase;
+
+                animation: showMenuList .1s ease-out;
+            }
+            &__item {
+                color: $color-white;
+                font-size: $font-big;
+                font-weight: 500;
+                line-height: 200%;
+
+                position: relative;
+
+                & a {
+                    height: 4rem;
+                    display: flex;
+                    align-items: center;
+
+                    transition: all .2s;
+                }
+
+                &.active {
+
+                    &::after {
+                        content: "";
+                        display: block;
+                        width: 100rem;
+                        height: 4rem;
+                        background-color: $color-white;
+
+                        position: absolute;
+                        left: -106rem;
+                        top: calc(50% - 2rem);
+                    }
+
+                    & a {
+                        height: 15rem;
+                    }
+                }
+            }
+        }
     }
 }

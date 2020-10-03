@@ -1,9 +1,10 @@
-<nav class="navigation">
+<nav class="navigation" id="menu">
+    <div class="navigation__background"></div>
     <h3 class="navigation__heading">MENU</h3>
     <ul class="navigation__list">
-        <li class="navigation__item">Domů</li>
-        <li class="navigation__item">Produkty</li>
-        <li class="navigation__item">Kategorie</li>
-        <li class="navigation__item">Objednávky</li>
+        <li class="navigation__item <% if (activeLink === 'home') { %>active<% } %>"><a href="/admin/">Domů</a></li>
+        <li class="navigation__item <% if (activeLink === 'products') { %>active<% } %>"><a href="/admin/products">Produkty</a></li>
+        <li class="navigation__item <% if (activeLink === 'categories') { %>active<% } %>"><a href="/admin/categories">Kategorie</a></li>
+        <li class="navigation__item <% if (activeLink === 'orders') { %>active<% } %>"><a href="/admin/orders">Objednávky</a></li>
     </ul>
 </nav>

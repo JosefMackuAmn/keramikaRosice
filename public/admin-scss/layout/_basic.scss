@@ -12,6 +12,14 @@
         justify-content: space-between;
         align-items: center;
     }
+    &--error {
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
 }
 
 .main {
@@ -22,5 +30,15 @@
         display: flex;
         justify-content: center;
         align-items: flex-start;
+    }
+    &--error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & .heading-3 {
+            margin-top: 25vh;
+            margin-bottom: 2rem;
+        }
     }
 }

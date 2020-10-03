@@ -1,12 +1,12 @@
-<%- include('./includes/head.ejs')) %>
+<%- include('./includes/head.ejs') %>
 </head>
 <body>
 
-    <%- include('./includes/navigation.ejs') %>
+    <%- include('./includes/navigation.ejs', { activeLink: 'products' }) %>
     
-    <div class="wrapper wrapper--login">
+    <div class="wrapper">
         
-        <%- include('./includes/header.ejs', { logout: true }) %>
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Produkty' }) %>
 
         <main class="main main--index">
 

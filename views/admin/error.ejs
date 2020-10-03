@@ -1,0 +1,22 @@
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'error' }) %>
+    
+    <div class="wrapper wrapper--error">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Administrace' }) %>
+
+        <main class="main main--error">
+
+            <h3 class="heading-3"><%= title %></h3>
+            <p><%= message %></p>
+            
+        </main>
+
+        <%- include('./includes/footer.ejs') %>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
