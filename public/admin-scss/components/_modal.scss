@@ -1,0 +1,110 @@
+.modal {
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+
+    &__background {
+        width: 100%;
+        height: 100%;
+        background-color: $color-black-overlay;
+        transform: translateZ(-1rem);
+        backdrop-filter: blur(10px);
+
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    &__content {
+        width: 100rem;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+    &__heading {
+        width: 100%;
+        height: 5rem;
+        padding: 0 2rem;
+        background-color: $color-black;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &__main {
+        width: 100%;
+        padding: 5rem;
+        margin-bottom: 2rem;
+        background-color: $color-white;
+    }
+    &__row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        & > * {
+            margin-right: auto;
+        }
+    }
+    &__data-cell {
+        display: flex;
+        flex-direction: column;
+
+        & .modal__label {
+            margin-bottom: 1rem;
+
+            font-weight: 500;
+        }
+        & .modal__input {
+            width: 25rem;
+            height: 4rem;
+            padding: 1rem;
+            border: 1px solid $color-black;
+
+            &:focus, &:active {
+                outline: none;
+                border: 1px solid $color-black;
+            }
+        }
+    }
+    &__actions {        
+        padding-bottom: 5rem;
+    }
+    &__btn {
+        width: 10rem;
+        height: 3rem;
+        border: 1px solid $color-black;
+        outline: none;
+        cursor: pointer;
+
+        font-weight: 600;
+
+        &--ok {
+            margin-right: 1rem;
+        }
+        &--danger {
+            background-color: $color-orange;
+        }
+
+        &:focus, &:active {
+            outline: none;
+            border: 1px solid $color-black;
+        }
+        &:hover {
+            box-shadow: 0 1px 5px 1px $color-white-overlay;
+        }
+    }
+}

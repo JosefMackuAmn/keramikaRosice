@@ -12,8 +12,10 @@ router.get('/', isAuth, adminController.getIndex);
 
 router.get('/categories', isAuth, ash(adminController.getCategories));
 router.post('/categories', isAuth, ash(adminController.postCategories));  // Expecting { categoryId: String || null, categoryName: String }
+
 router.delete('/categories/:categoryId', isAuth, ash(adminController.deleteCategory));
 router.put('/categories/', isAuth, ash(adminController.putCategory)); // Expecting { categoryId: String, newCategoryName: String }
+
 router.delete('/categories/sub/:subcategoryId', isAuth, ash(adminController.deleteSubcategory));
 router.put('/categories/sub/', isAuth, ash(adminController.putSubcategory)); // Expecting { subcategoryId: String, newCategoryName: String }
 
@@ -47,6 +49,7 @@ router.put('/products/edit', isAuth, ash(adminController.putEditProduct));  /* E
 
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
+    console.log(error);
     res.status(500).render('admin/error', {
         title: 'Error 500',
         message: 'An error occured on the server side. Please try again or contact AmnioN Web.'

@@ -1,0 +1,44 @@
+.item-list {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    & tr {
+        height: 5rem;
+    }
+
+    &__options {
+        margin-bottom: 4rem;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &__content {
+        width: 100%;
+    }
+    &__heading {
+        background-color: $color-black;
+
+        color: $color-white;
+        letter-spacing: .2rem;
+
+        & th {
+            font-weight: 400;
+        }
+    }
+    &__row {
+        background-color: $color-grey-light;
+
+        &:nth-child(even) {
+            background-color: $color-white;
+        }
+
+        & td {
+            border-left: 1px solid $color-grey;
+            border-right: 1px solid $color-grey;
+
+            text-align: center;
+        }
+    }
+}

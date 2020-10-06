@@ -16,7 +16,7 @@ exports.getProducts = async (req, res, next) => {
 }
 
 exports.deleteProduct = async (req, res, next) => {
-    const productId = body.params.productId;
+    const productId = req.params.productId;
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         return res.status(422).json({

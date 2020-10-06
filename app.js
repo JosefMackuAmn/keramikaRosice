@@ -47,6 +47,7 @@ app.set('view engine', 'ejs');
 app.use(helmet());
 // Parsing url encoded body
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 // Parsing binary data
 /* app.use(multer({storage: fileStorage}).single('image')); */
 // Serving static public folder
@@ -91,8 +92,15 @@ app.use((req, res, next) => {
 // Handling next(error) call
 app.use((error, req, res, next) => {
     console.log(error);
+    const errorMessage = error.message || error.msg;
+    if (req.headers.accept === 'application/json') {
+        return res.status(500).json({
+            msg: errorMessage
+        })
+    }
     res.status(500).render('500', {
-        title: '500'
+        title: '500',
+        msg: errorMessage
     })
 })
 
