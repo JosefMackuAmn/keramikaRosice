@@ -1,6 +1,7 @@
 ///////////////////////////////////
 ///// DEFINING FUNCTIONS
 
+/////
 // ready function to execute when DOM is loaded
 const ready = callbackFunc => {
     if (document.readyState !== 'loading') {
@@ -19,6 +20,8 @@ const ready = callbackFunc => {
     }
 }
 
+/////
+// Menu functions
 const toggleMenu = (menu) => {
     if (menu.classList.contains('opened')) {
         menu.classList.remove('opened');
@@ -32,17 +35,36 @@ const toggleMenu = (menu) => {
         }, 200);
     }    
 }
-
 const emphasizeHoveredMenuItem = (menuItems, itemIndex) => {
     menuItems.forEach(menuItem => menuItem.classList.remove('active'));
     if (itemIndex !== -1) menuItems[itemIndex].classList.add('active');
+}
+
+/////
+// Submit functions
+const onDeleteProduct = (e) => {
+    const productId = e.target.dataset.id;
+    const csrf = e.target.dataset.csrf;
+
+    fetch('/admin/products/' + productId + '?_csrf=' + csrf, {
+        method: 'DELETE'
+    })
+        .then(res => {
+            if (res.ok === true) {
+                document.getElementById(productId).remove();
+            } else {
+                throw new Error('Deleting was not successfull');
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
 }
 
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
 ready(() => {
     const menu = document.getElementById('menu');
-
     if (menu) {
         const menuItems = Array.from(menu.querySelectorAll('.navigation__item'));
         const activeMenuItemIndex = menuItems.findIndex(item => item.classList.contains('active'));
@@ -56,5 +78,11 @@ ready(() => {
             // Emphasize active page on unhover 
             item.addEventListener('mouseleave', emphasizeHoveredMenuItem.bind(this, menuItems, activeMenuItemIndex));
         });
+    }
+
+    // Try to find delete product button
+    const deleteProductBtns = document.querySelectorAll('.deleteProductBtn');
+    if (deleteProductBtns.length > 0) {
+        deleteProductBtns.forEach(button => button.addEventListener('click', onDeleteProduct));
     }
 });

@@ -17,6 +17,15 @@
     letter-spacing: .3rem;
 }
 
+.heading-4 {
+    font-size: $font-regular;
+    font-weight: 500;
+    
+    &--light {
+        color: $color-white;
+    }
+}
+
 .paragraph {
     &-small {
         font-size: $font-regular;

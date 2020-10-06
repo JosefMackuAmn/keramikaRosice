@@ -8,14 +8,19 @@
         
         <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Produkty' }) %>
 
-        <main class="main main--index">
+        <main class="main main--edit-product">
 
-            <div class="visiting-card">
-                <h3 class="heading-3">AmnioN Web</h3>
-                <p class="paragraph-normal">team@amnionweb.cz</p>
-                <p class="paragraph-normal">+420 735 044 114</p>
-                <a target="_blank" rel="noopener" href="https://amnionweb.cz"><p class="paragraph-normal">www.amnionweb.cz</p></a>
-            </div>
+            <form action="/admin/products/add" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="text" name="name" id="name" placeholder="NAME">
+                <input type="text" name="description" id="description" placeholder="DESCRIPTION">
+                <input type="number" name="price" id="price" placeholder="PRICE">
+                <input type="text" name="categoryId" id="categoryId" placeholder="CATEGORYID">
+                <input type="text" name="subcategoryId" id="subcategoryId" placeholder="SUBCATEGORYID">
+                <input type="number" name="amountInStock" id="amountInStock" placeholder="AMOUNTINSTOCK">
+                <input type="number" name="shippingCostId" id="shippingCostId" placeholder="SHIPPINGCOSTID">
+                <input type="submit" value="Odeslat">
+            </form>
             
         </main>
 

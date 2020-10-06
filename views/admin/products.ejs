@@ -8,14 +8,36 @@
         
         <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Produkty' }) %>
 
-        <main class="main main--index">
+        <main class="main main--products">
 
-            <div class="visiting-card">
-                <h3 class="heading-3">AmnioN Web</h3>
-                <p class="paragraph-normal">team@amnionweb.cz</p>
-                <p class="paragraph-normal">+420 735 044 114</p>
-                <a target="_blank" rel="noopener" href="https://amnionweb.cz"><p class="paragraph-normal">www.amnionweb.cz</p></a>
+            <div class="item-list__options">
+                <input type="text" placeholder="Hledat">
+                <a class="add-button" href="/admin/products/add">Nový produkt</a>
             </div>
+
+            <table class="item-list">
+                <tbody class="item-list__content">
+                    <tr class="item-list__heading">
+                        <th>Název</th>
+                        <th>Zařazení</th>
+                        <th>Skladem</th>
+                        <th>Cena</th>
+                        <th>Akce</th>
+                    </tr>
+                    <% products.forEach(product => { %>
+                        <tr class="item-list__row" id="<%= product._id %>">
+                            <td><%= product.name %></td>
+                            <td><%= product.categoryId %>, <%= product.subcategoryId %></td>
+                            <td><%= product.amountInStock %>ks</td>
+                            <td><%= product.price %>Kč</td>
+                            <td>
+                                <a href="/admin/products/edit/<%= product._id %>">Upravit</a>
+                                <button class="deleteProductBtn" data-id="<%= product._id %>" data-csrf="<%= csrfToken %>">Smazat</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
             
         </main>
 
