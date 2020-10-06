@@ -12,6 +12,24 @@
 
             <button class="add-button">+ Nová kategorie</button>
             <container class="categories">
+                <% categories.forEach(category => { %>
+                    <section class="category-box">
+                        <div class="category-box__heading">
+                            <h4 class="heading-4 heading-4--light"><%= category.name %></h4>
+                            <button class="category-box__edit-btn">!</button>
+                        </div>
+                        <div class="category-box__subcategories">
+                            <% subcategories.forEach(subcategory => {
+                                if (subcategory.categoryId === category._id) {  %>
+                                    <div class="category-box__subcategory">
+                                        <h4 class="heading-4"><%= subcategory.name %></h4>
+                                        <button class="category-box__edit-btn">!</button>
+                                    </div>
+                                <% }
+                            }) %>
+                        </div>
+                    </section>
+                <% }) %>
                 <section class="category-box">
                     <div class="category-box__heading">
                         <h4 class="heading-4 heading-4--light">Hrnky</h4>
@@ -116,94 +134,6 @@
                         </div>
                         <div class="category-box__subcategory">
                             <h4 class="heading-4">Subhrnky 4</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 5</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                    </div>
-                </section>
-                <section class="category-box">
-                    <div class="category-box__heading">
-                        <h4 class="heading-4 heading-4--light">Hrnky</h4>
-                        <button class="category-box__edit-btn">!</button>
-                    </div>
-                    <div class="category-box__subcategories">
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 1</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 2</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 3</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 4</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 5</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                    </div>
-                </section>
-                <section class="category-box">
-                    <div class="category-box__heading">
-                        <h4 class="heading-4 heading-4--light">Hrnky</h4>
-                        <button class="category-box__edit-btn">!</button>
-                    </div>
-                    <div class="category-box__subcategories">
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 1</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 2</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 3</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 4</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 5</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                    </div>
-                </section>
-                <section class="category-box">
-                    <div class="category-box__heading">
-                        <h4 class="heading-4 heading-4--light">Hrnky</h4>
-                        <button class="category-box__edit-btn">!</button>
-                    </div>
-                    <div class="category-box__subcategories">
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 1</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 2</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 3</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 4</h4>
-                            <button class="category-box__edit-btn">!</button>
-                        </div>
-                        <div class="category-box__subcategory">
-                            <h4 class="heading-4">Subhrnky 5</h4>
                             <button class="category-box__edit-btn">!</button>
                         </div>
                     </div>

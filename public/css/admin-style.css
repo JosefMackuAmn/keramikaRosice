@@ -185,7 +185,10 @@ a:link {
   .main--products {
     padding: 12rem; }
   .main--categories {
-    padding: 12rem; }
+    padding: 12rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center; }
 
 .footer {
   width: 100%;
