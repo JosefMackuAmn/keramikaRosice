@@ -137,6 +137,86 @@ a:link {
     letter-spacing: .2rem;
     font-size: 1.8rem; }
 
+.modal {
+  width: 100%;
+  height: 100%;
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 10000; }
+  .modal__background {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    transform: translateZ(-1rem);
+    backdrop-filter: blur(10px);
+    position: absolute;
+    top: 0;
+    left: 0; }
+  .modal__content {
+    width: 100rem;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%; }
+  .modal__heading {
+    width: 100%;
+    height: 5rem;
+    padding: 0 2rem;
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; }
+  .modal__main {
+    width: 100%;
+    padding: 5rem;
+    margin-bottom: 2rem;
+    background-color: white; }
+  .modal__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between; }
+    .modal__row > * {
+      margin-right: auto; }
+  .modal__data-cell {
+    display: flex;
+    flex-direction: column; }
+    .modal__data-cell .modal__label {
+      margin-bottom: 1rem;
+      font-weight: 500; }
+    .modal__data-cell .modal__input {
+      width: 25rem;
+      height: 4rem;
+      padding: 1rem;
+      border: 1px solid black; }
+      .modal__data-cell .modal__input:focus, .modal__data-cell .modal__input:active {
+        outline: none;
+        border: 1px solid black; }
+  .modal__actions {
+    padding-bottom: 5rem; }
+  .modal__btn {
+    width: 10rem;
+    height: 3rem;
+    border: 1px solid black;
+    outline: none;
+    cursor: pointer;
+    font-weight: 600; }
+    .modal__btn--ok {
+      margin-right: 1rem; }
+    .modal__btn--danger {
+      background-color: orangered; }
+    .modal__btn:focus, .modal__btn:active {
+      outline: none;
+      border: 1px solid black; }
+    .modal__btn:hover {
+      box-shadow: 0 1px 5px 1px rgba(255, 255, 255, 0.5); }
+
 .visiting-card {
   padding: 6rem;
   padding-bottom: 9rem;
@@ -293,6 +373,7 @@ a:link {
 
 .categories {
   margin: -5rem;
+  margin-top: 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;

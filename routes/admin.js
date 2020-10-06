@@ -12,8 +12,10 @@ router.get('/', isAuth, adminController.getIndex);
 
 router.get('/categories', isAuth, ash(adminController.getCategories));
 router.post('/categories', isAuth, ash(adminController.postCategories));  // Expecting { categoryId: String || null, categoryName: String }
+
 router.delete('/categories/:categoryId', isAuth, ash(adminController.deleteCategory));
 router.put('/categories/', isAuth, ash(adminController.putCategory)); // Expecting { categoryId: String, newCategoryName: String }
+
 router.delete('/categories/sub/:subcategoryId', isAuth, ash(adminController.deleteSubcategory));
 router.put('/categories/sub/', isAuth, ash(adminController.putSubcategory)); // Expecting { subcategoryId: String, newCategoryName: String }
 

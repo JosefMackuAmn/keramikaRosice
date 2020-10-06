@@ -10,7 +10,39 @@
 
         <main class="main main--categories">
 
-            <button class="add-button">+ Nová kategorie</button>
+            <!-- CATEGORIES MODAL -->
+            <container class="modal" id="modal" data-model="categories">
+                <div class="modal__background"></div>
+                <div class="modal__content">
+                    <section class="modal__heading">
+                        <h4 class="heading-4 heading-4--light" id="modal-heading">Kategorie - ${isEdit}</h4>
+                        <button class="modal__close-btn" id="modal-close">Close</button>
+                    </section>
+                    <section class="modal__main">
+                        <div class="modal__row">
+                            <input type="hidden" name="csrf" id="csrf" value="<%= csrfToken %>">
+                            <div class="modal__data-cell">
+                                <label for="categoryName" class="modal__label">Jméno</label>
+                                <input id="categoryName" name="categoryName" class="modal__input" value="Jméno kategorie" />
+                            </div>
+                            <div class="modal__data-cell">
+                                <label for="categoryId" class="modal__label">Podřazeno kategorii</label>
+                                <select id="categoryId" name="categoryId" class="modal__input">
+                                    <option value="">Nepodřazeno</option>
+                                    <option value="categoryId">Kategorie</option>
+                                </select>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="modal__actions">
+                        <button class="modal__btn modal__btn--ok" id="modal-action">Uložit</button>
+                        <button class="modal__btn modal__btn--danger" id="modal-cancel">Zrušit</button>
+                    </section>
+                </div>
+            </container>
+
+            <!-- LIST OF CATEGORIES AND ADD CATEGORY BUTTON -->
+            <button class="add-button" id="add-category-btn">+ Nová kategorie</button>
             <container class="categories">
                 <% categories.forEach(category => { %>
                     <section class="category-box">

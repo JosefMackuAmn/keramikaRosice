@@ -51,14 +51,81 @@ const onDeleteProduct = (e) => {
     })
         .then(res => {
             if (res.ok === true) {
-                document.getElementById(productId).remove();
+                document.getElementById(productId).remove(); // SHOW SUCCESS MODAL --------------------------
             } else {
-                throw new Error('Deleting was not successfull');
+                throw new Error('Deleting was not successfull'); // SHOW ERROR MODAL --------------------------
             }
         })
         .catch(err => {
-            console.log(err);
+            console.log(err); // SHOW ERROR MODAL --------------------------
         });
+}
+
+// Element click functions
+const onShowModal = () => {
+    state.modalEls.modal.style.display = 'block';
+}
+
+onCloseModal = () => {
+    // Hide modal
+    state.modalEls.modal.style.display = 'none';
+}
+
+onSaveModal = () => {
+    // Hide modal
+    state.modalEls.modal.style.display = 'none';
+
+    const dataModel = state.modalEls.modal.dataset.model;
+
+    switch (dataModel) {
+        case 'categories':
+            const categoryId = modal.querySelector('#categoryId').value;
+            const categoryName = modal.querySelector('#categoryName').value;
+            const csrf = modal.querySelector('#csrf').value;
+
+            if (!state.editMode) {
+                fetch('/admin/categories', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json',
+                        'CSRF-Token': csrf
+                    },
+                    body: JSON.stringify({
+                        categoryId: categoryId,
+                        categoryName: categoryName
+                    })
+                })
+                    .then(response => {
+                        return Promise.all([response.clone(), response.json()]);
+                    })
+                    .then(resolved => {
+                        const [res, json] = resolved;
+                        console.log(json);
+                        console.log(res);
+                        if (res.ok === true) {
+                            // SHOW SUCCESS MODAL ------------------------------------------------
+                            // RENDER NEW CATEGORY -----------------------------------------------
+                        } else {
+                            throw new Error(json.msg); // SHOW ERROR MODAL --------------------------
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err); // SHOW ERROR MODAL --------------------------
+                    });
+            } else {
+        
+            }
+        break;
+        default: throw new Error('Data model extracted from modal dataset does not exist'); // SHOW ERROR MODAL --------------------------
+    }
+}
+
+///////////////////////////////////
+///// Define state
+const state = {
+    modalEls: null,
+    editMode: undefined
 }
 
 ///////////////////////////////////
@@ -84,5 +151,45 @@ ready(() => {
     const deleteProductBtns = document.querySelectorAll('.deleteProductBtn');
     if (deleteProductBtns.length > 0) {
         deleteProductBtns.forEach(button => button.addEventListener('click', onDeleteProduct));
+    }
+
+    // Try to find add category button
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    if (addCategoryBtn) {
+        const modal = document.getElementById('modal');
+        const modalHeading = modal.querySelector('#modal-heading');
+        const modalAction = modal.querySelector('#modal-action');
+        const modalClose = modal.querySelector('#modal-close');
+        const modalCancel = modal.querySelector('#modal-cancel');
+
+        const modalEls = {
+            modal,
+            modalHeading,
+            modalAction,
+            modalClose,
+            modalCancel
+        }
+
+        state.modalEls = modalEls;
+
+        // Add event listeners for modal elements
+        const closeModalListenerFcn = (e) => {
+            onCloseModal();
+        }
+        const saveModalListenerFcn = e => {
+            onSaveModal();
+        }
+    
+        // On cancelling modal
+        modalEls.modalClose.addEventListener('click', closeModalListenerFcn);
+        modalEls.modalCancel.addEventListener('click', closeModalListenerFcn);
+    
+        // On saving modal
+        modalEls.modalAction.addEventListener('click', saveModalListenerFcn);
+
+        addCategoryBtn.addEventListener('click', () => {
+            state.editMode = false;
+            return onShowModal();
+        });
     }
 });
