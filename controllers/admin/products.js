@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const Product = require("../../models/product");
-const Category = require('../../models/Category');
-const Subcategory = require('../../models/Subcategory');
+const Category = require('../../models/category');
+const Subcategory = require('../../models/subcategory');
 
 ///////////////////////
 ///// Products

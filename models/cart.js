@@ -5,7 +5,7 @@ class Cart {
         this.shippingCostId = shippingCostId; // 0 === cheper shipping && 1 === more expensive shipping
     }
 
-    add = (product, amount) => {
+    add(product, amount) {
         const itemIndex = this.items.findIndex(item => item.product._id === product._id);
         if (itemIndex > -1) {
             this.items[itemIndex] = {
@@ -24,7 +24,7 @@ class Cart {
         }
     }
     
-    remove = (product, amount) => {
+    remove(product, amount) {
         const itemIndex = this.items.findIndex(item => item.product._id === product._id);
         if (itemIndex === -1) return;
 
