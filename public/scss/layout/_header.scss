@@ -1,0 +1,26 @@
+.header {
+    padding-top: 3rem;
+    background-color: transparent;
+
+    display: flex;
+    justify-content: space-between;
+
+    position: relative;
+    z-index: 1;
+ 
+    &__nav-list {
+        list-style: none;
+        display: flex;
+    }
+    &__nav-item {
+        margin-right: 5rem;
+    }
+    &__logo {
+        margin-left: 4rem;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+}
