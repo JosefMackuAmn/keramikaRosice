@@ -222,6 +222,63 @@ a:link {
     .modal__btn:hover {
       box-shadow: 0 1px 5px 1px rgba(255, 255, 255, 0.5); }
 
+.product-form {
+  width: 100%; }
+  .product-form__row {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-between; }
+    .product-form__row > .product-form__data-cell {
+      width: 25%; }
+  .product-form__column {
+    width: 25%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between; }
+    .product-form__column > .product-form__data-cell {
+      width: 100%; }
+  .product-form__data-cell {
+    display: flex;
+    flex-direction: column; }
+    .product-form__data-cell > * {
+      width: 100%; }
+  .product-form__actions {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+  .product-form__btn {
+    width: 10rem;
+    height: 4rem;
+    margin-top: 5rem;
+    margin-bottom: 3rem;
+    background-color: white;
+    border: 1px solid black;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .product-form__btn--submit {
+      background-color: lightgreen; }
+    .product-form__btn--cancel {
+      background-color: #CF7838; }
+    .product-form__btn:not(:last-child) {
+      margin-right: 2rem; }
+  .product-form input, .product-form textarea, .product-form select {
+    min-height: 4rem;
+    height: 100%;
+    padding: 1rem;
+    margin-bottom: 3rem;
+    border: 1px solid black;
+    font-size: 1.6rem;
+    font-family: sans-serif; }
+    .product-form input:focus, .product-form input:active, .product-form textarea:focus, .product-form textarea:active, .product-form select:focus, .product-form select:active {
+      outline: none;
+      border: 1px solid black; }
+  .product-form label {
+    margin-bottom: 1rem; }
+
 .visiting-card {
   padding: 6rem;
   padding-bottom: 9rem;
@@ -274,6 +331,8 @@ a:link {
     display: flex;
     flex-direction: column;
     align-items: center; }
+  .main--edit-product {
+    padding: 12rem; }
 
 .footer {
   width: 100%;

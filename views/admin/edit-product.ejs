@@ -6,20 +6,83 @@
     
     <div class="wrapper">
         
-        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Produkty' }) %>
+        <% let adminTitle = 'Vytvořit produkt'; %>
+        <% if (editMode) { adminTitle = 'Upravit produkt' } %>
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: adminTitle }) %>
 
         <main class="main main--edit-product">
 
-            <form action="/admin/products/add" method="POST">
+            <form class="product-form" id="product-form" method="POST" action="/admin/products/<% if (editMode) { %>edit<% } else { %>add<% } %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <input type="text" name="name" id="name" placeholder="NAME">
-                <input type="text" name="description" id="description" placeholder="DESCRIPTION">
-                <input type="number" name="price" id="price" placeholder="PRICE">
-                <input type="text" name="categoryId" id="categoryId" placeholder="CATEGORYID">
-                <input type="text" name="subcategoryId" id="subcategoryId" placeholder="SUBCATEGORYID">
-                <input type="number" name="amountInStock" id="amountInStock" placeholder="AMOUNTINSTOCK">
-                <input type="number" name="shippingCostId" id="shippingCostId" placeholder="SHIPPINGCOSTID">
-                <input type="submit" value="Odeslat">
+                <% if (editMode) { %>
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                <% } %>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="name">Název produktu</label>
+                        <input type="text" name="name" id="name" placeholder="Název produktu" value="<% if (editMode) { %><%= product.name %><% } %>">
+                    </div>
+                    <div class="product-form__data-cell">
+                        <label for="categoryId">Kategorie</label>
+                        <select type="text" name="categoryId" id="categoryId">
+                            <option value="">Vyberte kategorii</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category._id %>" <% if (editMode && product.categoryId && product.categoryId.toString() === category._id.toString()) { %>selected="selected"<% } %>><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="product-form__data-cell">
+                        <label for="amountInStock">Množství skladem</label>
+                        <input type="number" name="amountInStock" id="amountInStock" placeholder="Množství skladem" value="<% if (editMode) { %><%= product.amountInStock %><% } %>">
+                    </div>
+                </div>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="description">Popis</label>
+                        <textarea type="text" name="description" id="description" placeholder="Popis"><% if (editMode) { %><%= product.description %><% } %></textarea>
+                    </div>
+                    <div class="product-form__column">
+                        <div class="product-form__data-cell">
+                            <label for="subcategoryId">Podkategorie</label>
+                            <select type="text" name="subcategoryId" id="subcategoryId" <% if (!editMode) { %>disabled<% } else if (!product.categoryId) { %>disabled<% } %> data-subcategories="<%
+                                const subcategoriesObj = {};
+                                subcategories.forEach(subcategory => {
+                                    if (!subcategoriesObj[subcategory.categoryId]) {
+                                        subcategoriesObj[subcategory.categoryId] = []
+                                    }
+                                    subcategoriesObj[subcategory.categoryId].push({
+                                        name: subcategory.name,
+                                        _id: subcategory.id
+                                    });
+                                });
+                            %><%= JSON.stringify(subcategoriesObj) %>">
+                                <option value="">Vyberte podkategorii</option>
+                                <% if (editMode && product.categoryId) {
+                                    subcategoriesObj[product.categoryId].forEach(subcategory => { %>
+                                        <option value="<%= subcategory._id %>" <% if (editMode && product.subcategoryId && product.subcategoryId.toString() === subcategory._id.toString()) { %>selected="selected"<% } %>><%= subcategory.name %></option>
+                                    <% }) %>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="product-form__data-cell">
+                            <label for="shippingCostId">Poštovné</label>
+                            <select type="number" name="shippingCostId" id="shippingCostId">
+                                <option value="0" <% if (product && product.shippingCostId == '0') { %>selected="selected"<% } %>>Levné poštovné</option>
+                                <option value="1" <% if (product && product.shippingCostId == '1') { %>selected="selected"<% } %>>Drahé poštovné</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-form__column">
+                        <div class="product-form__data-cell">
+                            <label for="price">Cena v Kč</label>
+                            <input type="number" name="price" id="price" placeholder="Cena v Kč" value="<% if (editMode) { %><%= product.price %><% } %>">
+                        </div>
+                    </div>
+                </div>
+                <div class="product-form__actions">
+                    <input class="product-form__btn product-form__btn--submit" type="submit" value="Odeslat">
+                    <a href="/admin/products" class="product-form__btn product-form__btn--cancel">Zrušit</a>
+                </div>
             </form>
             
         </main>

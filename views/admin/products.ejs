@@ -27,7 +27,7 @@
                     <% products.forEach(product => { %>
                         <tr class="item-list__row" id="<%= product._id %>">
                             <td><%= product.name %></td>
-                            <td><%= product.categoryId %>, <%= product.subcategoryId %></td>
+                            <td><% if (product.categoryId) { %><%= product.categoryId.name %><% } else { %> - <% }; if (product.subcategoryId) { %>, <%= product.subcategoryId.name %> <% } else { %>, - <% } %></td>
                             <td><%= product.amountInStock %>ks</td>
                             <td><%= product.price %>Kč</td>
                             <td>

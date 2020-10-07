@@ -35,7 +35,7 @@ router.post('/products/add', isAuth, ash(adminController.postAddProduct)); /* Ex
 } */
 
 router.get('/products/edit/:productId', isAuth, ash(adminController.getEditProduct));
-router.put('/products/edit', isAuth, ash(adminController.putEditProduct));  /* Expecting {
+router.post('/products/edit', isAuth, ash(adminController.postEditProduct));  /* Expecting {
     productId: String,
     name: String,
     description: String,
@@ -50,9 +50,16 @@ router.put('/products/edit', isAuth, ash(adminController.putEditProduct));  /* E
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
     console.log(error);
-    res.status(500).render('admin/error', {
+    const errorMessage = error.message || error.msg;
+    const errorStatus = error.status || 500;
+    if (req.headers.accept === 'application/json') {
+        return res.status(errorStatus).json({
+            msg: errorMessage
+        })
+    }
+    res.status(errorStatus).render('admin/error', {
         title: 'Error 500',
-        message: 'An error occured on the server side. Please try again or contact AmnioN Web.'
+        message: errorMessage
     })
 })
 

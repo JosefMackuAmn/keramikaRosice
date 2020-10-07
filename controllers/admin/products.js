@@ -7,7 +7,7 @@ const Subcategory = require('../../models/subcategory');
 ///////////////////////
 ///// Products
 exports.getProducts = async (req, res, next) => {
-    const allProducts = await Product.find({});
+    const allProducts = await Product.find({}).populate({ path: 'categoryId' }).populate({ path: 'subcategoryId' });
 
     res.render('admin/products', {
         title: 'Products',
@@ -44,7 +44,9 @@ exports.getAddProduct = async (req, res, next) => {
     res.render('admin/edit-product', {
         title: 'Add product',
         categories: allCategories,
-        subcategories: allSubcategories
+        subcategories: allSubcategories,
+        product: null,
+        editMode: false,
     })
 }
 exports.postAddProduct = async (req, res, next) => {
@@ -82,6 +84,13 @@ exports.postAddProduct = async (req, res, next) => {
         })
     }
 
+    if (subcategoryId && (subcategory.categoryId.toString() !== category._id.toString())) {
+        return res.status(422).json({
+            msg: "Category and subcategory ID does not match"
+        })
+    }
+
+
     const product = new Product({
         name,
         description,
@@ -100,11 +109,13 @@ exports.postAddProduct = async (req, res, next) => {
 // Edit product
 exports.getEditProduct = async (req, res, next) => {
     const productId = req.params.productId;
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
-        return res.status(422).json({
-            msg: "productId is not a valid ID string"
-        })
+        const error = new Error('ProductId is not a valid ID string');
+        error.status = 422;
+        return next(error);
     }
 
     const product = await Product.findById(productId);
@@ -112,17 +123,19 @@ exports.getEditProduct = async (req, res, next) => {
     if (product) {
         return res.render('admin/edit-product', {
             title: 'Edit product',
-            product: product
+            editMode: true,
+            product: product,
+            categories: allCategories,
+            subcategories: allSubcategories
         });
     }
 
-    return res.render('admin/edit-product', {
-        title: 'Edit product',
-        product: null
-    })
+    const error = new Error('Product not found');
+    error.status = 422;
+    return next(error);
 }
 
-exports.putEditProduct = async (req, res, next) => {
+exports.postEditProduct = async (req, res, next) => {
     const productId = req.body.productId;
 
     const name = req.body.name;

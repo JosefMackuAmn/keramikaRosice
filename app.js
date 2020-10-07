@@ -78,7 +78,8 @@ app.use('/admin', adminRoutes);
 // Handling 500 case
 app.get('/500', (req, res, next) => {
     res.status(500).render('500', {
-        title: '500'
+        title: '500',
+        msg: 'Server error'
     })
 })
 
@@ -93,12 +94,13 @@ app.use((req, res, next) => {
 app.use((error, req, res, next) => {
     console.log(error);
     const errorMessage = error.message || error.msg;
+    const errorStatus = error.status || 500;
     if (req.headers.accept === 'application/json') {
-        return res.status(500).json({
+        return res.status(errorStatus).json({
             msg: errorMessage
         })
     }
-    res.status(500).render('500', {
+    res.status(errorStatus).render('500', {
         title: '500',
         msg: errorMessage
     })

@@ -22,6 +22,7 @@ const ready = callbackFunc => {
 
 /////
 // Menu functions
+/////
 const toggleMenu = (menu) => {
     if (menu.classList.contains('opened')) {
         menu.classList.remove('opened');
@@ -42,6 +43,7 @@ const emphasizeHoveredMenuItem = (menuItems, itemIndex) => {
 
 /////
 // Submit functions
+/////
 const onDeleteProduct = (e) => {
     const productId = e.target.dataset.id;
     const csrf = e.target.dataset.csrf;
@@ -122,7 +124,9 @@ const onDeleteCategory = () => {
     onCloseModal();
 }
 
+/////
 // Modal fcns
+/////
 const onShowModal = () => {
     if (!state.editMode) {
         // If in "add" mode
@@ -282,6 +286,38 @@ onSaveModal = () => {
     onCloseModal();
 }
 
+/////
+// Product form functions
+/////
+const onSelectCategory = () => {
+    // Retrieve all subcategories from dataset and currently selected categoryId
+    const allSubcategories = JSON.parse(state.prodFormEls.inpSubcategory.dataset.subcategories);
+    const categoryId = state.prodFormEls.inpCategory.value;
+
+    // Clean up last options
+    state.prodFormEls.inpSubcategory.innerHTML = "";
+    state.prodFormEls.inpSubcategory.setAttribute('disabled', true);
+    // Readd default option element
+    const defaultOptionElement = document.createElement('option');
+    defaultOptionElement.setAttribute('value', "");
+    defaultOptionElement.innerText = "Vyberte podkategorii";
+    state.prodFormEls.inpSubcategory.insertAdjacentElement('beforeend', defaultOptionElement);
+
+
+    const curSubcategories = allSubcategories[categoryId];
+    if (!curSubcategories) return;
+    if (curSubcategories.length > 0) {
+        curSubcategories.forEach(subcategory => {
+            const optionElement = document.createElement('option');
+            optionElement.setAttribute('value', subcategory._id);
+            optionElement.innerText = subcategory.name;
+            
+            state.prodFormEls.inpSubcategory.insertAdjacentElement('beforeend', optionElement);
+            state.prodFormEls.inpSubcategory.removeAttribute('disabled');
+        })
+    }
+}
+
 ///////////////////////////////////
 ///// DEFINE STATE
 const state = {
@@ -290,7 +326,9 @@ const state = {
     // Is modal editing or creating
     editMode: undefined,
     // Which element is currently selected (important for its dataset)
-    selectedElement: undefined
+    selectedElement: undefined,
+    // Product form elements
+    prodFormEls: null
 }
 
 ///////////////////////////////////
@@ -360,5 +398,24 @@ ready(() => {
                 return onShowModal();
             });
         })
+    }
+
+    // Try to find product-form
+    const productForm = document.getElementById('product-form');
+    if (productForm) {
+        // Get inputs
+        const inpCategory = productForm.querySelector('#categoryId');
+        const inpSubcategory = productForm.querySelector('#subcategoryId');
+
+        const prodFormEls = {
+            inpCategory,
+            inpSubcategory
+        }
+
+        // Put form elements into global state
+        state.prodFormEls = prodFormEls;
+
+        // Listen for change in category select to display matching subcategories
+        inpCategory.addEventListener('change', onSelectCategory);
     }
 });
