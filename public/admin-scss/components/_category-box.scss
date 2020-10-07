@@ -8,6 +8,8 @@
         height: 5rem;
         padding: 0 2rem;
 
+        text-transform: capitalize;
+
         display: flex;
         align-items: center;
         justify-content: space-between;
@@ -22,6 +24,8 @@
         height: 6rem;
         padding: 0 2rem;
         background-color: $color-white;
+
+        text-transform: capitalize;
 
         display: flex;
         align-items: center;

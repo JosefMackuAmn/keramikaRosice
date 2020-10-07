@@ -77,7 +77,7 @@ exports.deleteCategory = async (req, res, next) => {
         await Product.update({ categoryId: categoryId }, { $set: { categoryId: null }}, { multi: true });
 
         return res.status(200).json({
-            msg: "Category deleted successfully with all of its subcategories, related product are now uncategorized",
+            msg: "Category deleted successfully with all of its subcategories, related products are now uncategorized",
             category: deletedCategory
         })
     }
@@ -120,7 +120,7 @@ exports.deleteSubcategory = async (req, res, next) => {
         await Product.update({ subcategoryId: subcategoryId }, { $set: { subcategoryId: null }}, { multi: true });
 
         return res.status(200).json({
-            msg: "Subcategory deleted successfully, related product are now unsubcategorized",
+            msg: "Subcategory deleted successfully, related products are now unsubcategorized",
             category: deletedSubcategory
         })
     }
@@ -140,10 +140,9 @@ exports.putSubcategory = async (req, res, next) => {
         })
     }
 
-    const updatedCategory = await Subcategory.update({ _id: subcategoryId }, {name: newName });
+    await Subcategory.updateOne({ _id: subcategoryId }, { name: newName });
     
     return res.status(200).json({
-        msg: "Category successfully updated",
-        category: updatedCategory
+        msg: "Category successfully updated"
     })
 }

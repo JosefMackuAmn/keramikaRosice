@@ -1,0 +1,45 @@
+*, *::after, *::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit; }
+
+html {
+  font-size: 62.5%;
+  box-sizing: border-box; }
+
+body {
+  font-size: 1.6rem; }
+
+.heading-1 {
+  font-size: 4rem; }
+
+.heading-2 {
+  font-size: 3.5rem; }
+
+.index__header {
+  padding: 20rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center; }
+  .index__header__text .heading-1 {
+    margin-bottom: 2rem; }
+  .index__header__text .heading-2 {
+    transform: translateX(35%); }
+  .index__header__photo {
+    width: 67rem;
+    height: 50rem;
+    position: relative; }
+    .index__header__photo__background {
+      height: 100%;
+      width: 100%;
+      background-color: blue;
+      position: absolute;
+      transform: rotateZ(-3deg);
+      z-index: 1; }
+    .index__header__photo__image {
+      width: 100%;
+      height: 100%;
+      background-color: red;
+      position: absolute;
+      z-index: 2; }

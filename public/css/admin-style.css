@@ -1,6 +1,6 @@
 @keyframes showMenuList {
   from {
-    transform: translateX(-50rem); }
+    transform: translateX(-30rem); }
   to {
     transform: translateX(0); } }
 
@@ -61,6 +61,7 @@ a:link {
   .category-box__heading {
     height: 5rem;
     padding: 0 2rem;
+    text-transform: capitalize;
     display: flex;
     align-items: center;
     justify-content: space-between; }
@@ -73,6 +74,7 @@ a:link {
     height: 6rem;
     padding: 0 2rem;
     background-color: white;
+    text-transform: capitalize;
     display: flex;
     align-items: center;
     justify-content: space-between; }
@@ -207,10 +209,13 @@ a:link {
     outline: none;
     cursor: pointer;
     font-weight: 600; }
-    .modal__btn--ok {
+    .modal__btn:not(:last-child) {
       margin-right: 1rem; }
+    .modal__btn--cancel {
+      background-color: #CF7838; }
     .modal__btn--danger {
-      background-color: orangered; }
+      background-color: #AE0000;
+      color: white; }
     .modal__btn:focus, .modal__btn:active {
       outline: none;
       border: 1px solid black; }

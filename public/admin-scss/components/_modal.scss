@@ -92,11 +92,16 @@
 
         font-weight: 600;
 
-        &--ok {
+        &:not(:last-child) {
             margin-right: 1rem;
         }
-        &--danger {
+        &--cancel {
             background-color: $color-orange;
+        }
+        &--danger {
+            background-color: $color-red;
+            
+            color: $color-white;
         }
 
         &:focus, &:active {

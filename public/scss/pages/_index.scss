@@ -1,0 +1,46 @@
+.index {
+    
+    &__header {
+        padding: 20rem;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        &__text {
+            
+            
+            & .heading-1 {
+                margin-bottom: 2rem;
+            } 
+            & .heading-2 {
+                transform: translateX(35%);
+            }
+        }
+        &__photo {
+            width: 67rem;
+            height: 50rem;
+
+            position: relative;
+
+            &__background {
+                height: 100%;
+                width: 100%;
+                background-color: blue;
+
+                position: absolute;
+                transform: rotateZ(-3deg);
+                z-index: 1;
+            }
+            &__image {
+                width: 100%;
+                height: 100%;
+                background-color: red;
+                
+                position: absolute;
+                z-index: 2;
+            }
+        }      
+    }
+}
