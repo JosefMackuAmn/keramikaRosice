@@ -1,0 +1,51 @@
+//////////////////
+///// LOCAL VARIABLES
+:root {--gradient-width: 3rem;}
+
+//////////////////
+///// STYLES
+.gradient {
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    position: absolute;
+    top: 0;
+
+    &__top {
+        height: var(--gradient-width);
+
+        display: flex;
+    }
+    &__bottom {
+        display: flex;
+        justify-content: space-between;
+        flex-grow: 1;
+    }
+    &__top-left {
+        width: var(--gradient-width);
+        background-image: linear-gradient(to bottom, $color-secondary-light, transparent) ,
+        linear-gradient(to right, $color-secondary-light, transparent) ;
+    }
+    &__top-right {
+        width: var(--gradient-width);
+        background-image: linear-gradient(to bottom, $color-secondary-light, transparent),
+        linear-gradient(to left, $color-secondary-light, transparent);
+    }
+    &__top-mid {
+        background-image: linear-gradient(to bottom, $color-secondary-light, $color-white);
+
+        flex-grow: 1;
+    }
+    &__bottom-left {
+        background-image: linear-gradient(to right, $color-secondary-light, $color-white);
+        width: var(--gradient-width);
+    }
+    &__bottom-right {
+        background-image: linear-gradient(to left, $color-secondary-light, $color-white);
+        width: var(--gradient-width);
+    }
+}

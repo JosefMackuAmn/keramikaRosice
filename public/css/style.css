@@ -10,11 +10,70 @@ html {
 body {
   font-size: 1.6rem; }
 
+body {
+  font-family: 'PT Sans', sans-serif; }
+
 .heading-1 {
-  font-size: 4rem; }
+  font-size: 4rem;
+  font-family: 'Charm', cursive;
+  font-weight: 400; }
 
 .heading-2 {
-  font-size: 3.5rem; }
+  font-size: 3.5rem;
+  font-family: 'Charm', cursive;
+  font-weight: 400; }
+
+.header {
+  padding-top: 3rem;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  z-index: 1; }
+  .header__nav-list {
+    list-style: none;
+    display: flex; }
+  .header__nav-item {
+    margin-right: 5rem; }
+  .header__logo {
+    margin-left: 4rem; }
+  .header a {
+    text-decoration: none;
+    color: black; }
+
+:root {
+  --gradient-width: 3rem; }
+
+.gradient {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  position: absolute;
+  top: 0; }
+  .gradient__top {
+    height: var(--gradient-width);
+    display: flex; }
+  .gradient__bottom {
+    display: flex;
+    justify-content: space-between;
+    flex-grow: 1; }
+  .gradient__top-left {
+    width: var(--gradient-width);
+    background-image: linear-gradient(to bottom, #f5f2ec, transparent), linear-gradient(to right, #f5f2ec, transparent); }
+  .gradient__top-right {
+    width: var(--gradient-width);
+    background-image: linear-gradient(to bottom, #f5f2ec, transparent), linear-gradient(to left, #f5f2ec, transparent); }
+  .gradient__top-mid {
+    background-image: linear-gradient(to bottom, #f5f2ec, #FFF);
+    flex-grow: 1; }
+  .gradient__bottom-left {
+    background-image: linear-gradient(to right, #f5f2ec, #FFF);
+    width: var(--gradient-width); }
+  .gradient__bottom-right {
+    background-image: linear-gradient(to left, #f5f2ec, #FFF);
+    width: var(--gradient-width); }
 
 .index__header {
   padding: 20rem;
