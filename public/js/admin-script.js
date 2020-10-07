@@ -42,9 +42,39 @@ const emphasizeHoveredMenuItem = (menuItems, itemIndex) => {
 }
 
 /////
+// General functions
+/////
+const showErrorModal = (error) => {
+    // Expects string with an error message or error object with msg or message property
+    let message;
+    if (typeof error === 'string') {
+        message = error;
+    }
+    if (!message) {
+        message = error.message || error.msg;
+    }
+
+    const errorModalHTML = `
+    <section class="err-modal">
+        <h4 class="heading-4">Vyskytla se chyba</h4>
+        <p>Celá zpráva: ${message}</p>
+    </section>
+    `;
+
+    document.querySelector('html').insertAdjacentHTML('afterbegin', errorModalHTML);
+
+    setTimeout(() => {
+        document.querySelector('.err-modal').remove();
+    }, 10000);
+}
+
+/////
 // Submit functions
 /////
 const onDeleteProduct = (e) => {
+    const isConfirmed = confirm('Opravdu chcete smazat produkt?');
+    if (!isConfirmed) return;
+
     const productId = e.target.dataset.id;
     const csrf = e.target.dataset.csrf;
 
@@ -53,16 +83,16 @@ const onDeleteProduct = (e) => {
     })
         .then(res => {
             if (res.ok === true) {
-                document.getElementById(productId).remove(); // SHOW SUCCESS MODAL --------------------------
+                document.getElementById(productId).remove();
             } else {
-                throw new Error('Deleting was not successfull'); // SHOW ERROR MODAL --------------------------
+                throw new Error('Deleting was not successfull');
             }
         })
         .catch(err => {
-            console.log(err); // SHOW ERROR MODAL --------------------------
+            showErrorModal(err);
         });
 }
-const onDeleteCategory = () => {
+const onDeleteModal = () => {
     // Hide modal
     state.modalEls.modal.style.display = 'none';
 
@@ -107,17 +137,20 @@ const onDeleteCategory = () => {
                     console.log(json);
                     console.log(res);
                     if (res.ok === true) {
-                        // SHOW SUCCESS MODAL ------------------------------------------------
-                        // DELETE DELETED CATEGORY -----------------------------------------------
+                        // Refresh after success
+                        window.location.href = '/admin/categories?success=true';
                     } else {
-                        throw new Error(json.msg); // SHOW ERROR MODAL --------------------------
+                        throw new Error(json.msg);
                     }
                 })
                 .catch(err => {
-                    console.log(err); // SHOW ERROR MODAL --------------------------
+                    showErrorModal(err);
                 });
         break;
-        default: throw new Error('Data model extracted from modal dataset does not exist'); // SHOW ERROR MODAL --------------------------
+        default:
+            const err = new Error('Data model extracted from modal dataset does not exist');
+            showErrorModal(err);
+            throw err;
     }
 
     // Close modal
@@ -143,7 +176,7 @@ const onShowModal = () => {
         state.modalEls.modalDelete.classList = "modal__btn modal__btn--danger";
         state.modalEls.modalDelete.setAttribute('id', 'modal-delete');
         state.modalEls.modalDelete.innerText = "Smazat";
-        state.modalEls.modalDelete.addEventListener('click', onDeleteCategory);
+        state.modalEls.modalDelete.addEventListener('click', onDeleteModal);
 
         // Get dataset values
         const nameAttr = state.selectedElement.dataset.name;
@@ -223,14 +256,14 @@ onSaveModal = () => {
                         console.log(json);
                         console.log(res);
                         if (res.ok === true) {
-                            // SHOW SUCCESS MODAL ------------------------------------------------
-                            // RENDER NEW CATEGORY -----------------------------------------------
+                            // Refresh after success
+                            window.location.href = '/admin/categories?success=true';
                         } else {
-                            throw new Error(json.msg); // SHOW ERROR MODAL --------------------------
+                            throw new Error(json.msg);
                         }
                     })
                     .catch(err => {
-                        console.log(err); // SHOW ERROR MODAL --------------------------
+                        showErrorModal(err);
                     });
             } else {
                 // Update (sub)category
@@ -268,18 +301,21 @@ onSaveModal = () => {
                         console.log(json);
                         console.log(res);
                         if (res.ok === true) {
-                            // SHOW SUCCESS MODAL ------------------------------------------------
-                            // RENDER UPDATED CATEGORY -----------------------------------------------
+                            // Refresh after success
+                            window.location.href = '/admin/categories?success=true';
                         } else {
-                            throw new Error(json.msg); // SHOW ERROR MODAL --------------------------
+                            throw new Error(json.msg);
                         }
                     })
                     .catch(err => {
-                        console.log(err); // SHOW ERROR MODAL --------------------------
+                        showErrorModal(err);
                     });
             }
         break;
-        default: throw new Error('Data model extracted from modal dataset does not exist'); // SHOW ERROR MODAL --------------------------
+        default:
+            const err = new Error('Data model extracted from modal dataset does not exist');
+            showErrorModal(err);
+            throw err;
     }
 
     // Close modal
@@ -400,7 +436,7 @@ ready(() => {
         })
     }
 
-    // Try to find product-form
+    // Try to find #product-form
     const productForm = document.getElementById('product-form');
     if (productForm) {
         // Get inputs
