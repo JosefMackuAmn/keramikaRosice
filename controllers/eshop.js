@@ -1,9 +1,12 @@
+const fs = require('fs');
+
 const mongoose = require('mongoose');
 
 const Product = require("../models/product");
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Cart = require('../models/cart');
+const Order = require('../models/order');
 
 exports.getShop = async (req, res, next) => {
     const products = await Product.find({});
@@ -26,9 +29,7 @@ exports.getCategory = async (req, res, next) => {
     const categoryId = category._id;
 
 
-    const categoryProducts = await Product.find({ categoryId: categoryId })
-
-    console.log(categoryProducts);
+    const categoryProducts = await Product.find({ categoryId: categoryId });
 
     res.render('eshop/shop', {
         title: categoryName,
@@ -60,9 +61,7 @@ exports.getSubcategory = async (req, res, next) => {
     const subcategoryId = subcategory._id;
 
 
-    const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId })
-
-    console.log(subcategoryProducts);
+    const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
 
     res.render('eshop/shop', {
         title: subcategoryName
@@ -99,7 +98,7 @@ exports.postCart = async (req, res, next) => {
     if (!cart) {
         updatedCart = new Cart();
     } else {
-        updatedCart = new Cart(cart.items, cart.amount, cart.shippingCostId);
+        updatedCart = new Cart(cart.items, cart.total, cart.shippingCostId);
     }
 
     if (action === 'ADD') {
@@ -127,12 +126,55 @@ exports.postCart = async (req, res, next) => {
     })
 }
 
-exports.getOrder = (req, res, next) => {
-    res.render('eshop/order', {
-        title: 'Objednávka'
-    })
-}
+exports.postOrder = async (req, res, next) => {
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const street = req.body.street;
+    const city = req.body.city;
+    const delivery = req.body.delivery;
+    const payment = req.body.payment;
 
-exports.postOrder = (req, res, next) => {
-    
+    const constants = await fs.promises.readFile('constants.json');
+    const consts = JSON.parse(constants);
+
+    const cart = req.session.cart;
+
+    const order = new Order({
+        total: cart.total,
+        items: cart.items.map(item => {
+            return {
+                product: {
+                    _id: item.product._id,
+                    name: item.product.name,
+                    price: item.product.price
+                },
+                amount: item.amount
+            }
+        }),
+        firstName,
+        lastName,
+        email,
+        phone,
+        street,
+        city,
+        delivery,
+        deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
+        payment,
+        paymentCost: consts.paymentCosts[payment],
+        date: new Date().toISOString(),
+        status: consts.orderStatuses[0],
+        isPayed: false,
+        invoiceUrl: 'url'
+    });
+
+    await order.save();
+
+    req.session.cart = null;
+
+    res.status(201).render('eshop/cart', {
+        title: "Objednávka úspěšná"
+    })
+
 }

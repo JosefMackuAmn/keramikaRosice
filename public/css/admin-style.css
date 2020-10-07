@@ -350,7 +350,7 @@ a:link {
     .main--error .heading-3 {
       margin-top: 25vh;
       margin-bottom: 2rem; }
-  .main--products {
+  .main--products, .main--orders {
     padding: 12rem; }
   .main--categories {
     padding: 12rem;

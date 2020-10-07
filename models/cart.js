@@ -6,31 +6,31 @@ class Cart {
     }
 
     add(product, amount) {
-        const itemIndex = this.items.findIndex(item => item.product._id === product._id);
+        const itemIndex = this.items.findIndex(item => item.product._id.toString() === product._id.toString());
         if (itemIndex > -1) {
             this.items[itemIndex] = {
                 product: product,
-                amount: this.items[itemIndex].amount + amount
+                amount: +this.items[itemIndex].amount + +amount
             }
         } else {
             this.items.push({
                 product: product,
-                amount: amount
+                amount: +amount
             });
         }
-        this.total = this.total + product.price * amount;
+        this.total = +this.total + +product.price * +amount;
         if (this.shippingCostId === 0 && product.shippingCostId === 1) {
             this.shippingCostId = 1;
         }
     }
     
     remove(product, amount) {
-        const itemIndex = this.items.findIndex(item => item.product._id === product._id);
+        const itemIndex = this.items.findIndex(item => item.product._id.toString() === product._id.toString());
         if (itemIndex === -1) return;
 
-        if (!amount || amount >= this.items[itemIndex].amount) {
+        if (!amount || +amount >= +this.items[itemIndex].amount) {
             const removedProduct = this.items.splice(itemIndex, 1);
-            this.total = this.total - (removedProduct.product.price * removedProduct.amount);
+            this.total = +this.total - (+removedProduct.product.price * +removedProduct.amount);
             let newShippingCostId = 0;
             for (let i = 0; i < this.items.length; i++) {
                 if (this.items[i].product.shippingCostId === 1) {
@@ -44,9 +44,9 @@ class Cart {
 
         this.items[itemIndex] = {
             ...this.items[itemIndex],
-            amount: this.items[itemIndex].amount - amount
+            amount: +this.items[itemIndex].amount - +amount
         }
-        this.total = this.total - (this.items[itemIndex].product.price * amount);
+        this.total = +this.total - (+this.items[itemIndex].product.price * +amount);
 
         return this.items[itemIndex];
     }

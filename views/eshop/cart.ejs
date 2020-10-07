@@ -4,6 +4,36 @@
     
     <main>
         <%= title %>
+
+        <form action="/kosik" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="text" name="productId" value="5f7875ebcdb28b193078376d">
+            <input type="number" name="amount" value="1">
+            <input type="text" name="action" value="ADD">
+            <input type="submit" value="Do košíku">
+        </form>
+
+        <form action="/objednavka" method="POST">
+            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+            <input type="text" name="firstName" placeholder="Jméno">
+            <input type="text" name="lastName" placeholder="Příjmení">
+            <input type="text" name="email" placeholder="E-mail">
+            <input type="text" name="phone" placeholder="Telefon">
+            <input type="text" name="street" placeholder="Ulice, č.p.">
+            <input type="text" name="city" placeholder="Město, PSČ">
+            <select type="text" name="delivery">
+                <option value="ZAS">Zásilkovna</option>
+                <option value="POS">Česká pošta</option>
+                <option value="OOD">Osobní odběr</option>
+            </select>
+            <select type="text" name="payment">
+                <option value="DOB">Dobírka</option>
+                <option value="CRD">Kartou</option>
+                <option value="BTR">Bankovní převod</option>
+            </select>
+            <input type="submit" value="Odeslat">
+        </form>
+
     </main>
 
     <%- include('../includes/footer.ejs') %>

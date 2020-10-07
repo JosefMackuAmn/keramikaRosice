@@ -1,0 +1,22 @@
+{
+    "deliveryCosts": {
+        "ZAS": {
+            "0": 10,
+            "1": 11
+        },
+        "POS": {
+            "0": 12,
+            "1": 13
+        },
+        "OOD": {
+            "0": 14,
+            "1": 15
+        }
+    },
+    "paymentCosts": {
+        "CRD": 20,
+        "DOB": 21,
+        "BTR": 22
+    },
+    "orderStatuses": [ "ORDERED", "SHIPPED", "DELIVERED" ]
+}

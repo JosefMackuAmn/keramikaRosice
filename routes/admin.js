@@ -47,6 +47,8 @@ router.post('/products/edit', isAuth, ash(adminController.postEditProduct));  /*
     image: File || null
 } */
 
+router.get('/orders', isAuth, ash(adminController.getOrders));
+
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
     console.log(error);

@@ -1,6 +1,8 @@
 const categoriesAdminController = require('./categories');
 const productsAdminController = require('./products');
 
+const Order = require('../../models/order');
+
 const getIndex = (req, res, next) => {
     res.render('admin/index', {
         title: 'Administration'
@@ -39,11 +41,21 @@ const getLogout = (req, res, next) => {
     })
 }
 
+const getOrders = async (req, res, next) => {
+    const allOrders = await Order.find({});
+
+    res.render('admin/orders', {
+        title: 'Orders',
+        orders: allOrders
+    })
+}
+
 module.exports = {
     ...categoriesAdminController,
     ...productsAdminController,
     getIndex,
     getLogin,
     postLogin,
-    getLogout
+    getLogout,
+    getOrders
 }

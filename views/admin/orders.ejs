@@ -8,14 +8,42 @@
         
         <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Objednávky' }) %>
 
-        <main class="main main--index">
+        <main class="main main--orders">
 
-            <div class="visiting-card">
-                <h3 class="heading-3">AmnioN Web</h3>
-                <p class="paragraph-normal">team@amnionweb.cz</p>
-                <p class="paragraph-normal">+420 735 044 114</p>
-                <a target="_blank" rel="noopener" href="https://amnionweb.cz"><p class="paragraph-normal">www.amnionweb.cz</p></a>
+            <div class="item-list__options">
+                <input type="text" placeholder="Hledat">
+                <!-- <a class="add-button" href="/admin/products/add">Nová objednávka</a> -->
             </div>
+
+            <table class="item-list">
+                <tbody class="item-list__content">
+                    <tr class="item-list__heading">
+                        <th>Jméno</th>
+                        <th>E-mail</th>
+                        <th>Doprava</th>
+                        <th>Status</th>
+                        <th>Platba</th>
+                        <th>Zaplaceno</th>
+                        <th>Částka</th>
+                        <th>Akce</th>
+                    </tr>
+                    <% orders.forEach(order => { %>
+                        <tr class="item-list__row" id="<%= order._id %>">
+                            <td><%= order.firstName %> <%= order.lastName %></td>
+                            <td><%= order.email %></td>
+                            <td><%= order.delivery %></td>
+                            <td><%= order.status %></td>
+                            <td><%= order.payment %></td>
+                            <td><%= order.isPayed %></td>
+                            <td><%= order.total %>Kč</td>
+                            <td>
+                                <a href="#">Upravit</a>
+                                <!-- <button class="deleteProductBtn" data-id="<%= order._id %>" data-csrf="<%= csrfToken %>">Smazat</button> -->
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
             
         </main>
 
