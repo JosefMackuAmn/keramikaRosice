@@ -11,4 +11,11 @@ html {
 
 body {
     font-size: 1.6rem;
+
+    //overflow: hidden;
+}
+
+main {
+    z-index: 1;
+    position: relative;
 }

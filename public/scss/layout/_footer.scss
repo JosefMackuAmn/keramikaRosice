@@ -1,0 +1,17 @@
+.footer {
+    display: flex;
+    justify-content: space-around;
+
+    z-index: 1;
+    position: relative;
+
+    &__copyright {
+        color: $color-primary;
+    }
+    &__terms {
+
+    }
+    &__reference {
+        color: $color-primary;
+    }
+}
