@@ -1,3 +1,11 @@
+//VARIABLES
+$bp-header-mobile: 700px;
+
+$hamburger-width: 5rem;
+$hamburger-plate-height: .8rem;
+$hamburger-hover-offset: .3rem;
+//
+
 .header {
     padding-top: 3rem;
     background-color: transparent;
@@ -7,20 +15,156 @@
 
     position: relative;
     z-index: 1;
- 
+
+    @media screen and (max-width: $bp-header-mobile) {
+        padding-top: 0;
+
+        flex-direction: column-reverse;
+    }
+
+    &__nav {
+        position: relative;
+        
+        @media screen and (max-width: $bp-header-mobile) {
+            background-color: $color-primary;
+            width: 100%;
+            
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+
+            animation: headerShiftIn 1s;
+        }
+    }
+    &__nav-button {
+        height: 8rem;
+        margin-right: 3rem;
+        background-color: transparent;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        display: none;
+        
+        @media screen and (max-width: $bp-header-mobile) {
+            display: block;
+        }
+        @media (hover: hover) {
+            &:hover {
+                :first-child::before {
+                    transform: translateY(calc(-2*(#{$hamburger-plate-height}) - #{$hamburger-hover-offset}));
+                }
+                :first-child::after {
+                    transform: translateY(calc(#{$hamburger-plate-height} + #{$hamburger-hover-offset}));
+                }
+            }
+        }
+
+        &--clicked {
+            :first-child::before {
+                transform: translateY(calc(-2*(#{$hamburger-plate-height}) - #{$hamburger-hover-offset}));
+            }
+            :first-child::after {
+                transform: translateY(calc(#{$hamburger-plate-height} + #{$hamburger-hover-offset}));
+            }
+
+            & ~ .header__nav-list {
+
+                &::after {
+                    animation: headerShiftIn .1s;
+                }
+            }
+        }
+    }
+    &__nav-hamburger {
+        height: $hamburger-plate-height;
+        width: $hamburger-width;
+        background-color: $color-white;
+
+        &::before,
+        &::after {
+            content: "";
+            height: $hamburger-plate-height;
+            background-color: $color-white;
+            transition: all .2s;
+
+            display: block;
+        }
+        &::before {
+            transform: translateY(calc(-2*#{$hamburger-plate-height}));
+        }
+        &::after {
+            transform: translateY(#{$hamburger-plate-height});
+        }
+    }
     &__nav-list {
         list-style: none;
+
         display: flex;
+
+        @media screen and (max-width: $bp-header-mobile) {
+            width: 100%;
+            background-color: $color-white;
+
+            display: none;
+
+            z-index: 10;
+            position: relative;
+            
+            &::after {
+                content: "";
+                width: 100%;
+                height: 100%;
+            
+                background-color: $color-primary;
+                z-index: -1;
+                position: absolute;
+                top: 0;
+                left: 0;
+
+                display: block;
+
+                animation: headerShiftOut .1s forwards;
+            }
+        }
+
+        &--shown {
+            display: block;
+        }
     }
     &__nav-item {
         margin-right: 5rem;
+        transition: all .2s;
+        
+        &:hover {
+            transform: translateY(-3px);
+        }
+
+        @media screen and (max-width: $bp-header-mobile) {
+            margin-right: 3rem;
+            margin-bottom: 2rem;
+
+            text-align: right;
+        }
     }
     &__logo {
         margin-left: 4rem;
+
+        @media screen and (max-width: $bp-header-mobile) {
+            margin-left: 0;
+            margin-top: 5rem;
+
+            align-self: center;
+        }
     }
 
     a {
         text-decoration: none;
         color: black;
+        font-size: 2rem;
+
+        @media screen and (max-width: $bp-header-mobile) {
+           color: $color-white;
+        }
     }
 }

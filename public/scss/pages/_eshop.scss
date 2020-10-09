@@ -1,0 +1,113 @@
+.eshop {
+    padding-top: 10rem;
+
+    display: flex;
+    flex-wrap: wrap;
+
+    &__head {
+        width: 100%;
+        height: 50rem;
+        margin-bottom: 10rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &__category-picture {
+        width: 50rem;
+        border: 2px solid $color-primary;
+    }
+    &__heading {
+        font-weight: 400;
+
+        &--category {
+            margin-top: 4rem;
+
+            font-family: $font-secondary;
+            font-size: 4rem;
+        }
+        &--subcategory {
+            margin-top: 1rem;
+
+            font-family: $font-secondary;
+        }
+    }
+    &__category-select {
+        width: 30%;
+        height: 40rem;
+        margin-left: 4rem;
+    }
+    &__products {
+       flex-grow: 1;
+    }
+}
+.picture {
+    position: relative;
+
+    &__img {
+        width: 100%;
+        height: auto;
+
+        display: block;
+    }
+    &__bg {
+        width: 100%;
+        height: 100%;
+        background-color: $color-grey-light;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+        transform: rotate(-5deg);
+        z-index: -1;
+    }
+}
+.category-select {
+    ul {
+        list-style: none;
+    }
+
+    &__heading {
+        margin-bottom: 2rem;
+
+        text-align: center;
+    }
+    &__category-heading {
+        margin-bottom: 2rem;
+    }
+    &__category-list {
+
+    }
+    &__subcategory-list {
+
+    }
+    &__category {
+        padding-bottom: 2rem;
+
+    }
+    &__subcategory {
+        display: flex;
+        align-items: center;
+        
+        &::before {
+            content: "";
+            width: .8rem;
+            height: .8rem;
+            background-color: $color-secondary;
+            margin-right: 1rem;
+
+            display: inline-block;
+
+            transform: rotate(45deg);
+
+        }
+        &--selected {
+            &::before {
+                background-color: $color-primary;
+            } 
+        }
+        &:not(:last-child) {
+            margin-bottom: .5rem;
+        } 
+    }
+}
