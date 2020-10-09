@@ -32,6 +32,10 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
+    zipCode: {
+        type: String,
+        required: true
+    },
     delivery: {
         type: String,
         required: true

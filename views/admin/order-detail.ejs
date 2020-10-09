@@ -1,0 +1,141 @@
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'orders' }) %>
+    
+    <div class="wrapper">
+        
+        <% const adminTitle = 'Objednávka #' + order._id; %>
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: adminTitle }) %>
+
+        <main class="main main--order-detail">
+
+            <container class="order-detail">
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <select name="status" id="status">
+                            <% statuses.forEach(status => { %>
+                                <option value="<%= status %>" <% if (status === order.status) { %><%= selected="selected" %><% } %>><%= status %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="order-detail__column">
+                        <select name="isPayed" id="isPayed">
+                            <option value="true" <% if (order.isPayed) { %><%= selected="selected" %><% } %>>Ano</option>
+                            <option value="false" <% if (!order.isPayed) { %><%= selected="selected" %><% } %>>Ne</option>
+                        </select>
+                    </div>
+                    <button id="put-order" class="order-detail__btn" data-orderid="<%= order._id %>" data-csrf="<%= csrfToken %>">Upravit</button>
+                </section>
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Doručení</h4>
+                            <p class="paragraph-normal"><%= order.delivery %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Datum</h4>
+                            <p class="paragraph-normal"><%= order.date %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Platba</h4>
+                            <p class="paragraph-normal"><%= order.payment %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Faktura</h4>
+                            <p class="paragraph-normal"><%= order.invoiceUrl %></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Jméno</h4>
+                            <p class="paragraph-normal"><%= order.firstName %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">E-mail</h4>
+                            <p class="paragraph-normal"><%= order.email %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Příjmení</h4>
+                            <p class="paragraph-normal"><%= order.lastName %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Telefon</h4>
+                            <p class="paragraph-normal"><%= order.phone %></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Ulice a č.p.</h4>
+                            <p class="paragraph-normal"><%= order.street %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Město</h4>
+                            <p class="paragraph-normal"><%= order.city %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">&nbsp;</h4>
+                            <p class="paragraph-normal">&nbsp;</p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">PSČ</h4>
+                            <p class="paragraph-normal"><%= order.zipCode %></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <table class="item-list">
+                        <tbody class="item-list__content">
+                            <tr class="item-list__heading">
+                                <th>Název</th>
+                                <th>Počet</th>
+                                <th>Kč/ks</th>
+                                <th>Cena</th>
+                            </tr>
+                            <% order.items.forEach(item => { %>
+                                <tr class="item-list__row" id="<%= item.product._id %>">
+                                    <td><%= item.product.name %></td>
+                                    <td><%= item.amount %>ks</td>
+                                    <td><%= item.product.price %>Kč/ks</td>
+                                    <td><%= item.amount * item.product.price %>Kč</td>
+                                </tr>
+                            <% }) %>
+                            <tr class="item-list__row">
+                                <td>Platba - <%= order.payment %></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= order.paymentCost %>Kč</td>
+                            </tr>
+                            <tr class="item-list__row">
+                                <td>Doručení - <%= order.delivery %></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= order.deliveryCost %>Kč</td>
+                            </tr>
+                            <tr class="item-list__row">
+                                <td>Cena celkem</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= +order.total + +order.deliveryCost + +order.paymentCost %>Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+            </container>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>

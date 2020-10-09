@@ -248,6 +248,30 @@ a:link {
     .modal__btn:hover {
       box-shadow: 0 1px 5px 1px rgba(255, 255, 255, 0.5); }
 
+.order-detail {
+  width: 100%; }
+  .order-detail__row {
+    width: 100%;
+    padding: 5rem;
+    display: flex;
+    justify-content: space-evenly;
+    position: relative; }
+    .order-detail__row:not(:last-child) {
+      border-bottom: 1px solid black; }
+  .order-detail__column {
+    width: 25%;
+    display: flex;
+    flex-direction: column; }
+  .order-detail__data:first-child {
+    margin-bottom: 2rem; }
+  .order-detail__data .heading-4 {
+    margin-bottom: .5rem;
+    font-size: 2.2rem; }
+  .order-detail__btn {
+    position: absolute;
+    top: 50%;
+    right: 0rem; }
+
 .product-form {
   width: 100%; }
   .product-form__row {
@@ -350,7 +374,7 @@ a:link {
     .main--error .heading-3 {
       margin-top: 25vh;
       margin-bottom: 2rem; }
-  .main--products, .main--orders {
+  .main--products, .main--orders, .main--order-detail {
     padding: 12rem; }
   .main--categories {
     padding: 12rem;

@@ -134,8 +134,6 @@ const onDeleteModal = () => {
                 })
                 .then(resolved => {
                     const [res, json] = resolved;
-                    console.log(json);
-                    console.log(res);
                     if (res.ok === true) {
                         // Refresh after success
                         window.location.href = '/admin/categories?success=true';
@@ -155,6 +153,41 @@ const onDeleteModal = () => {
 
     // Close modal
     onCloseModal();
+}
+const putOrderHandler = () => {
+    const orderId = state.selectedElement.dataset.orderid;
+    const status = document.getElementById('status').value;
+    const isPayed = document.getElementById('isPayed').value;
+    const csrf = state.selectedElement.dataset.csrf;
+
+    const bodyObj = { orderId, status, isPayed };
+
+    console.log(bodyObj);
+
+    fetch('/admin/orders', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'CSRF-Token': csrf
+        },
+        body: JSON.stringify(bodyObj)
+    })
+        .then(response => {
+            return Promise.all([response.clone(), response.json()]);
+        })
+        .then(resolved => {
+            const [res, json] = resolved;
+            if (res.ok === true) {
+                // Refresh after success
+                window.location.href = '/admin/orders/' + orderId + '?success=true';
+            } else {
+                throw new Error(json.msg);
+            }
+        })
+        .catch(err => {
+            showErrorModal(err);
+        });
 }
 
 /////
@@ -253,8 +286,6 @@ onSaveModal = () => {
                     })
                     .then(resolved => {
                         const [res, json] = resolved;
-                        console.log(json);
-                        console.log(res);
                         if (res.ok === true) {
                             // Refresh after success
                             window.location.href = '/admin/categories?success=true';
@@ -339,7 +370,7 @@ const onSelectCategory = () => {
     defaultOptionElement.innerText = "Vyberte podkategorii";
     state.prodFormEls.inpSubcategory.insertAdjacentElement('beforeend', defaultOptionElement);
 
-
+    // Show matching subcategories and enable their selection
     const curSubcategories = allSubcategories[categoryId];
     if (!curSubcategories) return;
     if (curSubcategories.length > 0) {
@@ -453,5 +484,14 @@ ready(() => {
 
         // Listen for change in category select to display matching subcategories
         inpCategory.addEventListener('change', onSelectCategory);
+    }
+
+    // Try to find #put-order
+    const putOrderBtn = document.getElementById('put-order');
+    if (putOrderBtn) {
+        putOrderBtn.addEventListener('click', () => {
+            state.selectedElement = putOrderBtn;
+            return putOrderHandler();
+        });
     }
 });

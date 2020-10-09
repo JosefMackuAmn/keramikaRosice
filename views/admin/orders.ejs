@@ -21,8 +21,8 @@
                         <th>Jméno</th>
                         <th>E-mail</th>
                         <th>Doprava</th>
-                        <th>Status</th>
                         <th>Platba</th>
+                        <th>Status</th>
                         <th>Zaplaceno</th>
                         <th>Částka</th>
                         <th>Akce</th>
@@ -32,13 +32,12 @@
                             <td><%= order.firstName %> <%= order.lastName %></td>
                             <td><%= order.email %></td>
                             <td><%= order.delivery %></td>
-                            <td><%= order.status %></td>
                             <td><%= order.payment %></td>
+                            <td><%= order.status %></td>
                             <td><%= order.isPayed %></td>
                             <td><%= order.total %>Kč</td>
                             <td>
-                                <a href="#">Upravit</a>
-                                <!-- <button class="deleteProductBtn" data-id="<%= order._id %>" data-csrf="<%= csrfToken %>">Smazat</button> -->
+                                <a href="/admin/orders/<%= order._id %>">Detail</a>
                             </td>
                         </tr>
                     <% }) %>

@@ -135,6 +135,7 @@ exports.postOrder = async (req, res, next) => {
     const city = req.body.city;
     const delivery = req.body.delivery;
     const payment = req.body.payment;
+    const zipCode = req.body.zipCode;
 
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
@@ -159,6 +160,7 @@ exports.postOrder = async (req, res, next) => {
         phone,
         street,
         city,
+        zipCode,
         delivery,
         deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
         payment,

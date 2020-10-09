@@ -1,3 +1,7 @@
+const fs = require('fs');
+
+const mongoose = require('mongoose');
+
 const categoriesAdminController = require('./categories');
 const productsAdminController = require('./products');
 
@@ -50,6 +54,50 @@ const getOrders = async (req, res, next) => {
     })
 }
 
+const getOrderDetail = async (req, res, next) => {
+    const orderId = req.params.orderId;
+
+    const order = await Order.findById(orderId);
+
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
+
+    res.render('admin/order-detail', {
+        title: 'Orders',
+        order: order,
+        statuses: constants.orderStatuses
+    })
+}
+
+const putOrder = async (req, res, next) => {
+    const orderId = req.body.orderId;
+    const status = req.body.status;
+    const isPayed = req.body.isPayed;
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(422).json({
+            msg: "orderId is not a valid ID string"
+        })
+    }
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+        res.status(404).json({
+            msg: "Order does not exist"
+        });
+    }
+
+    order.status = status;
+    order.isPayed = isPayed;
+
+    await order.save();
+
+    res.json({
+        msg: "Order successfully updated"
+    })
+}
+
 module.exports = {
     ...categoriesAdminController,
     ...productsAdminController,
@@ -57,5 +105,7 @@ module.exports = {
     getLogin,
     postLogin,
     getLogout,
-    getOrders
+    getOrders,
+    getOrderDetail,
+    putOrder
 }

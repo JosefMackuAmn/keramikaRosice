@@ -48,6 +48,10 @@ router.post('/products/edit', isAuth, ash(adminController.postEditProduct));  /*
 } */
 
 router.get('/orders', isAuth, ash(adminController.getOrders));
+router.get('/orders/:orderId', isAuth, ash(adminController.getOrderDetail));
+
+// Edit order status and isPayed
+router.put('/orders', isAuth, ash(adminController.putOrder)); // Expecting { orderId: String, status: String, isPayed: Boolean }
 
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
