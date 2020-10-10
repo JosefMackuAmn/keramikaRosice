@@ -33,6 +33,7 @@
                             <td>
                                 <a href="/admin/products/edit/<%= product._id %>">Upravit</a>
                                 <button class="deleteProductBtn" data-id="<%= product._id %>" data-csrf="<%= csrfToken %>">Smazat</button>
+                                <img src="/<%= product.images[0] %>" width="500" height="500" alt=""> <% console.log(product.images[0]) %>
                             </td>
                         </tr>
                     <% }) %>

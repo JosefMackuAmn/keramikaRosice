@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
@@ -105,6 +106,21 @@ const putOrder = async (req, res, next) => {
     })
 }
 
+const getInvoice = async (req, res, next) => {
+    const orderId = req.params.orderId;
+
+    const invoiceName = 'invoice-' + orderId + '.pdf';
+
+    const invoicePath = path.join('pdf', 'invoices', invoiceName);
+
+    const fileStream = fs.createReadStream(invoicePath);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+
+    fileStream.pipe(res);
+}
+
 module.exports = {
     ...categoriesAdminController,
     ...productsAdminController,
@@ -114,5 +130,6 @@ module.exports = {
     getLogout,
     getOrders,
     getOrderDetail,
-    putOrder
+    putOrder,
+    getInvoice
 }

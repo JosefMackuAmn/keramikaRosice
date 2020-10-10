@@ -142,6 +142,8 @@ router.put('/orders', isAuth,
     ash(adminController.putOrder)
 ); // Expecting { orderId: String, status: String, isPayed: Boolean }
 
+router.get('/invoice/:orderId', isAuth, ash(adminController.getInvoice));
+
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
     console.log(error);
@@ -153,7 +155,7 @@ router.use(isAuth, (error, req, res, next) => {
         })
     }
     res.status(errorStatus).render('admin/error', {
-        title: 'Error 500',
+        title: 'Error ' + errorStatus,
         message: errorMessage
     })
 })

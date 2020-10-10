@@ -42,6 +42,14 @@ exports.postCategories = async (req, res, next) => {
         // Try to find category by its ID      
         const category = await Category.findById(categoryId);
         if (category) {
+            // Check if new subcategory name is unique
+            const subcategoryWithSameName = await Subcategory.findOne({ name: name });
+            if (subcategoryWithSameName) {
+                return res.status(409).json({
+                    msg: 'This subcategory name already exists'
+                });
+            }
+
             // Create and save new subcategory
             const newSubcategory = new Subcategory({
                 name: name,
@@ -56,6 +64,14 @@ exports.postCategories = async (req, res, next) => {
         return res.status(422).json({
             msg: "Category does not exist"
         })
+    }
+    
+    // Check if new category name is unique
+    const categoryWithSameName = await Category.findOne({ name: name });
+    if (categoryWithSameName) {
+        return res.status(409).json({
+            msg: 'This category name already exists'
+        });
     }
 
     // If categoryId hasn't been passed, category will be created

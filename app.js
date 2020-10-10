@@ -1,4 +1,4 @@
-// Basic modules imports
+// Core modules imports
 const path = require('path');
 
 // Library imports
@@ -30,14 +30,28 @@ const store = new MongoDBStore({
 const csrfProtection = csrf();
 
 // Define file storage for multer
-/* const fileStorage = multer.diskStorage({
+const fileStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'images');
+        cb(null, 'public/img');
     },
     filename: (req, file, cb) => {
-        cb(null, new Date().toISOString() + '-' + file.originalname);
+        let dateString = new Date().toISOString();
+        dateString = dateString.replace(/:/g, '');
+        dateString = dateString.replace('\.', '');
+    
+        const fileName = 'pimg_' + dateString + '-' + file.originalname;
+
+        cb(null, fileName);
     }
-}) */
+})
+// Define file filter for multer
+const fileFilter = (req, file, cb) => {
+    if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
 
 // Setting view engine
 app.set('view engine', 'ejs');
@@ -48,7 +62,7 @@ app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 // Parsing binary data
-/* app.use(multer({storage: fileStorage}).single('image')); */
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 // Serving static public folder
 app.use(express.static(path.join(__dirname, 'public')));
 // Using session middleware
@@ -80,7 +94,7 @@ app.get('/500', (req, res, next) => {
         title: '500',
         msg: 'Server error'
     })
-})
+}) // ------------------------ DOES THIS HAVE TO BE HERE? -----------
 
 // Handling 404 case
 app.use((req, res, next) => {
@@ -100,7 +114,7 @@ app.use((error, req, res, next) => {
         })
     }
     res.status(errorStatus).render('500', {
-        title: '500',
+        title: 'Error ' + errorStatus,
         msg: errorMessage
     })
 })

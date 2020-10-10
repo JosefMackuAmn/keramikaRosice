@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
@@ -27,6 +30,11 @@ exports.deleteProduct = async (req, res, next) => {
 
     const deletedProduct = await Product.findByIdAndDelete(productId);
     if (deletedProduct) {
+        await Promise.all(deletedProduct.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
         return res.status(200).json({
             msg: "Product deleted successfully",
             product: deletedProduct
@@ -58,7 +66,13 @@ exports.postAddProduct = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
     const amountInStock = req.body.amountInStock;
     const shippingCostId = req.body.shippingCostId;
-    //const image = req.file;
+    const image = req.file;
+
+    if (!image) {
+        return res.status(422).json({
+            msg: "image hasn't been received (expecting png, jpg, jpeg)"
+        })
+    }
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -105,7 +119,7 @@ exports.postAddProduct = async (req, res, next) => {
         subcategoryId: subcategory ? subcategoryId : null,
         amountInStock,
         shippingCostId,
-        images: ['']
+        images: ['img/' + image.filename]
     })
     await product.save();
 
@@ -151,6 +165,7 @@ exports.postEditProduct = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
     const amountInStock = req.body.amountInStock;
     const shippingCostId = req.body.shippingCostId;
+    const image = req.file;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -187,16 +202,33 @@ exports.postEditProduct = async (req, res, next) => {
         })
     }
 
-    await Product.updateOne({ _id: productId }, {
-        name,
-        description,
-        price,
-        categoryId,
-        subcategoryId: subcategory ? subcategoryId : null,
-        amountInStock,
-        shippingCostId,
-        images: ['']
-    })
+    if (image) {
+        const oldProduct = await Product.findByIdAndUpdate(productId, {
+            name,
+            description,
+            price,
+            categoryId,
+            subcategoryId: subcategory ? subcategoryId : null,
+            amountInStock,
+            shippingCostId,
+            images: ['img/' + image.filename]
+        })
+    
+        await Promise.all(oldProduct.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+    } else {
+        await Product.updateOne({ _id: productId }, {
+            name,
+            description,
+            price,
+            categoryId,
+            subcategoryId: subcategory ? subcategoryId : null,
+            amountInStock,
+            shippingCostId
+        })
+    }
 
     res.redirect('/admin/products');
 }

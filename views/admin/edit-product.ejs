@@ -12,7 +12,7 @@
 
         <main class="main main--edit-product">
 
-            <form class="product-form" id="product-form" method="POST" action="/admin/products/<% if (editMode) { %>edit<% } else { %>add<% } %>">
+            <form class="product-form" id="product-form" enctype="multipart/form-data" method="POST" action="/admin/products/<% if (editMode) { %>edit<% } else { %>add<% } %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <% if (editMode) { %>
                     <input type="hidden" name="productId" value="<%= product._id %>">
@@ -77,6 +77,12 @@
                             <label for="price">Cena v Kč</label>
                             <input type="number" name="price" id="price" placeholder="Cena v Kč" value="<% if (editMode) { %><%= product.price %><% } %>">
                         </div>
+                    </div>
+                </div>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="image">Obrázek</label>
+                        <input type="file" name="image" id="image">
                     </div>
                 </div>
                 <div class="product-form__actions">

@@ -9,8 +9,8 @@ const { body } = require('express-validator');
 const eshopController = require('../controllers/eshop');
 
 router.get('/shop', ash(eshopController.getShop));
-router.get('/shop/:category/:subcategory', ash(eshopController.getSubcategory)); // Development note: category name has to be unique
-router.get('/shop/:category', ash(eshopController.getCategory)); // Development note: subcategory name has to be unique
+router.get('/shop/:category/:subcategory', ash(eshopController.getSubcategory));
+router.get('/shop/:category', ash(eshopController.getCategory));
 
 router.get('/kosik', eshopController.getCart);
 
