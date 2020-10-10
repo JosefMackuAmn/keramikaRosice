@@ -27,7 +27,7 @@
             &__background {
                 height: 100%;
                 width: 100%;
-                background-color: blue;
+                background-color: $color-grey-light;
 
                 position: absolute;
                 transform: rotateZ(-3deg);
@@ -36,11 +36,45 @@
             &__image {
                 width: 100%;
                 height: 100%;
-                background-color: red;
                 
                 position: absolute;
                 z-index: 2;
             }
         }      
+    }
+    &__categories {
+        background-color: $color-secondary;
+        
+
+        &__bill {
+
+            &--left {
+
+            }
+            &--right {
+
+            }
+        }
+        &__content {
+            display: flex;
+            position: relative;
+            flex-direction: row;
+            justify-content: space-between;
+
+        }
+        &__category {
+            width: 20rem;
+            height: 20rem;
+        }
+        &__photo--1 {
+            width: 100%;
+            height: 100%;
+            object-position: center;
+            
+            position: absolute;
+        }
+        &__name {
+
+        }
     }
 }

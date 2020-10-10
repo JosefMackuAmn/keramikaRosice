@@ -1,9 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-exports.getIndex = (req, res, next) => {
+const Category = require('../models/category');
+
+exports.getIndex = async (req, res, next) => {
+    const allCatgories = await Category.find({});
+
     res.render('pages/index', {
-        title: 'Domů'
+        title: 'Domů',
+        categories: allCatgories
     })
 }
 

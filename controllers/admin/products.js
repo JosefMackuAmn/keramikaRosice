@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
 
 const Product = require("../../models/product");
 const Category = require('../../models/category');
@@ -58,6 +59,11 @@ exports.postAddProduct = async (req, res, next) => {
     const amountInStock = req.body.amountInStock;
     const shippingCostId = req.body.shippingCostId;
     //const image = req.file;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
         return res.status(422).json({
@@ -145,6 +151,11 @@ exports.postEditProduct = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
     const amountInStock = req.body.amountInStock;
     const shippingCostId = req.body.shippingCostId;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         return res.status(422).json({

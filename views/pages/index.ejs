@@ -5,16 +5,32 @@
     <%- include('../includes/gradient.ejs') %>
     
     <main class="main index">
+
+        <!-- HEADER -->
         <section class="index__header">
             <div class="index__header__text">
                 <h1 class="heading-1">Keramika z Rosic</h1>
                 <h2 class="heading-2">Vlastimily Nepevné</h2>
             </div>
             <div class="index__header__photo">
-                <img src="" alt="" class="index__header__photo__image">
+                <img src="../img/index-photo.jpg" alt="Hlavní fotka" class="index__header__photo__image">
                 <div class="index__header__photo__background"></div>
             </div>
         </section>
+        
+        <section class="index__categories"> <!-- DANGER, delete unnecessary imgs ------------------------------------------------------ -->
+            <p class="index__categories__bill index__categories__bill--left"><</p>
+            <container class="index__categories__content">
+                <% categories.forEach((category, index) => { %>
+                    <div class="index__categories__category">
+                        <img src="../img/index-photo.jpg" alt="<%= category.name %>" class="index__categories__photo--1">
+                        <p class="index__categories__name"><%= category.name %></p>
+                    </div>
+                <% }) %>
+            </container>
+            <p class="index__categories__bill index__categories__bill--right">></p>
+        </section>  
+          
     </main>
 
     <%- include('../includes/footer.ejs') %>

@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
 
 const categoriesAdminController = require('./categories');
 const productsAdminController = require('./products');
@@ -73,6 +74,12 @@ const putOrder = async (req, res, next) => {
     const orderId = req.body.orderId;
     const status = req.body.status;
     const isPayed = req.body.isPayed;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(orderId)) {
         return res.status(422).json({

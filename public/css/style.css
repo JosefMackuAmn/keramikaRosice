@@ -290,16 +290,31 @@ body {
     .index__header__photo__background {
       height: 100%;
       width: 100%;
-      background-color: blue;
+      background-color: #dbdbdb;
       position: absolute;
       transform: rotateZ(-3deg);
       z-index: 1; }
     .index__header__photo__image {
       width: 100%;
       height: 100%;
-      background-color: red;
       position: absolute;
       z-index: 2; }
+
+.index__categories {
+  background-color: #E9E2D4; }
+  .index__categories__content {
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    justify-content: space-between; }
+  .index__categories__category {
+    width: 20rem;
+    height: 20rem; }
+  .index__categories__photo--1 {
+    width: 100%;
+    height: 100%;
+    object-position: center;
+    position: absolute; }
 
 .eshop {
   padding-top: 10rem;

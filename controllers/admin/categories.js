@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const { validationResult } = require('express-validator');
+
 const Category = require('../../models/category');
 const Subcategory = require('../../models/subcategory');
 const Product = require('../../models/product');
@@ -21,6 +23,12 @@ exports.getCategories = async (req, res, next) => {
 exports.postCategories = async (req, res, next) => {
     const categoryId = req.body.categoryId || false;
     const name = req.body.categoryName.toLowerCase();
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
 
     // If categoryId has been passed, subcategory will be created
     if (categoryId) {
@@ -91,6 +99,12 @@ exports.putCategory = async (req, res, next) => {
     const categoryId = req.body.categoryId;
     const newName = req.body.newCategoryName.toLowerCase();
 
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
     if (!mongoose.Types.ObjectId.isValid(categoryId)) {
         return res.status(422).json({
             msg: "categoryId is not a valid ID string"
@@ -133,6 +147,12 @@ exports.deleteSubcategory = async (req, res, next) => {
 exports.putSubcategory = async (req, res, next) => {
     const subcategoryId = req.body.subcategoryId;
     const newName = req.body.newCategoryName.toLowerCase();
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
 
     if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
         return res.status(422).json({

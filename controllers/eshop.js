@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
 
 const Product = require("../models/product");
 const Category = require('../models/category');
@@ -60,7 +61,6 @@ exports.getSubcategory = async (req, res, next) => {
     }
     const subcategoryId = subcategory._id;
 
-
     const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
 
     res.render('eshop/shop', {
@@ -79,6 +79,11 @@ exports.postCart = async (req, res, next) => {
     const productId = req.body.productId;
     const amount = req.body.amount;
     const action = req.body.action;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
     
     const isValidId = mongoose.Types.ObjectId.isValid(productId);
     if (!isValidId) {

@@ -15,7 +15,6 @@ const multer = require('multer');
 const eshopRoutes = require('./routes/eshop');
 const pagesRoutes = require('./routes/pages');
 const adminRoutes = require('./routes/admin');
-const { db } = require('./models/product');
 
 /////////////////
 

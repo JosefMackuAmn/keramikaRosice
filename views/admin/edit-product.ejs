@@ -57,7 +57,7 @@
                                 });
                             %><%= JSON.stringify(subcategoriesObj) %>">
                                 <option value="">Vyberte podkategorii</option>
-                                <% if (editMode && product.categoryId) {
+                                <% if (editMode && product.categoryId && subcategoriesObj[product.categoryId]) {
                                     subcategoriesObj[product.categoryId].forEach(subcategory => { %>
                                         <option value="<%= subcategory._id %>" <% if (editMode && product.subcategoryId && product.subcategoryId.toString() === subcategory._id.toString()) { %>selected="selected"<% } %>><%= subcategory.name %></option>
                                     <% }) %>
