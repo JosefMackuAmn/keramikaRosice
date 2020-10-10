@@ -35,11 +35,16 @@ const fileStorage = multer.diskStorage({
         cb(null, 'public/img');
     },
     filename: (req, file, cb) => {
+        let prefix = 'pimg_';
+        if (req.url.includes('categories')) {
+            prefix = 'cimg_'
+        }
+
         let dateString = new Date().toISOString();
         dateString = dateString.replace(/:/g, '');
         dateString = dateString.replace('\.', '');
     
-        const fileName = 'pimg_' + dateString + '-' + file.originalname;
+        const fileName = prefix + dateString + '-' + file.originalname;
 
         cb(null, fileName);
     }

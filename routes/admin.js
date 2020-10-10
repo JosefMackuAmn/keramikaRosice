@@ -27,7 +27,7 @@ router.post('/categories', isAuth,
         .isString().withMessage('categoryName must be a string')
         .isLength({min: 3}).withMessage('categoryName must be at least 3 characters long'),
     ash(adminController.postCategories)
-);  // Expecting { categoryId: String || null, categoryName: String }
+);  // Expecting { categoryId: String || null, categoryName: String, image: File }
 
 router.delete('/categories/:categoryId', isAuth, ash(adminController.deleteCategory));
 router.put('/categories/', isAuth,
@@ -36,7 +36,7 @@ router.put('/categories/', isAuth,
         .isString().withMessage('newCategoryName must be a string')
         .isLength({min: 3}).withMessage('newCategoryName must be at least 3 characters long'),
     ash(adminController.putCategory)
-); // Expecting { categoryId: String, newCategoryName: String }
+); // Expecting { categoryId: String, newCategoryName: String, image: File || null }
 
 router.delete('/categories/sub/:subcategoryId', isAuth, ash(adminController.deleteSubcategory));
 router.put('/categories/sub/', isAuth,

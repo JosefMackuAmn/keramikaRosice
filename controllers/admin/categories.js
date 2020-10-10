@@ -1,3 +1,6 @@
+const fs = require('fs');
+const path = require('path');
+
 const mongoose = require('mongoose');
 
 const { validationResult } = require('express-validator');
@@ -21,8 +24,12 @@ exports.getCategories = async (req, res, next) => {
 
 // Posting new categories and subcategories
 exports.postCategories = async (req, res, next) => {
-    const categoryId = req.body.categoryId || false;
+    let categoryId = req.body.categoryId || false;
+    if (categoryId === 'false' || categoryId === 'null') {
+        categoryId = false;
+    };
     const name = req.body.categoryName.toLowerCase();
+    const image = req.file;
 
     const errors = validationResult(req);
 
@@ -65,6 +72,12 @@ exports.postCategories = async (req, res, next) => {
             msg: "Category does not exist"
         })
     }
+
+    if (!image) {
+        return res.status(422).json({
+            msg: 'You have to pass an image when creating a category'
+        })
+    }
     
     // Check if new category name is unique
     const categoryWithSameName = await Category.findOne({ name: name });
@@ -76,7 +89,8 @@ exports.postCategories = async (req, res, next) => {
 
     // If categoryId hasn't been passed, category will be created
     const newCategory = new Category({
-        name: name
+        name: name,
+        images: ['img/' + image.filename]
     });
     await newCategory.save();
     return res.status(201).json({
@@ -100,6 +114,11 @@ exports.deleteCategory = async (req, res, next) => {
         await Subcategory.deleteMany({ categoryId: categoryId });
         await Product.update({ categoryId: categoryId }, { $set: { categoryId: null }}, { multi: true });
 
+        await Promise.all(deletedCategory.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
         return res.status(200).json({
             msg: "Category deleted successfully with all of its subcategories, related products are now uncategorized",
             category: deletedCategory
@@ -114,6 +133,7 @@ exports.deleteCategory = async (req, res, next) => {
 exports.putCategory = async (req, res, next) => {
     const categoryId = req.body.categoryId;
     const newName = req.body.newCategoryName.toLowerCase();
+    const image = req.file;
 
     const errors = validationResult(req);
 
@@ -127,11 +147,22 @@ exports.putCategory = async (req, res, next) => {
         })
     }
 
-    const updatedCategory = await Category.update({ _id: categoryId }, {name: newName });
+    let oldCategory;
+    if (image) {
+        oldCategory = await Category.findByIdAndUpdate(categoryId, { name: newName, images: ['img/' + image.filename] });
+
+        await Promise.all(oldCategory.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
+    } else {
+        oldCategory = await Category.findByIdAndUpdate(categoryId, { name: newName });
+    }
     
     return res.status(200).json({
         msg: "Category successfully updated",
-        category: updatedCategory
+        category: oldCategory
     })
 }
 

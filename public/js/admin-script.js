@@ -202,7 +202,7 @@ const onShowModal = () => {
         state.modalEls.modalHeading.innerText = "Upravit kategorii";
 
         // Disable selecting higher order category
-        state.modalEls.modal.querySelector('#categoryId').setAttribute('disabled', true);
+        state.modalEls.modalCategorySelect.setAttribute('disabled', true);
 
         // Add delete button
         state.modalEls.modalDelete = document.createElement("button");
@@ -219,7 +219,8 @@ const onShowModal = () => {
         // Adjust modal for selected element
         state.modalEls.modal.querySelector('#categoryName').value = nameAttr;
         if (subcategoryId) {
-            state.modalEls.modal.querySelector('#categoryId').querySelector(`[value="${categoryId}"]`).setAttribute('selected', 'selected');
+            state.modalEls.modalCategorySelect.querySelector(`[value="${categoryId}"]`).setAttribute('selected', 'selected');
+            state.modalEls.modal.querySelector(`#image`).setAttribute('disabled', 'true');
         }
         
         state.modalEls.modalAction.insertAdjacentElement('afterend', state.modalEls.modalDelete); 
@@ -228,16 +229,18 @@ const onShowModal = () => {
     state.modalEls.modal.style.display = 'block';
 }
 
-onCloseModal = () => {
+const onCloseModal = () => {
     // Hide modal
     state.modalEls.modal.style.display = 'none';
 
     // Enable selecting higher order category
-    state.modalEls.modal.querySelector('#categoryId').removeAttribute('disabled');
+    state.modalEls.modalCategorySelect.removeAttribute('disabled');
 
     // Reset modal
-    state.modalEls.modal.querySelector('#categoryId').querySelectorAll('option').forEach(option => option.removeAttribute('selected'));
-    state.modalEls.modal.querySelector('#categoryId').querySelector('[value=""]').setAttribute('selected', 'selected');
+    state.modalEls.modalCategorySelect.querySelectorAll('option').forEach(option => option.removeAttribute('selected'));
+    state.modalEls.modalCategorySelect.querySelector('[value=""]').setAttribute('selected', 'selected');
+    state.modalEls.modal.querySelector(`#image`).removeAttribute('disabled');
+    state.modalEls.modal.querySelector(`#categoryName`).value = "";
 
     // Clean up state
     if (state.modalEls.modalDelete) {
@@ -250,7 +253,7 @@ onCloseModal = () => {
     
 }
 
-onSaveModal = () => {
+const onSaveModal = () => {
     // Hide modal
     state.modalEls.modal.style.display = 'none';
 
@@ -260,26 +263,27 @@ onSaveModal = () => {
     switch (dataModel) {
         case 'categories':
             // Get input values
-            let categoryId = modal.querySelector('#categoryId').value;
-            !categoryId ? categoryId = null : null;
-            const categoryName = modal.querySelector('#categoryName').value;
-            const csrf = modal.querySelector('#csrf').value;
+            let categoryId = state.modalEls.modalCategorySelect.value;
+            !categoryId ? categoryId = false : null;
+            const categoryName = state.modalEls.modal.querySelector('#categoryName').value;
+            const csrf = state.modalEls.modal.querySelector('#csrf').value;
+            const image = state.modalEls.modal.querySelector('#image').files[0] || null;
 
-            console.log(categoryId);
+            const formData = new FormData();
+            formData.append('_csrf', csrf);
 
             if (!state.editMode) {
                 // Add new (sub)category
+                formData.append('categoryId', categoryId);
+                formData.append('categoryName', categoryName);
+
+                if (!categoryId) {
+                    formData.append('image', image);
+                }
+
                 fetch('/admin/categories', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'CSRF-Token': csrf
-                    },
-                    body: JSON.stringify({
-                        categoryId: categoryId,
-                        categoryName: categoryName
-                    })
+                    body: formData
                 })
                     .then(response => {
                         return Promise.all([response.clone(), response.json()]);
@@ -304,25 +308,21 @@ onSaveModal = () => {
                 const subcategoryId = state.selectedElement.dataset.subcategoryid;
 
                 // Create body for request
-                const bodyObj = { newCategoryName: categoryName };
+                formData.append('newCategoryName', categoryName)
 
                 let endpointStr = '/admin/categories';
                 if (subcategoryId) {
                     endpointStr = '/admin/categories/sub';
-                    bodyObj.subcategoryId = subcategoryId;
+                    formData.append('subcategoryId', subcategoryId);
                 } else {
-                    bodyObj.categoryId = categoryId;
+                    formData.append('categoryId', categoryId);
+                    formData.append('image', image);
                 }
 
                 // Update
                 fetch(endpointStr, {
                     method: 'PUT',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'CSRF-Token': csrf
-                    },
-                    body: JSON.stringify(bodyObj)
+                    body: formData
                 })
                     .then(response => {
                         return Promise.all([response.clone(), response.json()]);
@@ -351,6 +351,18 @@ onSaveModal = () => {
 
     // Close modal
     onCloseModal();
+}
+
+const onModalSelectCategory = () => {
+    const categoryId = state.modalEls.modalCategorySelect.value;
+
+    const fileInput = state.modalEls.modal.querySelector('#image');
+
+    if (!categoryId) {
+        fileInput.removeAttribute('disabled');
+    } else {
+        fileInput.setAttribute('disabled', 'true');
+    }
 }
 
 /////
@@ -432,17 +444,22 @@ ready(() => {
         const modalAction = modal.querySelector('#modal-action');
         const modalClose = modal.querySelector('#modal-close');
         const modalCancel = modal.querySelector('#modal-cancel');
+        const modalCategorySelect = modal.querySelector('#categoryId')
 
         const modalEls = {
             modal,
             modalHeading,
             modalAction,
             modalClose,
-            modalCancel
+            modalCancel,
+            modalCategorySelect
         }
 
         // Put modal elements into global state
         state.modalEls = modalEls;
+
+        // Add listener to change in supercategory to disable file input
+        modalCategorySelect.addEventListener('change', onModalSelectCategory);
     
         // On cancelling modal
         modalEls.modalClose.addEventListener('click', onCloseModal);
