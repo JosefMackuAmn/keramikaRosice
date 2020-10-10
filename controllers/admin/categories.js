@@ -12,8 +12,8 @@ const Product = require('../../models/product');
 //////////////////////
 ///// Categories
 exports.getCategories = async (req, res, next) => {
-    const allCategories = await Category.find({});
-    const allSubcategories = await Subcategory.find({});
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
 
     res.render('admin/categories', {
         title: 'Categories',

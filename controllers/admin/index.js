@@ -3,6 +3,7 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
+const transporter = require('../../util/mailing');
 
 const categoriesAdminController = require('./categories');
 const productsAdminController = require('./products');
@@ -48,7 +49,7 @@ const getLogout = (req, res, next) => {
 }
 
 const getOrders = async (req, res, next) => {
-    const allOrders = await Order.find({});
+    const allOrders = await Order.find({}).sort('-date');
 
     res.render('admin/orders', {
         title: 'Orders',

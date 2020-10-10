@@ -11,7 +11,7 @@ const Subcategory = require('../../models/subcategory');
 ///////////////////////
 ///// Products
 exports.getProducts = async (req, res, next) => {
-    const allProducts = await Product.find({}).populate({ path: 'categoryId' }).populate({ path: 'subcategoryId' });
+    const allProducts = await Product.find({}).sort('-date').populate({ path: 'categoryId' }).populate({ path: 'subcategoryId' });
 
     res.render('admin/products', {
         title: 'Products',
@@ -47,8 +47,8 @@ exports.deleteProduct = async (req, res, next) => {
 
 // Add product
 exports.getAddProduct = async (req, res, next) => {
-    const allCategories = await Category.find({});
-    const allSubcategories = await Subcategory.find({});
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
     
     res.render('admin/edit-product', {
         title: 'Add product',
@@ -129,8 +129,8 @@ exports.postAddProduct = async (req, res, next) => {
 // Edit product
 exports.getEditProduct = async (req, res, next) => {
     const productId = req.params.productId;
-    const allCategories = await Category.find({});
-    const allSubcategories = await Subcategory.find({});
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
 
     if (!mongoose.Types.ObjectId.isValid(productId)) {
         const error = new Error('ProductId is not a valid ID string');

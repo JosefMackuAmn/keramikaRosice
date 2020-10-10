@@ -1,5 +1,6 @@
 // Core modules imports
 const path = require('path');
+const fs = require('fs');
 
 // Library imports
 const express = require('express');
@@ -10,6 +11,7 @@ const session = require('express-session');
 const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const multer = require('multer');
+const morgan = require('morgan');
 
 // Custom imports
 const eshopRoutes = require('./routes/eshop');
@@ -58,11 +60,21 @@ const fileFilter = (req, file, cb) => {
     }
 }
 
+// Creating write stream for morgan
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'), {
+    flags: 'a'
+});
+
 // Setting view engine
 app.set('view engine', 'ejs');
 
 // Using helmet
 app.use(helmet());
+// Using morgan
+app.use(morgan('combined', { stream: accessLogStream }));
+
+
 // Parsing url encoded body
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

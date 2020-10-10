@@ -3,6 +3,8 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
+const transporter = require('../util/mailing');
+const generateInvoice = require('../util/generateInvoice');
 const Product = require("../models/product");
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
@@ -175,13 +177,27 @@ exports.postOrder = async (req, res, next) => {
         isPayed: false,
         invoiceUrl: 'url'
     });
+    
+    const invoiceName = 'invoice-' + order._id + '.pdf';
+    const invoicePath = path.join('pdf', 'invoices', invoiceName);
+    order.invoiceUrl = invoicePath;
+
+    await generateInvoice(order, invoicePath);
 
     await order.save();
 
     req.session.cart = null;
 
-    res.status(201).render('eshop/cart', {
-        title: "Objednávka úspěšná"
+    transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: email,
+        subject: 'Keramika Rosice: Nová objednávka',
+        html: '<h1>This is working!</h1>'
+    }, (err, info) => {
+        if (err) {
+            console.log(err);
+            return res.redirect('/kosik?success=true&mailSent=false');
+        }
+        return res.redirect('/kosik?success=true&mailSent=true');
     })
-
 }
