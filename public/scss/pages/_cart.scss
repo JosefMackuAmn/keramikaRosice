@@ -1,0 +1,21 @@
+.cart {
+    padding: 12rem;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    &__cart-content {
+        width: 50%;
+    }
+    &__order {
+        width: 50%;
+
+        &__form {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}

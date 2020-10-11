@@ -3,6 +3,7 @@
 
 /////
 // ready function to execute when DOM is loaded
+/////
 const ready = callbackFunc => {
     if (document.readyState !== 'loading') {
         // Document is already ready, call the callback directly

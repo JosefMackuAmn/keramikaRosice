@@ -1,7 +1,7 @@
 .index {
     
     &__header {
-        padding: 20rem;
+        padding: 12rem 15rem 15rem 15rem;
 
         display: flex;
         flex-direction: row;
@@ -9,18 +9,47 @@
         align-items: center;
 
         &__text {
-            
+            margin-left: 8%;
+            transform: translateY(-2rem);
+
+            display: flex;
+            flex-direction: column;
             
             & .heading-1 {
                 margin-bottom: 2rem;
+                animation: headerH1SlideIn 1.5s forwards ease-out;
             } 
             & .heading-2 {
-                transform: translateX(35%);
+                margin-bottom: 12rem;              
+                opacity: 0;
+                transform: translateX(-20%);
+                
+                animation: headerH2SlideIn 1s .5s forwards ease-out;
+            }
+            &__cta {
+                padding: 2rem 10rem;
+                border: 1px solid $color-primary;
+                border-radius: 3rem;
+                border-top-right-radius: 10rem;
+                box-shadow: -2px 2px 5px 3px $color-secondary;
+                
+                color: $color-primary;
+                font-size: $font-big;
+
+                align-self: center;
+
+                transition: all .2s;
+
+                &:hover {
+                    box-shadow: -2px 2px 5px 1px $color-secondary;
+                    transform: translate(3px, 1px);
+                }
             }
         }
         &__photo {
-            width: 67rem;
+            width: 60rem;
             height: 50rem;
+            margin-right: 5%;
 
             position: relative;
 
@@ -28,53 +57,96 @@
                 height: 100%;
                 width: 100%;
                 background-color: $color-grey-light;
+                transform: rotate(-3deg);
 
                 position: absolute;
-                transform: rotateZ(-3deg);
                 z-index: 1;
+
+                animation: headerBackImgTurn 1.5s forwards;
             }
             &__image {
                 width: 100%;
                 height: 100%;
+                box-shadow: 1px 1px 10px 1px $color-black-overlay;
+                transform: rotate(0deg);
                 
                 position: absolute;
                 z-index: 2;
+
+                animation: headerImgTurn 1.5s forwards;
             }
         }      
     }
     &__categories {
+        padding: 8rem;
+        margin-bottom: 16rem;
         background-color: $color-secondary;
         
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
         &__bill {
-
-            &--left {
-
-            }
-            &--right {
-
-            }
+            cursor: pointer;
+            font-size: 8rem;
         }
         &__content {
-            display: flex;
-            position: relative;
-            flex-direction: row;
-            justify-content: space-between;
+            margin: 0 5rem;
+            overflow:  hidden;
 
+            flex-grow: 1;
+
+            &__inner {
+                display: flex;
+                flex-direction: row;
+            }
         }
         &__category {
-            width: 20rem;
-            height: 20rem;
+            width: 27rem;
+            height: 27rem;
+            margin: 0 4rem;
+
+            flex-shrink: 0;
+
+            position: relative;
+
+            &:hover {
+                .index__categories__name {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 1;
+                }
+                .index__categories__photo {
+                    filter: brightness(30%);
+                    transform: scale(.93);
+                }               
+            }
         }
-        &__photo--1 {
+        &__photo {
             width: 100%;
             height: 100%;
             object-position: center;
-            
-            position: absolute;
+
+            transition: all .5s;
         }
         &__name {
+            max-width: 100%;
+            padding: 2rem;
+            transform: translate(-50%, -50%) scale(.9);
+            opacity: 0;
 
+            letter-spacing: 3px;
+            line-height: 145%;
+            text-transform: uppercase;
+            text-align: center;
+            font-weight: 500;
+            color: $color-white;
+            font-size: $font-big;
+            
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transition: all .5s;
         }
     }
 }

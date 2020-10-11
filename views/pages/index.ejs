@@ -11,24 +11,27 @@
             <div class="index__header__text">
                 <h1 class="heading-1">Keramika z Rosic</h1>
                 <h2 class="heading-2">Vlastimily Nepevné</h2>
-            </div>
+                <a href="/shop" class="index__header__text__cta">E-shop</a>
+            </div> 
             <div class="index__header__photo">
                 <img src="../img/index-photo.jpg" alt="Hlavní fotka" class="index__header__photo__image">
                 <div class="index__header__photo__background"></div>
             </div>
         </section>
         
-        <section class="index__categories"> <!-- DANGER, delete unnecessary imgs ------------------------------------------------------ -->
-            <p class="index__categories__bill index__categories__bill--left"><</p>
-            <container class="index__categories__content">
-                <% categories.forEach((category, index) => { %>
-                    <div class="index__categories__category">
-                        <img src="../img/index-photo.jpg" alt="<%= category.name %>" class="index__categories__photo--1">
-                        <p class="index__categories__name"><%= category.name %></p>
-                    </div>
-                <% }) %>
+        <section class="index__categories" id="categories-slider"> <!-- DANGER, delete unnecessary imgs ------------------------------------------------------ -->
+            <p class="index__categories__bill index__categories__bill--left" id="arrow-left"><</p>
+            <container class="index__categories__content" id="categories-scrollable-container">
+                <container class="index__categories__content__inner">
+                    <% categories.forEach((category, index) => { %>
+                        <a href="/shop/<%= category.name %>" class="index__categories__category categories-category">
+                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="index__categories__photo">
+                            <p class="index__categories__name"><%= category.name %></p>
+                        </a>
+                    <% }) %>
+                </container>
             </container>
-            <p class="index__categories__bill index__categories__bill--right">></p>
+            <p class="index__categories__bill index__categories__bill--right" id="arrow-right">></p>
         </section>  
           
     </main>

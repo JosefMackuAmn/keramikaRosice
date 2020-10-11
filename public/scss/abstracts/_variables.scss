@@ -1,7 +1,9 @@
 ///////////////////
 ///// FONT SIZES
-$font-largest: 4rem;
-$font-large: 3.5rem;
+$font-largest: 6rem;
+$font-large: 4.5rem;
+$font-big: 2rem;
+$font-regular: 1.8rem;
 
 //////////////////
 ///// COLORS
@@ -17,6 +19,9 @@ $color-white: #FFF;
 
 $color-grey: #cecece;
 $color-grey-light: lighten($color-grey, 5%);
+
+$color-black: black;
+$color-black-overlay: rgba($color-black, .3);
 
 //TYPOGRAPHY
 $font-secondary: 'Charm';

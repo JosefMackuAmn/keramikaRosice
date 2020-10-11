@@ -19,3 +19,7 @@ main {
     z-index: 1;
     position: relative;
 }
+
+* a, * a:visited, * a:link {
+    text-decoration: none;
+}

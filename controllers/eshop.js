@@ -3,13 +3,14 @@ const fs = require('fs');
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
 
-const transporter = require('../util/mailing');
-const generateInvoice = require('../util/generateInvoice');
 const Product = require("../models/product");
 const Category = require('../models/category');
 const Subcategory = require('../models/subcategory');
 const Cart = require('../models/cart');
 const Order = require('../models/order');
+
+const transporter = require('../util/mailing');
+const generateInvoice = require('../util/generateInvoice');
 
 exports.getShop = async (req, res, next) => {
     const products = await Product.find({});
@@ -71,8 +72,13 @@ exports.getSubcategory = async (req, res, next) => {
 }
 
 exports.getCart = (req, res, next) => {
+    const cart = req.session.cart;
+
+    console.log(cart);
+
     res.render('eshop/cart', {
-        title: 'Košík'
+        title: 'Košík',
+        cart: cart
     })
 }
 
@@ -111,7 +117,7 @@ exports.postCart = async (req, res, next) => {
     if (action === 'ADD') {
         if (!amount || typeof +amount !== 'number') { // TRY TO DEBUG --------------------------------------------------
             return res.status(422).json({
-                msg: "amount property has to be passed along with an 'ADD' action"
+                msg: "amount property has to be passed along with 'ADD' action"
             })
         }
         updatedCart.add(product, amount);

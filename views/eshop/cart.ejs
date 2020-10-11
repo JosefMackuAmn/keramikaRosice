@@ -1,39 +1,54 @@
 <%- include('../includes/head.ejs') %>
 </head>
 <body>
+    <%- include('../includes/header.ejs') %>
+    <%- include('../includes/gradient.ejs') %>
     
-    <main>
-        <%= title %>
+    <main class="main cart">
+        
+        <!-- CART LIST -->
+        <section class="cart__cart-content">
+            <ul class="cart__cart-content__list">
+                <% if (cart) {
+                    cart.items.forEach(item => { %>
 
-        <form action="/kosik" method="POST">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <input type="text" name="productId" value="5f7875ebcdb28b193078376d">
-            <input type="number" name="amount" value="1">
-            <input type="text" name="action" value="ADD">
-            <input type="submit" value="Do košíku">
-        </form>
+                        <li class="cart__cart-content__item"><% item.product.name %></li> 
 
-        <form action="/objednavka" method="POST">
-            <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-            <input type="text" name="firstName" placeholder="Jméno">
-            <input type="text" name="lastName" placeholder="Příjmení">
-            <input type="text" name="email" placeholder="E-mail">
-            <input type="text" name="phone" placeholder="Telefon">
-            <input type="text" name="street" placeholder="Ulice, č.p.">
-            <input type="text" name="city" placeholder="Město">
-            <input type="text" name="zipCode" placeholder="PSČ">
-            <select type="text" name="delivery">
-                <option value="ZAS">Zásilkovna</option>
-                <option value="POS">Česká pošta</option>
-                <option value="OOD">Osobní odběr</option>
-            </select>
-            <select type="text" name="payment">
-                <option value="DOB">Dobírka</option>
-                <option value="CRD">Kartou</option>
-                <option value="BTR">Bankovní převod</option>
-            </select>
-            <input type="submit" value="Odeslat">
-        </form>
+                    <% });
+                } else { %>
+
+                    <li class="cart__cart-content__item">Zatím v jste do košíku nic nevložili</li>
+
+                <% } %>
+            </ul>
+        </section>
+
+        <!-- ORDER FORM -->
+        <section class="cart__order">
+            
+            <form class="cart__order__form" action="/objednavka" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <input type="text" name="firstName" placeholder="Jméno">
+                <input type="text" name="lastName" placeholder="Příjmení">
+                <input type="text" name="email" placeholder="E-mail">
+                <input type="text" name="phone" placeholder="Telefon">
+                <input type="text" name="street" placeholder="Ulice, č.p.">
+                <input type="text" name="city" placeholder="Město">
+                <input type="text" name="zipCode" placeholder="PSČ">
+                <select type="text" name="delivery">
+                    <option value="ZAS">Zásilkovna</option>
+                    <option value="POS">Česká pošta</option>
+                    <option value="OOD">Osobní odběr</option>
+                </select>
+                <select type="text" name="payment">
+                    <option value="DOB">Dobírka</option>
+                    <option value="CRD">Kartou</option>
+                    <option value="BTR">Bankovní převod</option>
+                </select>
+                <input type="submit" value="Odeslat">
+            </form>
+
+        </section>
 
     </main>
 

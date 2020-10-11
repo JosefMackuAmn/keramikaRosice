@@ -1,3 +1,6 @@
+/////
+// HEADER
+/////
 @keyframes headerShiftIn {
     0% {
         transform: translateX(100%);
@@ -9,11 +12,55 @@
 }
 
 @keyframes headerShiftOut {
-    0% {
+    from {
         transform: translateX(0);
     }
-    100% {
+    to {
         transform: translateX(100%);
         display: none;
+    }
+}
+
+/////
+// INDEX
+/////
+@keyframes headerH1SlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes headerH2SlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(30%);
+    }
+}
+
+@keyframes headerImgTurn {
+    from {
+        transform: rotate(-20deg);
+    }
+    to {
+        transform: rotate(0deg);        
+    }
+}
+
+@keyframes headerBackImgTurn {
+    from {
+        opacity: 0;
+        transform: rotate(20deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(-3deg);        
     }
 }
