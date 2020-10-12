@@ -6,6 +6,7 @@ $bp-eshop-mobile: 700px;
     --product-width: 30rem;
     --product-count: 4;
     --product-margin-right: 4rem;
+
     @media screen and (max-width: 1800px) {
         --product-count: 3;
     }
@@ -42,12 +43,6 @@ $bp-eshop-mobile: 700px;
     display: flex;
     flex-wrap: wrap;
 
-    & .heading-1 {
-        margin-top: 4rem;
-    }
-    & .heading-2 {
-        margin-top: 1rem;
-    }
     & .category-select {
         width: 20rem;
         margin-right: 4rem;
@@ -56,17 +51,66 @@ $bp-eshop-mobile: 700px;
             margin-right: 2rem;
         }  
         @media screen and (max-width: $bp-eshop-mobile) {
-           position: absolute;
+            width: 100%;
+            background-color: $color-white;
+    
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            position: absolute;
+            z-index: 2;
         }    
     }
     &__head {
         width: 100%;
-        height: 50rem;
         margin-bottom: 10rem;
 
         display: flex;
         flex-direction: column;
         align-items: center;
+
+        @media screen and (max-width: 600px) {
+            margin-bottom: 6rem;
+        }
+
+        & .heading-2 {
+            margin-top: 4rem;
+
+            @media screen and (max-width: $bp-eshop-mobile) {
+                margin-top: 0;
+                margin-bottom: 4rem;
+
+                order: -1;
+            }    
+        }
+        & .heading-3 {
+            margin-top: .5rem;
+
+            font-size: 2rem;
+
+            @media screen and (max-width: $bp-eshop-mobile) {
+                margin-top: 6rem;
+
+                position: relative;
+                z-index: 1;
+
+                &::after {
+                    content: "";
+                    width: 4rem;
+                    height: 4rem;
+                    background-color: $color-secondary;
+
+                    display: block;
+
+                    position: absolute;
+                    top: 50%;
+                    left: 50%;
+                    transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+                    z-index: -1;
+                }
+            }   
+        }
     }
     &__body {
         width: 100%;
@@ -80,9 +124,19 @@ $bp-eshop-mobile: 700px;
             padding-right: 2rem;
         }  
     }
-    &__category-picture {
+    & .picture {
         width: 50rem;
         border: 2px solid $color-primary;
+
+        @media screen and (max-width: 600px) {
+            border-left: none;
+            border-right: none;
+            width: 100%;
+
+            &__bg {
+                display: none;
+            }
+        }
     }
     &__products {
         padding-bottom: 20rem;
@@ -96,6 +150,10 @@ $bp-eshop-mobile: 700px;
        & > * {
            margin-right: var(--product-margin-right);
            margin-bottom: 8rem;
+
+           @media screen and (max-width: $bp-eshop-mobile) {
+                margin-bottom: 12rem;
+            }    
        }
     }
 }
@@ -226,7 +284,6 @@ $bp-eshop-mobile: 700px;
             width: 2rem;
             height: 2rem;
             background-color: $color-primary;
-           
             transition: all .1s;
 
             display: block;
@@ -243,7 +300,6 @@ $bp-eshop-mobile: 700px;
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-
     }
     &__subcategory {
         display: flex;
@@ -259,7 +315,6 @@ $bp-eshop-mobile: 700px;
             display: inline-block;
 
             transform: rotate(45deg);
-
         }
         &--selected {
             &::before {
@@ -316,6 +371,9 @@ $bp-eshop-mobile: 700px;
        height: 100%;
        object-fit: cover;
 
+       @media screen and (max-width: 850px) {
+        margin-top: 3rem;
+        }
     }
     &__description {
         height: 100%;
@@ -327,7 +385,6 @@ $bp-eshop-mobile: 700px;
         top: 0;
         left: 0;
         transform: translateX(200%);
-        
     }
     &__description-text {
         width: 100%;
@@ -342,7 +399,6 @@ $bp-eshop-mobile: 700px;
         transform: translateX(-50%) translateY(-50%);
 
         @media screen and (max-width: 1100px) {
-           //line-height: 2rem;
            padding: 2rem;
         }      
     }
@@ -356,8 +412,25 @@ $bp-eshop-mobile: 700px;
         bottom: -4rem;
         transform: translateX(-50%);
     }
+
     &:hover {
         transform: rotate(5deg);
+    }
+    &::after {
+        content: "";
+        width: 100%;
+        height: calc(100% + 6rem);
+        border: 2px solid $color-secondary;
+
+        display: none;
+
+        position: absolute;
+        top: 0;
+        left: 0;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            display: block;
+        }    
     }
 }
 .to-cart-button {
@@ -368,7 +441,7 @@ $bp-eshop-mobile: 700px;
     transition: all .2s;
 
     color: $color-white;
-    font-family: 'PT Sans';
+    font-family: $font-secondary;
     font-size: 100%;
 
     position: relative;
@@ -423,6 +496,15 @@ $bp-eshop-mobile: 700px;
         @media screen and (max-width: 1100px) {
             margin-top: 6rem;
         }
+        @media screen and (max-width: 1000px) {
+            margin-top: 4rem;
+        }
+        @media screen and (max-width: 850px) {
+            margin-top: 3rem;
+        }
+        @media screen and (max-width: $bp-eshop-mobile) {
+            margin-top: 6rem;
+        }
 
         &::before {
             width : 5rem;
@@ -434,13 +516,21 @@ $bp-eshop-mobile: 700px;
     &__amount  {
         margin-top:  6rem;
 
-        font-size: 2rem;
         color: $color-white;
 
         @media screen and (max-width: 1400px) {
             margin-top: 4rem;
          }
         @media screen and (max-width: 1100px) {
+            margin-top: 6rem;
+        }
+        @media screen and (max-width: 1000px) {
+            margin-top: 4rem;
+        }
+        @media screen and (max-width: 850px) {
+            margin-top: 3rem;
+        }
+        @media screen and (max-width: $bp-eshop-mobile) {
             margin-top: 6rem;
         }
     }
@@ -466,6 +556,11 @@ $bp-eshop-mobile: 700px;
         position: absolute;
         top: 1rem;
         right: 1rem;
+
+        @media screen and (max-width: 850px) {
+            top: 0;
+            right: 0;
+        }
 
         &::before,
         &::after {
@@ -497,7 +592,9 @@ $bp-eshop-mobile: 700px;
     height: 4rem;
     width: 100%;
     background-color: $color-black;
-
     display: flex;
     align-items: center;
+
+    position: relative;
+    z-index: 1;
 }

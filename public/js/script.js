@@ -74,7 +74,7 @@ const categorySelectButtonClickHandler = (event) => {
 }
 // Getting all buttons on the category select portion of the page
 const categorySelect = document.querySelector('.category-select');
-const categorySelectButtons = categorySelect.querySelectorAll('button');
+const categorySelectButtons = categorySelect.querySelectorAll('.category-select__button');
 // Setting up event listeners
 for (const btn of categorySelectButtons) {
   btn.addEventListener('click', categorySelectButtonClickHandler); 
@@ -98,3 +98,13 @@ for(const prod of products) {
   btnShowProdModal.addEventListener('click', showProdModal.bind(this, prod));
   btnCloseProdModal.addEventListener('click', closeProdModal.bind(this, prod));
 }
+
+//ESHOP-CATEGORY-SELECT-MOBILE-BUTTON
+const toggleCategorySelect = event => {
+  const btn = event.target;
+  const list = btn.parentElement.querySelector('.category-select__category-list');
+  list.style.display = 'block';
+}
+
+const categoryMobileBtn = categorySelect.querySelector('button');
+categoryMobileBtn.addEventListener('click', toggleCategorySelect);
