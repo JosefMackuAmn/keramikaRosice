@@ -1,6 +1,10 @@
 body {
     font-family: 'PT Sans', sans-serif;
 }
+
+/////
+// HEADINGS
+/////
 .heading-1 {
     font-size: $font-largest;
     font-family: 'Charm', cursive;
@@ -8,6 +12,10 @@ body {
 }
 .heading-2 {
     font-size: $font-large;
-    font-family: 'Charm', cursive;
     font-weight: 400;
+    font-family: $font-secondary;
+}
+.heading-3 {
+    font-weight: 400;
+    font-family: $font-secondary;
 }

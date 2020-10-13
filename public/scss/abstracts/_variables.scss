@@ -16,6 +16,7 @@ $color-secondary-light: lighten($color-secondary, 7%);
 
 // Shades
 $color-white: #FFF;
+$color-black: rgba(0, 0 , 0, 1);
 
 $color-grey: #cecece;
 $color-grey-light: lighten($color-grey, 5%);
@@ -24,4 +25,4 @@ $color-black: black;
 $color-black-overlay: rgba($color-black, .3);
 
 //TYPOGRAPHY
-$font-secondary: 'Charm';
+$font-secondary: 'Charm', 'cursive';

@@ -2,12 +2,44 @@
 // HEADER
 /////
 @keyframes headerShiftIn {
+  0% {
+    transform: translateX(100%);
+    display: block;
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes headerShiftOut {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+    display: none;
+  }
+}
+
+/////
+// E-SHOP
+/////
+@keyframes cart-icon-shake {
+  25% {
+      transform: rotate(20deg);
+  }
+  75% {
+    transform: rotate(-20deg);
+  }
+}
+@keyframes subcategorySelectShiftIn {
     0% {
-        transform: translateX(100%);
-        display: block;
+        transform: translateY(-50%) scale(0.1);
+        opacity: 0;
     }
     100% {
-        transform: translateX(0);
+        transform: translateY(0);
+        opacity: 1;
     }
 }
 
@@ -63,4 +95,35 @@
         opacity: 1;
         transform: rotate(-3deg);        
     }
+}
+
+
+/////
+// 
+/////
+@keyframes subcategorySelectShiftOut {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-50%) scale(0.1);
+        opacity: 0;
+    }
+}
+@keyframes categorySelectMobileShiftIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes categorySelectMobileShiftOut {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }
