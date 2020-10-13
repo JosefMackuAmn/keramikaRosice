@@ -12,7 +12,7 @@ router.get('/shop', ash(eshopController.getShop));
 router.get('/shop/:category/:subcategory', ash(eshopController.getSubcategory));
 router.get('/shop/:category', ash(eshopController.getCategory));
 
-router.get('/kosik', eshopController.getCart);
+router.get('/kosik', ash(eshopController.getCart));
 
 // Update cart route, application/json
 router.post('/kosik',

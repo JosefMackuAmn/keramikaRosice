@@ -71,14 +71,15 @@ exports.getSubcategory = async (req, res, next) => {
     });
 }
 
-exports.getCart = (req, res, next) => {
+exports.getCart = async (req, res, next) => {
     const cart = req.session.cart;
-
-    console.log(cart);
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
 
     res.render('eshop/cart', {
         title: 'Košík',
-        cart: cart
+        cart: cart,
+        constants: constants
     })
 }
 

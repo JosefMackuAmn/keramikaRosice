@@ -1,0 +1,142 @@
+.order-form {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__row {
+        width: 100%;
+        margin-bottom: 3rem;
+
+        display: flex;
+        align-items: center;
+    }
+    &__data-cell {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        &:not(:last-child) {
+            margin-right: 3rem;
+        }
+    }
+    &__label {
+        margin-bottom: 1rem;
+    }
+    &__input {
+        width: 100%;
+        height: 5rem;    
+        border: 1px solid $color-primary;
+        padding: 1rem;
+
+        flex-grow: 1;
+
+        &:focus {
+            outline: none;
+        }
+    }
+    &__radio-row {
+        width: 100%;
+        margin-bottom: 3rem;
+
+        display: flex;
+        flex-direction: column;
+    }
+    &__radio-cell {
+        width: 100%;
+        padding: 1rem;
+
+        display: flex;
+        align-items: center;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $color-secondary;
+        }
+        
+        & input {
+            margin-right: 1rem;
+        }
+        & label {
+            margin-right: auto;
+        }
+    }
+    &__agree-row {
+        width: 100%;
+        margin-bottom: 3rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__agree-cell {
+        width: 40%;
+        padding: 1rem;
+        margin: 0 auto;
+        
+        display: flex;
+        align-items: flex-start;
+        
+        & input {
+            margin-top: 4px;
+            margin-right: 1rem;
+        }
+    }
+    &__submit {
+        width: 20rem;
+        height: 8rem;
+        cursor: pointer;
+        border: 1px solid $color-primary;
+        background-color: $color-white;
+        transform-style: preserve-3d;
+
+        color: $color-primary;
+        font-family: $font-secondary;
+        font-size: $font-big;
+
+        position: relative;
+
+        transition: all .3s cubic-bezier(0, 0.55, 0.45, 1);
+        
+        &:hover {
+            transform: scale(.98);
+
+            &::before {
+                transform: translate3d(-50%, -50%, -1rem) scale(1.06);
+            }
+        }
+        &:focus {
+            outline: none;
+        }
+        &:disabled {
+            background-color: $color-grey-lightest;
+
+            &:hover {
+                transform: none;
+
+                &::before {
+                    transform: translate3d(-50%, -50%, -1rem);
+                }
+            }
+        }
+
+        &::before {
+            display: block;
+            content: "";
+            width: calc(100% + 1rem);
+            height: calc(100% + 1rem);
+            background-color: $color-primary;
+            transform: translate3d(-50%, -50%, -1rem);
+
+            clip-path: polygon(0 0, 0 100%, 3rem 100%, 0 calc(100% - 3rem), 0 3rem, 3rem 0, calc(100% - 3rem) 0, 100% 3rem, 100% calc(100% - 3rem), calc(100% - 3rem) 100%, 100% 100%, 100% 0);
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+
+            transition: all .3s cubic-bezier(0, 0.55, 0.45, 1);
+        }
+    }
+}

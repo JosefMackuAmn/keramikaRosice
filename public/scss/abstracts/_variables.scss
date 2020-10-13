@@ -2,6 +2,7 @@
 ///// FONT SIZES
 $font-largest: 6rem;
 $font-large: 4.5rem;
+$font-bigger: 2.5rem;
 $font-big: 2rem;
 $font-regular: 1.8rem;
 
@@ -20,6 +21,7 @@ $color-black: rgba(0, 0 , 0, 1);
 
 $color-grey: #cecece;
 $color-grey-light: lighten($color-grey, 5%);
+$color-grey-lightest: lighten($color-grey, 30%);
 
 $color-black: black;
 $color-black-overlay: rgba($color-black, .3);
