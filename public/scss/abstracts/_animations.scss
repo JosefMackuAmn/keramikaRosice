@@ -47,3 +47,19 @@
         opacity: 0;
     }
 }
+@keyframes categorySelectMobileShiftIn {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+@keyframes categorySelectMobileShiftOut {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}

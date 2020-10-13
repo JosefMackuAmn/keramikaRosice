@@ -7,6 +7,9 @@ $bp-eshop-mobile: 700px;
     --product-count: 4;
     --product-margin-right: 4rem;
 
+    --category-select-mobile-button-height: 6rem;
+    --category-select-mobile-list-height: 40rem;
+
     @media screen and (max-width: 1800px) {
         --product-count: 3;
     }
@@ -52,7 +55,6 @@ $bp-eshop-mobile: 700px;
         }  
         @media screen and (max-width: $bp-eshop-mobile) {
             width: 100%;
-            background-color: $color-white;
     
             display: flex;
             flex-direction: column;
@@ -188,15 +190,41 @@ $bp-eshop-mobile: 700px;
         text-align: center;
 
         @media screen and (max-width: $bp-eshop-mobile) {
-            display: none;
-        }    
+            margin-bottom: 0;
+
+            left: 0;
+            bottom: calc(var(--category-select-mobile-button-height) + var(--category-select-mobile-list-height));
+        }
     }
     & .heading-3 {
         font-size: 2rem;
     }
     &__category-list {
         @media screen and (max-width: $bp-eshop-mobile) {
-            display: none;
+        height: var(--category-select-mobile-list-height);
+
+        left: 0;
+        bottom: var(--category-select-mobile-button-height);
+        overflow-y: auto;
+        }
+    }
+    &__category-list,
+    & .heading-2 {
+        @media screen and (max-width: $bp-eshop-mobile) {
+            background-color: $color-white;
+            width: 100%;
+
+            position: fixed;
+
+            &--hidden {
+                display: none;
+            }
+            &--hiding {
+                animation: categorySelectMobileShiftOut .2s;
+            }
+            &--visible{
+                animation: categorySelectMobileShiftIn .2s;
+            }
         }    
     }
     &__subcategory-list {
@@ -218,7 +246,7 @@ $bp-eshop-mobile: 700px;
         outline: none;
         border: none;
         background-color: $color-primary;
-        padding: 2rem;
+        height: var(--category-select-mobile-button-height);
         cursor: pointer;
         
         color: $color-white;
