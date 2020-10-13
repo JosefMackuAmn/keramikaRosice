@@ -15,10 +15,20 @@ const showOrHideEl = (element, hiddenClass, visibleClass, hidingClass) => {
     element.classList.remove(visibleClass);
     element.classList.add(hidingClass);
 
-    element.addEventListener('animationend', function() {
+    const animationEndHandler =  function(event) {
+      if(event.pseudoElement) {
+        element.addEventListener('animationend', animationEndHandler,  {
+          capture: false,
+          once: true,
+          passive: false
+        });
+        return;
+      }
      element.classList.remove(hidingClass);
      element.classList.add(hiddenClass);
-    }, {
+    }
+
+    element.addEventListener('animationend', animationEndHandler, {
       capture: false,
       once: true,
       passive: false
@@ -38,50 +48,23 @@ const switchClass = (el, classA, classB) => {
 }
 
 //HEADER/////////////////////////////////////////////////////////////////////////////////////////////////////////
-const resizeHeaderHandler = (btn) => {
-  console.log(window.clientX);
-  if (document.documentElement.getBoundingClientRect().width > 700) {
-    const navList = btn.nextElementSibling;
-    navList.classList.remove("header__nav-list--shown");
-    btn.classList.remove("header__nav-button--clicked");
-    btn.nextElementSibling.removeAttribute('style');
-    for(const child of btn.nextElementSibling.children) {
-      child.style.animation = 'none';
-    }
-  }
-};
-const hamburgerBtnClickHandler = (btn, event) => {
-  event.stopPropagation();
 
-  if (Array.from(btn.classList).includes("header__nav-button--clicked")) {
-    btn.classList.remove("header__nav-button--clicked");
-    btn.nextElementSibling.addEventListener('animationend', function(e) {
-      btn.nextElementSibling.style.display = 'none';
-    }, {
-      capture: false,
-      once: true,
-      passive: false
-    });
-    for(const child of btn.nextElementSibling.children) {
-      child.style.animation = 'headerShiftOut .2s forwards';
-    }
-  } else {
-    btn.classList.toggle("header__nav-button--clicked");
-    btn.nextElementSibling.style.display = 'block';
-    for(const child of btn.nextElementSibling.children) {
-      child.style.animation = 'headerShiftIn .2s forwards';
-    }
-  }
-
-};
 const hamburgerBtn = document.querySelector("#hamburger-btn");
+const headerList = hamburgerBtn.nextElementSibling;
 
 hamburgerBtn.addEventListener(
   "click",
-  hamburgerBtnClickHandler.bind(this, hamburgerBtn)
+  () => {
+
+    switchClass(hamburgerBtn, 'header__nav-button--hide', 'header__nav-button--show');
+    showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+    for (const listItem of headerList.children) {
+      showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+    }
+
+  }
 );
 
-window.addEventListener("resize", resizeHeaderHandler.bind(this, hamburgerBtn));
 //ESHOP//////////////////////////////////////////////////////////////////////
 
 //ESHOP-CATEGORY-SELECT
