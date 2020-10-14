@@ -75,15 +75,15 @@
                 <div class="eshop__products">
                     <% products.forEach(product => { %>
                         <div class="product">
-                            <div class="product-modal">
-                                <button class="close-button product-modal__close-button"></button>
-                                <p class="product-modal__amount">Množství</p>
-                                <input class="product-modal__input" type="number">
+                            <div class="product__modal">
+                                <button class="close-button product__modal__close-button"></button>
+                                <p class="product__modal__amount">Množství</p>
+                                <input class="product__modal__input" type="number">
                                 <button class="to-cart-button">
                                     Do košíku
                                 </button>
                             </div>
-                            <div class="product-body">
+                            <div class="product__body">
                                 <img src="<%= product.images[0] %>" alt="Fotka <%= product.name %>" class="product__image">
                                 <div class="product__description">
                                     <p class="product__description-text">
@@ -91,7 +91,7 @@
                                     </p>
                                 </div>
                             </div>
-                            <div class="product-info">
+                            <div class="product__info">
                                 <button class="to-cart-button">
                                     Do košíku
                                 </button>

@@ -17,6 +17,8 @@ $color-grey-lightest: lighten($color-grey, 30%);
 
 $color-black: black;
 $color-black-overlay: rgba($color-black, .3);
+$color-black-overlay-light: rgba($color-black, .15);
+$color-black-overlay-lightest: rgba($color-black, .05);
 
 /////////////////
 ///// TYPOGRAPHY
@@ -28,7 +30,7 @@ $font-secondary: 'Charm', 'cursive';
 $font-largest: 6rem;
 $font-large: 4.5rem;
 $font-bigger: 2.5rem;
-$font-big: 2rem;
+$font-big: 2.2rem;
 $font-regular: 1.8rem;
 
 ////////////////

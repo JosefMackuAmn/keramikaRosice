@@ -9,6 +9,10 @@
     position: absolute;
     
     transition: all .2s;
+    
+    &:hover {
+        transform: rotate(-10deg);
+    }
 
     @media screen and (max-width: 850px) {
         top: 0;
@@ -36,8 +40,5 @@
     }
     &::after {
         transform: translateY(-50%) translateX(-50%) rotate(-45deg);
-    }
-    &:hover {
-        transform: rotate(-10deg);
     }
 }
