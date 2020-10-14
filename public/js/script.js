@@ -47,10 +47,20 @@ const showOrHideEl = (element, hiddenClass, visibleClass, hidingClass) => {
     element.classList.remove(visibleClass);
     element.classList.add(hidingClass);
 
-    element.addEventListener('animationend', function() {
+    const animationEndHandler =  function(event) {
+      if(event.pseudoElement) {
+        element.addEventListener('animationend', animationEndHandler,  {
+          capture: false,
+          once: true,
+          passive: false
+        });
+        return;
+      }
      element.classList.remove(hidingClass);
      element.classList.add(hiddenClass);
-    }, {
+    }
+
+    element.addEventListener('animationend', animationEndHandler, {
       capture: false,
       once: true,
       passive: false
@@ -152,9 +162,19 @@ const state = {
 ready(() => {
   // Select hamburger button and attach click listener
   const hamburgerBtn = document.querySelector("#hamburger-btn");
+  const headerList = hamburgerBtn.nextElementSibling;
+
   hamburgerBtn.addEventListener(
     "click",
-    hamburgerBtnClickHandler.bind(this, hamburgerBtn)
+    () => {
+
+      switchClass(hamburgerBtn, 'header__nav-button--hide', 'header__nav-button--show');
+      showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+      for (const listItem of headerList.children) {
+        showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+      }
+
+    }
   );
 
   // Window resize listener
@@ -182,7 +202,6 @@ ready(() => {
      
 });
 
-window.addEventListener("resize", resizeHeaderHandler.bind(this, hamburgerBtn));
 //ESHOP//////////////////////////////////////////////////////////////////////
 
 //ESHOP-CATEGORY-SELECT

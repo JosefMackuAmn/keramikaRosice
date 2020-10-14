@@ -60,7 +60,7 @@ $hamburger-hover-offset: .3rem;
             }
         }
 
-        &--clicked {
+        &--hide {
             :first-child::before {
                 transform: translateY(calc(-2*(#{$hamburger-plate-height}) - #{$hamburger-hover-offset}));
             }
@@ -106,8 +106,6 @@ $hamburger-hover-offset: .3rem;
             width: 100%;
             background-color: $color-white;
 
-            
-
             z-index: 10;
             position: relative;
 
@@ -120,7 +118,7 @@ $hamburger-hover-offset: .3rem;
             }
 
             &--hiding {
-
+                display: block;
             }
  
             &::after {
@@ -139,10 +137,6 @@ $hamburger-hover-offset: .3rem;
                 animation: headerShiftOut .1s forwards;
             }
         }
-
-        &--shown {
-            
-        }
     }
     &__nav-item {
         margin-right: 5rem;
@@ -157,6 +151,20 @@ $hamburger-hover-offset: .3rem;
             margin-bottom: 2rem;
 
             text-align: right;
+
+            &--hidden {
+                display: none;
+            }
+
+            &--visible {
+                display: block;
+
+                animation: headerShiftIn .2s forwards;
+            }
+
+            &--hiding {
+                animation: headerShiftOut .2s forwards;
+            }
         }
     }
     &__logo {
