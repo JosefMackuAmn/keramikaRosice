@@ -1,11 +1,3 @@
-///////////////////
-///// FONT SIZES
-$font-largest: 6rem;
-$font-large: 4.5rem;
-$font-bigger: 2.5rem;
-$font-big: 2rem;
-$font-regular: 1.8rem;
-
 //////////////////
 ///// COLORS
 
@@ -26,5 +18,19 @@ $color-grey-lightest: lighten($color-grey, 30%);
 $color-black: black;
 $color-black-overlay: rgba($color-black, .3);
 
-//TYPOGRAPHY
+/////////////////
+///// TYPOGRAPHY
+
+// FONT FAMILIES
 $font-secondary: 'Charm', 'cursive';
+
+// FONT SIZES
+$font-largest: 6rem;
+$font-large: 4.5rem;
+$font-bigger: 2.5rem;
+$font-big: 2rem;
+$font-regular: 1.8rem;
+
+////////////////
+///// BPs
+$bp-eshop-mobile: 700px;

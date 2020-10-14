@@ -7,13 +7,17 @@
 @import "./base/utilities";
 
 @import "./components/cart-item";
+@import "./components/category-select";
 @import "./components/close-button";
 @import "./components/order-form";
+@import "./components/picture";
+@import "./components/product";
+@import "./components/to-cart-button";
 
 @import "./layout/footer";
 @import "./layout/header";
 @import "./layout/gradient";
 
 @import "./pages/cart";
-@import "./pages/eshop";
 @import "./pages/index";
+@import "./pages/eshop";

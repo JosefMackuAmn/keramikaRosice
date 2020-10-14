@@ -1,0 +1,30 @@
+.to-cart-button {
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    transition: all .2s;
+
+    color: $color-white;
+    font-family: $font-secondary;
+    font-size: 100%;
+
+    position: relative;
+
+    &::before {
+        content: "";
+        background-image: url('../img/cart-icon.png');
+        background-size: cover;
+
+        display: block;
+
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    &:hover {
+        color: $color-primary;
+
+        transform: translateY(-1px);
+    }
+}
