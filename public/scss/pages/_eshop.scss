@@ -297,7 +297,7 @@ $bp-eshop-mobile: 700px;
                 transform: translateY(calc(-50% - 8px)) translateX(-50%);
             }
         }
-        &--hide{
+        &--hide {
             &::after {
                 clip-path: polygon(0 50%, 100% 50%, 50% 0);
                 transform: translateY(calc(-50% + 5px)) translateX(-50%);
@@ -572,48 +572,9 @@ $bp-eshop-mobile: 700px;
         font-family: 'PT Sans';
         font-size: 1.6rem;
     }
-    &__close-button {
-        background-color: transparent;
-        outline: none;
-        border: none;
-        width : 3rem;
-        height: 3rem;
-        cursor: pointer;
-        transition: all .2s;
-
-        position: absolute;
+    & .close-button {
         top: 1rem;
         right: 1rem;
-
-        @media screen and (max-width: 850px) {
-            top: 0;
-            right: 0;
-        }
-
-        &::before,
-        &::after {
-            content: "";
-            height: .5rem;
-            width: 2rem;
-            background-color: $color-white;
-            transition: all 2s;
-
-            display: block;
-
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateY(-50%) translateX(-50%);
-        }
-        &::before {
-            transform: translateY(-50%) translateX(-50%) rotate(45deg);
-        }
-        &::after {
-            transform: translateY(-50%) translateX(-50%) rotate(-45deg);
-        }
-        &:hover {
-            transform: rotate(-10deg);
-        }
     }
 }
 .product-info {

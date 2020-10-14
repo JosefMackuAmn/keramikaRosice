@@ -23,6 +23,17 @@
         display: flex;
         align-items: flex-start;
         justify-content: space-between;
+
+        position: relative;
+
+        & .close-button {
+            top: 0;
+            right: 0;
+
+            &::after, &::before {
+                background-color: $color-primary;
+            }
+        }
     }
     &__delete {
         width: 2.5rem;
