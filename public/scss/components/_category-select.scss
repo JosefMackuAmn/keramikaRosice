@@ -1,0 +1,217 @@
+.category-select {
+    & ul {
+        list-style: none;
+    }
+    & .heading-2 {
+        margin-bottom: 2rem;
+        
+        text-align: center;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            margin-bottom: 0;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            border-top: 1px solid $color-primary;
+
+            font-size: 6rem;
+
+            left: 0;
+            bottom: calc(var(--category-select-mobile-button-height) + var(--category-select-mobile-list-height));
+
+            &.scrollLocked {
+                position: absolute;
+                bottom: var(--category-select-mobile-list-height);
+            }
+        }
+    }
+    & .heading-3 {
+        font-size: 2rem;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+           font-size: 2.5rem;
+        }
+    }
+    &__category-list {
+        @media screen and (max-width: $bp-eshop-mobile) {
+            height: var(--category-select-mobile-list-height);
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            bottom: var(--category-select-mobile-button-height);
+            overflow-y: auto;
+
+            &.scrollLocked {
+                position: absolute;
+                bottom: 0;
+            }
+        }
+    }
+    &__category-list,
+    & .heading-2 {
+        @media screen and (max-width: $bp-eshop-mobile) {
+            background-color: $color-white;
+            width: 100%;
+
+            position: fixed;
+            left: 0;
+
+            &--hidden {
+                display: none;
+            }
+            &--hiding {
+                animation: categorySelectMobileShiftOut .2s;
+            }
+            &--visible{
+                animation: categorySelectMobileShiftIn .2s;
+            }
+        }    
+    }
+    &__subcategory-list {
+        margin-left: 2rem;
+        margin-top: 2rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        animation: subcategorySelectShiftIn .1s;
+
+        &--hiding {
+            animation: subcategorySelectShiftOut .1s;
+        }
+        &--hidden {
+          display: none;
+        }
+    }
+    &__mobile-button {
+        width: 100%;
+        outline: none;
+        border: none;
+        background-color: $color-primary;
+        height: var(--category-select-mobile-button-height);
+        cursor: pointer;
+        
+        color: $color-white;
+        font-size: 1.8rem;
+        font-family: $font-secondary;
+
+        display: none;
+
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 100;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }    
+
+        &--hide {
+            &::before {
+                transform: rotate(180deg);
+            }
+        }
+
+        &::before {
+            content: "";
+            background-color: $color-white;
+            width: 2rem;
+            height: 3rem;
+            margin-right: 2rem;
+            clip-path: polygon(50% 0, 100% 0, 50% 50%, 100% 100%, 50% 100%, 0 50%);
+            transition: all .2s;
+
+            display: inline-block;
+        }
+    }
+    &__button {
+        width: 3rem;
+        height: 3rem;
+        cursor: pointer;
+        border: none;
+        outline: none;
+        background-color: transparent;
+    
+        right: -2rem;
+        position: absolute;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            right: -4rem;
+        }    
+
+        &--show {
+            &::after {
+                clip-path: polygon(0 50%, 100% 50%, 50% 100%);
+                transform: translateY(calc(-50% - 5px)) translateX(-50%);
+            }
+            &:hover::after {
+                transform: translateY(calc(-50% - 8px)) translateX(-50%);
+            }
+        }
+        &--hide{
+            &::after {
+                clip-path: polygon(0 50%, 100% 50%, 50% 0);
+                transform: translateY(calc(-50% + 5px)) translateX(-50%);
+            }
+            &:hover::after {
+                transform: translateY(calc(-50% + 2px)) translateX(-50%);
+            }
+        }
+
+        &::after {
+            content: "";
+            width: 2rem;
+            height: 2rem;
+            background-color: $color-primary;
+            transition: all .1s;
+
+            display: block;
+            
+            position: absolute;
+            z-index: 10;
+            top: 50%;
+            left: 50%;
+        }
+    }
+    &__category {
+        padding-bottom: 2rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        position: relative;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            margin-left: -2rem;
+        } 
+    }
+    &__subcategory {
+        display: flex;
+        align-items: center;
+
+        &::before {
+            content: "";
+            width: .8rem;
+            height: .8rem;
+            background-color: $color-secondary;
+            margin-right: 1rem;
+
+            display: inline-block;
+
+            transform: rotate(45deg);
+        }
+        &--selected {
+            &::before {
+                background-color: $color-primary;
+            } 
+        }
+        &:not(:last-child) {
+            margin-bottom: .5rem;
+        } 
+    }
+}
