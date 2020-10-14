@@ -105,8 +105,28 @@ const categorySelectMobileBtn = categorySelect.querySelector('button');
 const categorySelectList = categorySelectMobileBtn.parentElement.querySelector('.category-select__category-list');
 const categorySelectHeading = categorySelectMobileBtn.parentElement.querySelector('.heading-2');
 
+const footer = document.querySelector('footer');
+
+window.addEventListener('scroll', () => {
+  const footerY = footer.getBoundingClientRect().y;
+  const btnY = categorySelectMobileBtn.getBoundingClientRect().y;
+  if (footerY >= btnY) {
+    categorySelectList.classList.remove('scrollLocked');
+    categorySelectHeading.classList.remove('scrollLocked');
+  } else {
+    categorySelectList.classList.add('scrollLocked');
+    categorySelectHeading.classList.add('scrollLocked');
+  }
+});
 
 categorySelectMobileBtn.addEventListener('click', () => {
   showOrHideEl(categorySelectList, 'category-select__category-list--hidden', 'category-select__category-list--visible', 'category-select__category-list--hiding');
   showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
+  switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
+
+  if([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
+    categorySelectMobileBtn.textContent = 'Zobrazit kategorie';
+  } else {
+    categorySelectMobileBtn.textContent = 'Skrýt kategorie';
+  }
 })

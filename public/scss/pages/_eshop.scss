@@ -55,13 +55,16 @@ $bp-eshop-mobile: 700px;
         }  
         @media screen and (max-width: $bp-eshop-mobile) {
             width: 100%;
+            //height: 100%;
     
             display: flex;
             flex-direction: column;
             align-items: center;
 
             position: absolute;
-            z-index: 2;
+            z-index: 7;
+            left: 0;
+            bottom: 0;
         }    
     }
     &__head {
@@ -117,9 +120,10 @@ $bp-eshop-mobile: 700px;
     &__body {
         width: 100%;
         padding-left: 4rem;
-        padding-right: 4rem;
 
         display: flex;
+
+        position: relative;
 
         @media screen and (max-width: 900px) {
             padding-left: 2rem;
@@ -148,6 +152,9 @@ $bp-eshop-mobile: 700px;
 
         display: flex;
        flex-wrap: wrap;
+
+       position: relative;
+       z-index: 6;
 
        & > * {
            margin-right: var(--product-margin-right);
@@ -191,21 +198,43 @@ $bp-eshop-mobile: 700px;
 
         @media screen and (max-width: $bp-eshop-mobile) {
             margin-bottom: 0;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+            border-top: 1px solid $color-primary;
+
+            font-size: 6rem;
 
             left: 0;
             bottom: calc(var(--category-select-mobile-button-height) + var(--category-select-mobile-list-height));
+
+            &.scrollLocked {
+                position: absolute;
+                bottom: var(--category-select-mobile-list-height);
+            }
         }
     }
     & .heading-3 {
         font-size: 2rem;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+           font-size: 2.5rem;
+        }
     }
     &__category-list {
         @media screen and (max-width: $bp-eshop-mobile) {
-        height: var(--category-select-mobile-list-height);
+            height: var(--category-select-mobile-list-height);
 
-        left: 0;
-        bottom: var(--category-select-mobile-button-height);
-        overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            bottom: var(--category-select-mobile-button-height);
+            overflow-y: auto;
+
+            &.scrollLocked {
+                position: absolute;
+                bottom: 0;
+            }
         }
     }
     &__category-list,
@@ -215,6 +244,7 @@ $bp-eshop-mobile: 700px;
             width: 100%;
 
             position: fixed;
+            left: 0;
 
             &--hidden {
                 display: none;
@@ -230,7 +260,10 @@ $bp-eshop-mobile: 700px;
     &__subcategory-list {
         margin-left: 2rem;
         margin-top: 2rem;
-        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
 
         animation: subcategorySelectShiftIn .1s;
 
@@ -258,13 +291,19 @@ $bp-eshop-mobile: 700px;
         position: fixed;
         bottom: 0;
         left: 0;
-        z-index: 10;
+        z-index: 100;
 
         @media screen and (max-width: $bp-eshop-mobile) {
             display: flex;
             align-items: center;
             justify-content: center;
         }    
+
+        &--hide {
+            &::before {
+                transform: rotate(180deg);
+            }
+        }
 
         &::before {
             content: "";
@@ -273,6 +312,7 @@ $bp-eshop-mobile: 700px;
             height: 3rem;
             margin-right: 2rem;
             clip-path: polygon(50% 0, 100% 0, 50% 50%, 100% 100%, 50% 100%, 0 50%);
+            transition: all .2s;
 
             display: inline-block;
         }
@@ -280,13 +320,17 @@ $bp-eshop-mobile: 700px;
     &__button {
         width: 3rem;
         height: 3rem;
-        margin-left: 2rem;
         cursor: pointer;
         border: none;
         outline: none;
         background-color: transparent;
-       
-        position: relative;
+    
+        right: -2rem;
+        position: absolute;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            right: -4rem;
+        }    
 
         &--show {
             &::after {
@@ -326,8 +370,14 @@ $bp-eshop-mobile: 700px;
         padding-bottom: 2rem;
 
         display: flex;
-        flex-wrap: wrap;
+        flex-direction: column;
         align-items: center;
+
+        position: relative;
+
+        @media screen and (max-width: $bp-eshop-mobile) {
+            margin-left: -2rem;
+        } 
     }
     &__subcategory {
         display: flex;
