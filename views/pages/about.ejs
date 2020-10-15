@@ -1,9 +1,42 @@
 <%- include('../includes/head.ejs') %>
 </head>
 <body>
+
+    <%- include('../includes/header.ejs') %>
+    <%- include('../includes/gradient.ejs') %>
     
     <main>
-        <%= title %>
+        <section class="about">
+            <div class="about__head">
+                <h1 class="heading-1">O mojí keramice</h1>
+            </div>
+            <div class="about__body">
+                    <figure class="picture picture--top">
+                        <img src="img/aboutdummy.jpeg" class="picture__img" alt="Category picture">
+                        <div class="picture__bg"></div>
+                    </figure>
+                    <p class="about__paragraph">
+                        Můj sortiment tvoří hrnky a hrníčky všech tvarů a velikostí, aroma lampy, džbány, láhve, vázy, misky, dózy, cukřenky a další.
+                    </p>
+                    <p class="about__paragraph">
+                        Věnuji se také šperkům a to jak keramickým, tak i porcelánovým zdobeným plastickým dekorem, listrem nebo platinou.
+                    </p>
+                    <p class="about__paragraph">
+                        Mimo e-shop prodávám svoji produkci přímo z dílny, přes e-shopy Fler a Simira a při různých městských slavnostech, řemeslných a keramických trzích.
+                    </p>
+                    <figure class="picture picture--bottom">
+                        <img src="img/aboutdummy.jpeg" class="picture__img" alt="Category picture">
+                        <div class="picture__bg"></div>
+                    </figure>
+                    <p class="about__paragraph">
+                        Všechny moje točené výrobky jsou dvakrát pálené při teplotách ostrého výpalu 1135-1230 °C,  podle použité hrnčířské hlíny. Mohou se používat v mikrovlnné troubě i mýt v myčce na nádobí a splňují platné hygienické normy.
+                    </p>
+                    <p class="about__paragraph">
+                        Ve své keramické dílně v Rosicích u Brna se zabývám výrobou keramiky od roku 1990. Vyrábím užitkovou keramiku točenou na hrnčířském kruhu. 
+    Moje keramické výrobky jsou vytvářeny s úctou k tradičním postupům.
+                    </p>
+            </div>
+        </section>
     </main>
 
     <%- include('../includes/footer.ejs') %>
