@@ -203,8 +203,14 @@ exports.postOrder = async (req, res, next) => {
     transporter.sendMail({
         from: process.env.MAIL_USER,
         to: email,
+        cc: process.env.MAIL_USER,
         subject: 'Keramika Rosice: Nová objednávka',
-        html: '<h1>This is working!</h1>'
+        html: '<h1>This is working!</h1>',
+        attachments: [{
+            filename: invoiceName,
+            path: invoicePath,
+            contentType: 'application/pdf'
+        }],
     }, (err, info) => {
         if (err) {
             console.log(err);
