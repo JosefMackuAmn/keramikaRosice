@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
@@ -23,21 +24,21 @@ exports.getShop = async (req, res, next) => {
 
 exports.getCategory = async (req, res, next) => {
     const categoryName = req.params.category.toLowerCase();
-    const category = await Category.findOne({ name: categoryName });
+    const category = await Category.findOne({ name: 'amnion category' });
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
-            categoryProducts: []
+            products: []
         })
     }
     const categoryId = category._id;
 
 
-    const categoryProducts = await Product.find({ categoryId: categoryId });
+    const categoryProducts = await Product.find({ categoryId: categoryId }) || [];
 
     res.render('eshop/shop', {
         title: categoryName,
-        categoryProducts: categoryProducts
+        products: categoryProducts
     });
 }
 
@@ -49,7 +50,7 @@ exports.getSubcategory = async (req, res, next) => {
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
-            categoryProducts: []
+            products: []
         })
     }
     const categoryId = category._id;
@@ -59,7 +60,7 @@ exports.getSubcategory = async (req, res, next) => {
     if (!subcategory) {
         return res.status(400).render('eshop/shop', {
             title: 'Podkategorie nenalezena',
-            categoryProducts: []
+            products: []
         })
     }
     const subcategoryId = subcategory._id;
@@ -67,7 +68,8 @@ exports.getSubcategory = async (req, res, next) => {
     const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
 
     res.render('eshop/shop', {
-        title: subcategoryName
+        title: subcategoryName,
+        products: subcategoryProducts
     });
 }
 
@@ -157,8 +159,10 @@ exports.postOrder = async (req, res, next) => {
     const cart = req.session.cart;
 
     const order = new Order({
-        total: cart.total,
-        items: cart.items.map(item => {
+        //total: cart.total,
+        total: 456 * 5,
+        items: [{product: {_id: '456', name: '456', price: 456}, amount: 5}],
+        /* items: cart.items.map(item => {
             return {
                 product: {
                     _id: item.product._id,
@@ -167,7 +171,7 @@ exports.postOrder = async (req, res, next) => {
                 },
                 amount: item.amount
             }
-        }),
+        }), */
         firstName,
         lastName,
         email,
@@ -176,7 +180,8 @@ exports.postOrder = async (req, res, next) => {
         city,
         zipCode,
         delivery,
-        deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
+        //deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
+        deliveryCost: consts.deliveryCosts[delivery][0],
         payment,
         paymentCost: consts.paymentCosts[payment],
         date: new Date().toISOString(),

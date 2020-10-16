@@ -28,9 +28,7 @@ const getLogin = (req, res, next) => {
 const postLogin = (req, res, next) => {
     const password = req.body.password;
     if (password !== process.env.ADMIN_PASSWORD) {
-        return res.status(401).json({
-            msg: "Wrong password"
-        })
+        return res.status(401).redirect('/');
     } else if (password === process.env.ADMIN_PASSWORD) {
         req.session.isAdmin = true;
         return req.session.save(err => {
@@ -38,7 +36,7 @@ const postLogin = (req, res, next) => {
             return res.redirect('/admin');
         })
     }
-    res.redirect('/');
+    res.status(401).redirect('/');
 }
 
 const getLogout = (req, res, next) => {

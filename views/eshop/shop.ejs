@@ -8,13 +8,14 @@
         <section class="eshop">
             <div class="eshop__head">
                 <figure class="picture eshop__category-picture">
-                    <img src="img/index-photo.jpg" class="picture__img" alt="Category picture">
+                    <img src="/img/index-photo.jpg" class="picture__img" alt="Category picture">
                     <div class="picture__bg"></div>
                 </figure>
                 <h2 class="heading-2">Porcelánový špek</h2>
                 <h3 class="heading-3">Podkategorie</h3>
             </div>
             <div class="eshop__body">
+
                 <!-- CATEGORY-SELECT -->
                 <div class="category-select">
                     <button class="category-select__mobile-button category-select__mobile-button--show">
@@ -71,39 +72,44 @@
                     </ul>
                    
                 </div>
+
                 <!-- PRODUCTS -->
                 <div class="eshop__products">
-                    <% products.forEach(product => { %>
-                        <div class="product">
-                            <div class="product__modal">
-                                <button class="close-button product__modal__close-button"></button>
-                                <p class="product__modal__amount">Množství</p>
-                                <input class="product__modal__input" type="number">
-                                <button class="to-cart-button">
-                                    Do košíku
-                                </button>
-                            </div>
-                            <div class="product__body">
-                                <img src="<%= product.images[0] %>" alt="Fotka <%= product.name %>" class="product__image">
-                                <div class="product__description">
-                                    <p class="product__description-text">
-                                        <%= product.description %>
+                    <% if (products.length > 0) {
+                        products.forEach(product => { %>
+                            <div class="product">
+                                <div class="product__modal">
+                                    <button class="close-button product__modal__close-button"></button>
+                                    <p class="product__modal__amount">Množství</p>
+                                    <input class="product__modal__input" type="number">
+                                    <button class="to-cart-button">
+                                        Do košíku
+                                    </button>
+                                </div>
+                                <div class="product__body">
+                                    <img src="/<%= product.images[0] %>" alt="Fotka <%= product.name %>" class="product__image">
+                                    <div class="product__description">
+                                        <p class="product__description-text">
+                                            <%= product.description %>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="product__info">
+                                    <button class="to-cart-button">
+                                        Do košíku
+                                    </button>
+                                    <p class="product__price">
+                                        <%= product.price %>Kč
+                                    </p>
+                                    <p class="product__name">
+                                        <%= product.name %>
                                     </p>
                                 </div>
                             </div>
-                            <div class="product__info">
-                                <button class="to-cart-button">
-                                    Do košíku
-                                </button>
-                                <p class="product__price">
-                                    <%= product.price %>Kč
-                                </p>
-                                <p class="product__name">
-                                    <%= product.name %>
-                                </p>
-                            </div>
-                        </div>
-                    <% }) %>
+                        <% });
+                    } else { %>
+                        <p>Žádné produkty nenalezeny</p>
+                    <% } %>
                     <div class="product">
                         <div class="product__modal">
                             <button class="close-button product__modal__close-button"></button>
