@@ -36,6 +36,6 @@ const productSchema = new Schema({
         required: true
     },
     images: [ String ]
-})
+});
 
 module.exports = mongoose.model('Product', productSchema);

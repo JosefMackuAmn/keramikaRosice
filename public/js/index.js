@@ -14,8 +14,10 @@
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/state */ "./src/js/utils/state.js");
 /* harmony import */ var _utils_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/functions */ "./src/js/utils/functions.js");
+/* harmony import */ var _utils_ajax__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/ajax */ "./src/js/utils/ajax.js");
 
-  
+
+
   
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
@@ -69,6 +71,30 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     /////
     // E-SHOP
     /////
+
+    ///// SUBMIT TO CART BUTTON
+
+    const eshopProducts = document.querySelector('.eshop__products');
+
+    if(eshopProducts) {
+        const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
+        for (const btn of submitBtns) {
+            btn.addEventListener('click', () => {
+                // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
+                const postCartData = {
+                    action: 'ADD',
+                    productId: btn.dataset.productid,
+                    csrf: btn.dataset.csrf,
+                    amount: btn.parentElement.querySelector('input').value
+                }
+                
+                _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCart(postCartData).catch(err => {
+                    // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
+                });
+            })
+        }
+
+    }
 
     ///// CATEGORY SELECT
     const categorySelect = document.querySelector('.category-select');
@@ -132,7 +158,7 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
     
-            if([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
+            if ([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
                 categorySelectMobileBtn.textContent = 'Zobrazit kategorie';
             } else {
                 categorySelectMobileBtn.textContent = 'Skrýt kategorie';
@@ -143,6 +169,57 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
 
   
+
+/***/ }),
+
+/***/ "./src/js/utils/ajax.js":
+/*!******************************!*\
+  !*** ./src/js/utils/ajax.js ***!
+  \******************************/
+/*! namespace exports */
+/*! export postCart [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "postCart": () => /* binding */ postCart
+/* harmony export */ });
+const postCart = async ({ action, csrf, amount, productId }) => {
+    switch (action) {
+        case 'ADD':
+        case 'REMOVE':
+
+            // Create body object
+            const bodyObj = {
+                action: action,
+                amount: amount,
+                productId: productId
+            };
+
+            // Send request
+            fetch('/kosik', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': csrf,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(bodyObj)
+            }).then(res => {
+                if (!(res.ok && res.status >= 200 && res.status < 300)) {                
+                    const errorMsg = res.json().msg;
+                    throw new Error(errorMsg);
+                }
+            }).catch(err => {
+                throw new Error(err);
+            })
+
+            break;
+        default: throw new Error('Non-existing cart action');
+    }
+}
 
 /***/ }),
 

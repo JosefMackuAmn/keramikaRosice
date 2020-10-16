@@ -26,6 +26,7 @@ exports.getContact = (req, res, next) => {
 
 exports.getConditions = (req, res, next) => {
     const pdfPath = path.join('pdf', 'conditions.pdf');
+    
     fs.readFile(pdfPath, (err, data) => {
         if (err) return next(err);
         res.setHeader('Content-Type', 'application/pdf');
@@ -35,11 +36,13 @@ exports.getConditions = (req, res, next) => {
 }
 
 exports.getGDPR = (req, res, next) => {
-    const pdfPath = path.join('pdf', 'conditions.pdf');
+    const pdfPath = path.join('pdf', 'gdpr.pdf');
+
     fs.readFile(pdfPath, (err, data) => {
         if (err) return next(err);
+
         res.setHeader('Content-Type', 'application/pdf');
-        res.setHeader('Content-Disposition', 'inline; filename="conditions.pdf"');
+        res.setHeader('Content-Disposition', 'inline; filename="ochrana-osobnich-udaju.pdf"');
         res.send(data);
     });
 }

@@ -1,5 +1,6 @@
 import state from './utils/state';
-import * as fcns from './utils/functions';  
+import * as fcns from './utils/functions';
+import * as ajax from './utils/ajax';
   
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
@@ -53,6 +54,30 @@ fcns.ready(() => {
     /////
     // E-SHOP
     /////
+
+    ///// SUBMIT TO CART BUTTON
+
+    const eshopProducts = document.querySelector('.eshop__products');
+
+    if(eshopProducts) {
+        const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
+        for (const btn of submitBtns) {
+            btn.addEventListener('click', () => {
+                // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
+                const postCartData = {
+                    action: 'ADD',
+                    productId: btn.dataset.productid,
+                    csrf: btn.dataset.csrf,
+                    amount: btn.parentElement.querySelector('input').value
+                }
+                
+                ajax.postCart(postCartData).catch(err => {
+                    // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
+                });
+            })
+        }
+
+    }
 
     ///// CATEGORY SELECT
     const categorySelect = document.querySelector('.category-select');
@@ -116,7 +141,7 @@ fcns.ready(() => {
             fcns.showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
             fcns.switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
     
-            if([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
+            if ([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
                 categorySelectMobileBtn.textContent = 'Zobrazit kategorie';
             } else {
                 categorySelectMobileBtn.textContent = 'Skrýt kategorie';

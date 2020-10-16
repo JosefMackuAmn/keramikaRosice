@@ -330,9 +330,7 @@ const onSaveModal = () => {
                     })
                     .then(resolved => {
                         const [res, json] = resolved;
-                        console.log(json);
-                        console.log(res);
-                        if (res.ok === true) {
+                        if (res.ok) {
                             // Refresh after success
                             window.location.href = '/admin/categories?success=true';
                         } else {

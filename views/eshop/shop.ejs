@@ -82,7 +82,7 @@
                                     <button class="close-button product__modal__close-button"></button>
                                     <p class="product__modal__amount">Množství</p>
                                     <input class="product__modal__input" type="number">
-                                    <button class="to-cart-button">
+                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>">
                                         Do košíku
                                     </button>
                                 </div>
