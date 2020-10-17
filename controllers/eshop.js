@@ -237,7 +237,7 @@ exports.postOrder = async (req, res, next) => {
         // if payment is of type 'CRD'
         // stripe session id should be sent as JSON data
 
-        // Create stripe-compatible item list with delivery and payment cost
+        // Create stripe-compatible item list with delivery and payment costs
         const stripeItems = order.items.map(item => {
             return {
                 price_data: {

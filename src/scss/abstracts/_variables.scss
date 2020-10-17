@@ -3,6 +3,7 @@
 
 // Colors
 $color-primary: #AE4900;
+$color-primary-light: lighten($color-primary, 60%);
 
 $color-secondary: #E9E2D4;
 $color-secondary-light: lighten($color-secondary, 7%);

@@ -1,4 +1,4 @@
-export const postCart = async ({ action, csrf, amount, productId }) => {
+export const postCartHandler = async ({ action, csrf, amount, productId }) => {
     switch (action) {
         case 'ADD':
         case 'REMOVE':

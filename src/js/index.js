@@ -14,15 +14,18 @@ fcns.ready(() => {
     const hamburgerBtn = state.hamburgerBtn = document.querySelector("#hamburger-btn");
     const headerList = hamburgerBtn.nextElementSibling;
 
-    hamburgerBtn.addEventListener("click", () => {
+    hamburgerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
 
-        fcns.switchClass(hamburgerBtn, 'header__nav-button--hide', 'header__nav-button--show');
-        fcns.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+        if(![hamburgerBtn.classList].includes('header__nav-button--hiding')) {
 
-        for (const listItem of headerList.children) {
-            fcns.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+            fcns.showOrHideEl(hamburgerBtn, 'header__nav-button--show', 'header__nav-button--hide', 'header__nav-button--hiding');
+            fcns.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+
+            for (const listItem of headerList.children) {
+                fcns.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+            }
         }
-
     });
 
     // Window resize listener
@@ -49,6 +52,21 @@ fcns.ready(() => {
             state.categoriesSlider.selectedArr = 'right';
             fcns.moveCategoriesSlider();
         });        
+    }
+
+    /////
+    // CART
+    /////
+
+    ///// TO ORDER BUTTON
+
+    const toOrderBtn = document.getElementById('to-order');
+    if(toOrderBtn) {
+        const orderSection = document.getElementById('cart-order');
+
+        toOrderBtn.addEventListener('click', () => {
+            orderSection.scrollIntoView({behavior: 'smooth'});
+        })
     }
     
     /////
@@ -79,7 +97,7 @@ fcns.ready(() => {
                     amount: btn.parentElement.querySelector('input').value
                 }
                 
-                ajax.postCart(postCartData).catch(err => {
+                ajax.postCartHandler(postCartData).catch(err => {
                     // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
                 });
             })
@@ -156,6 +174,9 @@ fcns.ready(() => {
             }
         });
     }
+    /////
+    // MODAL
+    /////
 });
 
 

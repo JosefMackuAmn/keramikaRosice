@@ -75,6 +75,9 @@ $hamburger-hover-offset: .3rem;
                 }
             }
         }
+        &--hiding {
+            animation: doNothing .2s;
+        }
     }
     &__nav-hamburger {
         height: $hamburger-plate-height;
@@ -185,6 +188,8 @@ $hamburger-hover-offset: .3rem;
 
         @media screen and (max-width: $bp-header-mobile) {
            color: $color-white;
+
+           font-size: 2.5rem;
         }
     }
 }

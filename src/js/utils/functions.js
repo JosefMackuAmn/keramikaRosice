@@ -99,30 +99,6 @@ export const resizeHeaderHandler = () => {
     }
 };
 
-export const hamburgerBtnClickHandler = (btn, event) => {
-    event.stopPropagation();
-
-    if (Array.from(btn.classList).includes("header__nav-button--clicked")) {
-        btn.classList.remove("header__nav-button--clicked");
-        btn.nextElementSibling.addEventListener('animationend', function(e) {
-        btn.nextElementSibling.style.display = 'none';
-        }, {
-        capture: false,
-        once: true,
-        passive: false
-        });
-        for(const child of btn.nextElementSibling.children) {
-        child.style.animation = 'headerShiftOut .2s forwards';
-        }
-    } else {
-        btn.classList.toggle("header__nav-button--clicked");
-        btn.nextElementSibling.style.display = 'block';
-        for(const child of btn.nextElementSibling.children) {
-        child.style.animation = 'headerShiftIn .2s forwards';
-        }
-    }
-};
-
 /////
 // Categories slider
 /////
