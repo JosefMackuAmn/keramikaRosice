@@ -10,7 +10,7 @@
         <section class="cart__cart-content">
 
             <h1 class="heading-1">Košík</h1>
-            <button class="cart__cart-content__to-order-btn">K objednávce</button>
+            <button id="to-order" class="cart__cart-content__to-order-btn">K objednávce</button>
             <ul class="cart__cart-content__list">
                 <% const item = { product: { name: "Nejlepší produkt", images: ['img/pimg_2020-10-14T072646343Z-119939200_2621104791553149_4071285393717798880_n.jpg'], price: 35 }, amount: 2 }; %>
                 <% cart = { shippingCostId: 1, total: 4000 }; cart.items = [item, item, item]%>
@@ -53,7 +53,7 @@
         </section>
 
         <!-- ORDER FORM -->
-        <section class="cart__order">
+        <section id="cart-order" class="cart__order">
             
             <h1 class="heading-1">Objednávka</h1>
             <form class="order-form" action="/objednavka" method="POST">

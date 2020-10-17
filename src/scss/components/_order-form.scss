@@ -52,6 +52,8 @@
 
         &:focus {
             outline: none;
+
+            box-shadow: inset 1px 1px 5px rgba($color-black, .1);
         }
     }
     &__radio-row {
@@ -137,6 +139,9 @@
         }
         &:disabled {
             background-color: $color-grey-lightest;
+            border: 1px solid $color-grey;
+
+            color: $color-grey;
 
             &:hover {
                 transform: none;
@@ -144,6 +149,10 @@
                 &::before {
                     transform: translate3d(-50%, -50%, -1rem);
                 }
+            }
+            &::after,
+            &::before {
+                background-color: $color-grey;
             }
         }
 

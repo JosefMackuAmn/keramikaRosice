@@ -59,6 +59,12 @@
 
         left: -6rem;
       }
+      & .close-button {
+        @media screen and (max-width: 850px) {
+          top: 0;
+          right: 0;
+        }
+      }
     }
     &__amount {
       margin-top: 6rem;

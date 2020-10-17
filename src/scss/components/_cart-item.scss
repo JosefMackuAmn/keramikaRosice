@@ -82,7 +82,7 @@
             right: -3rem;
     
             &:hover {
-                transform: translate(50%, -50%) rotate(-10deg);
+                transform: translate(-50%, -50%) rotate(-10deg);
             }
 
             @media only screen and (max-width: 900px) {
@@ -156,6 +156,7 @@
             border: none;
             outline: none;
             cursor: pointer;
+            transition: transform .1s;
 
             font-size: $font-regular;
             font-weight: 800;
@@ -167,6 +168,13 @@
                 height: 4rem;
 
                 font-size: $font-big;
+            }
+
+            &:hover {
+                transform: scale(1.05);
+            }
+            &:active {
+                color: $color-primary;
             }
         }
     }

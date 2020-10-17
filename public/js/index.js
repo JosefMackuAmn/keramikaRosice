@@ -29,15 +29,18 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     const hamburgerBtn = _utils_state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn = document.querySelector("#hamburger-btn");
     const headerList = hamburgerBtn.nextElementSibling;
 
-    hamburgerBtn.addEventListener("click", () => {
+    hamburgerBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
 
-        _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(hamburgerBtn, 'header__nav-button--hide', 'header__nav-button--show');
-        _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+        if(![hamburgerBtn.classList].includes('header__nav-button--hiding')) {
 
-        for (const listItem of headerList.children) {
-            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(hamburgerBtn, 'header__nav-button--show', 'header__nav-button--hide', 'header__nav-button--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+
+            for (const listItem of headerList.children) {
+                _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
+            }
         }
-
     });
 
     // Window resize listener
@@ -64,6 +67,21 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             _utils_state__WEBPACK_IMPORTED_MODULE_0__.default.categoriesSlider.selectedArr = 'right';
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.moveCategoriesSlider();
         });        
+    }
+
+    /////
+    // CART
+    /////
+
+    ///// TO ORDER BUTTON
+
+    const toOrderBtn = document.getElementById('to-order');
+    if(toOrderBtn) {
+        const orderSection = document.getElementById('cart-order');
+
+        toOrderBtn.addEventListener('click', () => {
+            orderSection.scrollIntoView({behavior: 'smooth'});
+        })
     }
     
     /////
@@ -139,6 +157,9 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             }
         });
     }
+    /////
+    // MODAL
+    /////
 });
 
 
@@ -151,7 +172,6 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
   !*** ./src/js/utils/functions.js ***!
   \***********************************/
 /*! namespace exports */
-/*! export hamburgerBtnClickHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export moveCategoriesSlider [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
@@ -169,7 +189,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "showOrHideEl": () => /* binding */ showOrHideEl,
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
 /* harmony export */   "resizeHeaderHandler": () => /* binding */ resizeHeaderHandler,
-/* harmony export */   "hamburgerBtnClickHandler": () => /* binding */ hamburgerBtnClickHandler,
 /* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider
 /* harmony export */ });
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
@@ -270,30 +289,6 @@ const resizeHeaderHandler = () => {
 
         for(const child of _state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn.nextElementSibling.children) {
             child.style.animation = 'none';
-        }
-    }
-};
-
-const hamburgerBtnClickHandler = (btn, event) => {
-    event.stopPropagation();
-
-    if (Array.from(btn.classList).includes("header__nav-button--clicked")) {
-        btn.classList.remove("header__nav-button--clicked");
-        btn.nextElementSibling.addEventListener('animationend', function(e) {
-        btn.nextElementSibling.style.display = 'none';
-        }, {
-        capture: false,
-        once: true,
-        passive: false
-        });
-        for(const child of btn.nextElementSibling.children) {
-        child.style.animation = 'headerShiftOut .2s forwards';
-        }
-    } else {
-        btn.classList.toggle("header__nav-button--clicked");
-        btn.nextElementSibling.style.display = 'block';
-        for(const child of btn.nextElementSibling.children) {
-        child.style.animation = 'headerShiftIn .2s forwards';
         }
     }
 };
