@@ -54,5 +54,33 @@
 
             text-align: center;
         }
+
+        &__btn {
+            padding: .5rem 1rem;
+            border: 1px solid $color-black;
+            background-color: $color-white;
+            outline: none;
+            cursor: pointer;
+    
+            font-weight: 600;
+            font-size: $font-small;
+    
+            &:not(:last-child) {
+                margin-right: 2rem;
+            }
+            &--danger {
+                background-color: $color-red;
+                
+                color: $color-white;
+            }
+    
+            &:focus, &:active {
+                outline: none;
+                border: 1px solid $color-black;
+            }
+            &:hover {
+                box-shadow: 0 1px 5px 1px $color-white-overlay;
+            }
+        }
     }
 }

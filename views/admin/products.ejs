@@ -31,8 +31,8 @@
                             <td><%= product.amountInStock %>ks</td>
                             <td><%= product.price %>Kč</td>
                             <td>
-                                <a href="/admin/products/edit/<%= product._id %>">Upravit</a>
-                                <button class="deleteProductBtn" data-id="<%= product._id %>" data-csrf="<%= csrfToken %>">Smazat</button>
+                                <a class="item-list__row__btn" href="/admin/products/edit/<%= product._id %>">Upravit</a>
+                                <button class="item-list__row__btn item-list__row__btn--danger deleteProductBtn" data-id="<%= product._id %>" data-csrf="<%= csrfToken %>">Smazat</button>
                             </td>
                         </tr>
                     <% }) %>

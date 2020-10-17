@@ -1,10 +1,11 @@
 .add-button {
-    font-size: $font-regular;
-    font-weight: bold;
     background: none;
     border: none;
     outline: none;
     cursor: pointer;
+    
+    font-size: $font-regular;
+    font-weight: bold;
 
     display: flex;
     align-items: center;

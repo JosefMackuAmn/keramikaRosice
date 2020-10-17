@@ -60,12 +60,12 @@ a:link {
   letter-spacing: .2rem; }
 
 .add-button {
-  font-size: 1.8rem;
-  font-weight: bold;
   background: none;
   border: none;
   outline: none;
   cursor: pointer;
+  font-size: 1.8rem;
+  font-weight: bold;
   display: flex;
   align-items: center;
   justify-content: center; }
@@ -110,6 +110,30 @@ a:link {
     justify-content: space-between; }
     .category-box__subcategory:nth-child(even) {
       background-color: #EAEAEA; }
+  .category-box__edit-btn {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .category-box__edit-btn::before {
+      content: "?";
+      width: 2.5rem;
+      height: 2.5rem;
+      margin-right: 1rem;
+      border: 3px solid white;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center; }
+    .category-box__edit-btn--dark::before {
+      border: 3px solid black;
+      color: black; }
 
 .err-modal {
   width: 50%;
@@ -166,6 +190,24 @@ a:link {
       border-left: 1px solid #CECECE;
       border-right: 1px solid #CECECE;
       text-align: center; }
+    .item-list__row__btn {
+      padding: .5rem 1rem;
+      border: 1px solid black;
+      background-color: white;
+      outline: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.6rem; }
+      .item-list__row__btn:not(:last-child) {
+        margin-right: 2rem; }
+      .item-list__row__btn--danger {
+        background-color: #AE0000;
+        color: white; }
+      .item-list__row__btn:focus, .item-list__row__btn:active {
+        outline: none;
+        border: 1px solid black; }
+      .item-list__row__btn:hover {
+        box-shadow: 0 1px 5px 1px rgba(255, 255, 255, 0.5); }
 
 .login-form {
   width: 100%;
@@ -234,6 +276,28 @@ a:link {
     display: flex;
     align-items: center;
     justify-content: space-between; }
+  .modal__close-btn {
+    width: 3rem;
+    height: 3rem;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    cursor: pointer;
+    position: relative; }
+    .modal__close-btn::before, .modal__close-btn::after {
+      content: "";
+      height: .5rem;
+      width: 2rem;
+      background-color: white;
+      transform: translateY(-50%) translateX(-50%);
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%; }
+    .modal__close-btn::before {
+      transform: translateY(-50%) translateX(-50%) rotate(45deg); }
+    .modal__close-btn::after {
+      transform: translateY(-50%) translateX(-50%) rotate(-45deg); }
   .modal__main {
     width: 100%;
     padding: 5rem;

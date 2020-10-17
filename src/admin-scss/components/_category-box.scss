@@ -36,6 +36,38 @@
         }
     }
     &__edit-btn {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
 
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::before {
+            content: "?";
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-right: 1rem;
+            border: 3px solid $color-white;
+            border-radius: 50%;
+
+            color: $color-white;
+            font-size: $font-regular;
+            font-weight: 900;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &--dark {
+            &::before {
+                border: 3px solid $color-black;
+                
+                color: $color-black;
+            }
+        }
     }
 }

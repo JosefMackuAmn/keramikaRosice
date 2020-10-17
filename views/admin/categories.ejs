@@ -56,14 +56,14 @@
                     <section class="category-box">
                         <div class="category-box__heading">
                             <h4 class="heading-4 heading-4--light"><%= category.name %></h4>
-                            <button class="category-box__edit-btn" data-name="<%= category.name %>" data-categoryId="<%= category._id %>">!</button>
+                            <button class="category-box__edit-btn" data-name="<%= category.name %>" data-categoryId="<%= category._id %>"></button>
                         </div>
                         <div class="category-box__subcategories">
                             <% subcategories.forEach(subcategory => { %>
                                 <% if (subcategory.categoryId.toString() === category._id.toString()) {  %>
                                     <div class="category-box__subcategory">
                                         <h4 class="heading-4"><%= subcategory.name %></h4>
-                                        <button class="category-box__edit-btn" data-name="<%= subcategory.name %>" data-categoryId="<%= category._id %>" data-subcategoryId="<%= subcategory._id %>">!</button>
+                                        <button class="category-box__edit-btn category-box__edit-btn--dark" data-name="<%= subcategory.name %>" data-categoryId="<%= category._id %>" data-subcategoryId="<%= subcategory._id %>"></button>
                                     </div>
                                 <% } %>
                             <% }) %>
