@@ -95,8 +95,13 @@ const putOrder = async (req, res, next) => {
         });
     }
 
+    if (!order.isPayed && isPayed) {
+        // Mark as payed and send notification
+        await asyncHelpers.paidOrderHandler(order);
+    }
+
+    // Its possible to only change status if order is already paid
     order.status = status;
-    order.isPayed = isPayed;
 
     await order.save();
 

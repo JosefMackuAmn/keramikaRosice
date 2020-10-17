@@ -59,6 +59,30 @@ a:link {
   font-weight: 400;
   letter-spacing: .2rem; }
 
+.add-button {
+  font-size: 1.8rem;
+  font-weight: bold;
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center; }
+  .add-button::before {
+    content: "+";
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-right: 1rem;
+    border: 3px solid black;
+    border-radius: 50%;
+    color: black;
+    font-size: 1.8rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+
 .category-box {
   width: 35rem;
   padding-left: 3rem;
@@ -115,6 +139,7 @@ a:link {
   .item-list__options {
     margin-bottom: 4rem;
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center; }
   .item-list__content {
@@ -266,6 +291,11 @@ a:link {
     display: flex;
     align-items: center;
     justify-content: center; }
+  .order-detail__select {
+    padding: 1rem;
+    margin-top: 1rem;
+    outline: none;
+    font-size: 1.6rem; }
   .order-detail__row {
     width: 100%;
     padding: 5rem;
@@ -284,6 +314,11 @@ a:link {
     margin-bottom: .5rem;
     font-size: 2.2rem; }
   .order-detail__btn {
+    padding: 2rem 5rem;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.8rem;
+    font-weight: bold;
     position: absolute;
     top: 50%;
     right: 0rem; }

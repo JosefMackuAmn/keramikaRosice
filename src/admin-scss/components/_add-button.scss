@@ -1,0 +1,29 @@
+.add-button {
+    font-size: $font-regular;
+    font-weight: bold;
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+        content: "+";
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 1rem;
+        border: 3px solid $color-black;
+        border-radius: 50%;
+
+        color: $color-black;
+        font-size: $font-regular;
+        font-weight: 900;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

@@ -76,8 +76,19 @@ app.use(morgan('combined', { stream: accessLogStream }));
 
 
 // Parsing url encoded body
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return bodyParser.urlencoded({ extended: false })(req, res, next);
+});
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return bodyParser.json()(req, res, next);
+});
+
 // Parsing binary data
 app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
 // Serving static public folder
@@ -90,12 +101,19 @@ app.use(session({
     store: store
 }));
 
-// Using CSRF protection after using session middleware
-app.use(csrfProtection);
+// Using CSRF protection after using session middleware (excluding stripe webhook route)
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return csrfProtection(req, res, next);
+});
 
 // Passing common props to views
 app.use((req, res, next) => {
-    res.locals.csrfToken = req.csrfToken();
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
     res.locals.cart = req.session.cart;
     next();
 });

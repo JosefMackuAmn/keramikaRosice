@@ -13,6 +13,7 @@ const Order = require('../models/order');
 
 const transporter = require('../util/mailing');
 const generateInvoice = require('../util/generateInvoice');
+const asyncHelpers = require('../util/asyncHelpers');
 
 exports.getShop = async (req, res, next) => {
     const products = await Product.find({});
@@ -282,38 +283,82 @@ exports.postOrder = async (req, res, next) => {
             success_url: `https://testapp-4400.rostiapp.cz/success.html`,
             cancel_url: `https://testapp-4400.rostiapp.cz/cancel.html`
         });
+
+        
+        //const sameOrderButFromDatabase = await Order.findById(order._id);
+        
+        order.stripePaymentIntent = session.payment_intent;
+        await order.save();
     
-        return res.json({ id: session.id })
+        return res.json({ id: session.id });
     });
 }
 
-exports.postCheckoutWebhook = (req, res, next) => {
+exports.postCheckoutWebhook = async (req, res, next) => {
     const payload = req.body;
     const stripeSignature = req.headers['stripe-signature'];
-
+    
     let event;
     try {
         event = stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_ENDPOINT_SECRET);
     } catch (err) {
+        console.log(err);
         return res.status(400).send(`Webhook Error: ${err.message}`);
     }
 
-    const order = {};
+    // Retrieve stripe session
+    const session = event.data.object;
 
     switch (event.type) {
-        case 'checkout.session.completed':
+        case 'checkout.session.completed': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
 
             if (session.payment_status === 'paid') {
+
                 // Mark order as payed and send email
+                try {
+                    const result = await asyncHelpers.paidOrderHandler(order);
+                    console.log(result);
+                } catch (err) {
+                    console.log(err);
+                    res.status(500);
+                }
+
             }
 
             break;
-        case 'checkout.session.async_payment_succeeded':
+        }
+        case 'checkout.session.async_payment_succeeded': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
 
             // Mark order as payed and send email
+            try {
+                const result = await asyncHelpers.paidOrderHandler(order);
+                console.log(result);
+            } catch (err) {
+                console.log(err);
+                res.status(500);
+            }
 
             break;
-        case 'checkout.session.async_payment_failed':
+        }
+        case 'checkout.session.async_payment_failed': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
 
             // Send email with notification about unprocessed payment
             transporter.sendMail({
@@ -329,8 +374,9 @@ exports.postCheckoutWebhook = (req, res, next) => {
             });
 
             break;
+        }
+        default: null;
     }
-
 
     return res.status(200);
 }

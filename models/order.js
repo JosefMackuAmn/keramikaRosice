@@ -56,6 +56,10 @@ const orderSchema = new Schema({
         type: String,
         required: true
     },
+    stripePaymentIntent: {
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         required: true

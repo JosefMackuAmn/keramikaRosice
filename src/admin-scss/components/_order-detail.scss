@@ -12,6 +12,13 @@
         align-items: center;
         justify-content: center;
     }
+    &__select {
+        padding: 1rem;
+        margin-top: 1rem;
+        outline: none;
+
+        font-size: $font-small;
+    }
     &__row {
         width: 100%;
         padding: 5rem;
@@ -43,6 +50,13 @@
         }
     }
     &__btn {
+        padding: 2rem 5rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+
+        font-size: $font-regular;
+        font-weight: bold;
+
         position: absolute;
         top: 50%;
         right: 0rem;

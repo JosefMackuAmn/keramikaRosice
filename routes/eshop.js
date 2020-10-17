@@ -2,6 +2,7 @@ const fs = require('fs');
 
 // Library imports
 const router = require('express').Router();
+const bodyParser = require('body-parser');
 const ash = require('express-async-handler');
 const { body } = require('express-validator');
 
@@ -131,6 +132,6 @@ router.post('/objednavka',
     payment: String, // 'DOB' = dobírka, 'BTR' = bankovní převod, 'CRD' = kartou
 } */
 
-router.post('/checkout-webhook', eshopController.postCheckoutWebhook);
+router.post('/checkout-webhook', bodyParser.raw({type: 'application/json'}), ash(eshopController.postCheckoutWebhook));
 
 module.exports = router;

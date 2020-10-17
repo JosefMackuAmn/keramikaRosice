@@ -22,7 +22,7 @@
 
                         <div class="order-detail__data">
                             <h4 class="heading-4">Status</h4>
-                            <select name="status" id="status">
+                            <select class="order-detail__select" name="status" id="status">
                                 <% statusesCzechLabels = ["Objednáno", "Odesláno", "Doručeno"] %>
                                 <% statuses.forEach((status, index) => { %>
                                     <option value="<%= status %>" <% if (status === order.status) { %><%= selected="selected" %><% } %>><%= statusesCzechLabels[index] %></option>
@@ -35,7 +35,7 @@
 
                         <div class="order-detail__data">
                             <h4 class="heading-4">Zaplaceno</h4>
-                            <select name="isPayed" id="isPayed">
+                            <select class="order-detail__select" name="isPayed" id="isPayed" <% if (order.isPayed) { %>disabled<% } %>>
                                 <option value="true" <% if (order.isPayed) { %><%= selected="selected" %><% } %>>Ano</option>
                                 <option value="false" <% if (!order.isPayed) { %><%= selected="selected" %><% } %>>Ne</option>
                             </select>

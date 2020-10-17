@@ -47,6 +47,25 @@ exports.cancelOrder = async (orderId) => {
 
 }
 
-exports.payOrder = async (orderId) => {
+exports.paidOrderHandler = async (order) => {
+
+    // Mark order as paid
+    order.isPayed = true;
+    await order.save();
+
+    // Send notification about successfull payment
+    transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: order.email,
+        cc: process.env.MAIL_USER,
+        subject: 'Keramika Rosice: Úspěšná platba',
+        html: '<h1>Úspěšná platba!</h1>'
+    }, (err, info) => {
+        if (err) {
+            console.log(err);
+            return { success: false };
+        }
+        return { success: true };
+    })
 
 }
