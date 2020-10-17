@@ -10,10 +10,10 @@
 
         <main class="main main--orders">
 
-            <div class="item-list__options">
+            <!-- <div class="item-list__options">
                 <input type="text" placeholder="Hledat">
-                <!-- <a class="add-button" href="/admin/products/add">Nová objednávka</a> -->
-            </div>
+                <a class="add-button" href="/admin/products/add">Nová objednávka</a>
+            </div> -->
 
             <table class="item-list">
                 <tbody class="item-list__content">
@@ -27,8 +27,14 @@
                         <th>Částka</th>
                         <th>Akce</th>
                     </tr>
-                    <% orders.forEach(order => { %>
-                        <tr class="item-list__row" id="<%= order._id %>">
+                    <% orders.forEach(order => {
+                        let additionalClass = '';
+                        if (order.status === "ORDERED") { additionalClass = 'item-list__row--yellow'; }
+                        if (order.isPayed && order.status === "DELIVERED") { additionalClass = 'item-list__row--green'; }
+                        if (order.isCanceled) { additionalClass = 'item-list__row--red'; }
+                        if (!additionalClass) { additionalClass = 'item-list__row--white'; } %>
+                        
+                        <tr class="item-list__row <%= additionalClass %>" id="<%= order._id %>">
                             <td><%= order.firstName %> <%= order.lastName %></td>
                             <td><%= order.email %></td>
                             <td><%= order.delivery %></td>

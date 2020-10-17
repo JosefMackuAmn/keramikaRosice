@@ -286,3 +286,51 @@ exports.postOrder = async (req, res, next) => {
         return res.json({ id: session.id })
     });
 }
+
+exports.postCheckoutWebhook = (req, res, next) => {
+    const payload = req.body;
+    const stripeSignature = req.headers['stripe-signature'];
+
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_ENDPOINT_SECRET);
+    } catch (err) {
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    const order = {};
+
+    switch (event.type) {
+        case 'checkout.session.completed':
+
+            if (session.payment_status === 'paid') {
+                // Mark order as payed and send email
+            }
+
+            break;
+        case 'checkout.session.async_payment_succeeded':
+
+            // Mark order as payed and send email
+
+            break;
+        case 'checkout.session.async_payment_failed':
+
+            // Send email with notification about unprocessed payment
+            transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to: order.email,
+                cc: process.env.MAIL_USER,
+                subject: 'Keramika Rosice: Nepovedená platba',
+                html: '<h1>Platba se nepovedla!</h1>'
+            }, (err, info) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+            break;
+    }
+
+
+    return res.status(200);
+}

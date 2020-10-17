@@ -172,7 +172,7 @@ const generateProductsTable = (invoice, order) => {
         .text('Dodavatel není plátce DPH.', 65, 470 + deltaY)
 }
 
-module.exports = (order, invoicePath) => {
+module.exports = async (order, invoicePath) => {
 
     let invoice = new PDFDocument({ margin: 50 });
 

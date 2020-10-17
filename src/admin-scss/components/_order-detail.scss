@@ -1,6 +1,17 @@
 .order-detail {
     width: 100%;
 
+    &__cancel-notification {
+        width: 100%;
+
+        color: red;
+        font-size: $font-big;
+        font-weight: bold;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     &__row {
         width: 100%;
         padding: 5rem;
@@ -35,5 +46,26 @@
         position: absolute;
         top: 50%;
         right: 0rem;
+    }
+    &__cancel-form {
+        width: 100%;
+        margin-top: 12rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &__btn {
+            padding: 2rem 5rem;
+            background-color: red;
+            border: none;
+            outline: none;
+            cursor: pointer;
+
+            color: white;
+            font-size: $font-big;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
     }
 }

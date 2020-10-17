@@ -131,4 +131,6 @@ router.post('/objednavka',
     payment: String, // 'DOB' = dobírka, 'BTR' = bankovní převod, 'CRD' = kartou
 } */
 
+router.post('/checkout-webhook', eshopController.postCheckoutWebhook);
+
 module.exports = router;

@@ -3,10 +3,10 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
-const transporter = require('../../util/mailing');
 
 const categoriesAdminController = require('./categories');
 const productsAdminController = require('./products');
+const asyncHelpers = require('../../util/asyncHelpers');
 
 const Order = require('../../models/order');
 
@@ -105,6 +105,27 @@ const putOrder = async (req, res, next) => {
     })
 }
 
+const postCancelOrder = async (req, res, next) => {
+    const { orderId } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(422).json({
+            msg: "orderId is not a valid ID string"
+        })
+    }
+
+    try {
+        await asyncHelpers.cancelOrder(orderId);
+    } catch (err) {
+        const errorStatus = err.status || 500;
+        return res.status(errorStatus).json({
+            msg: err.message
+        });
+    }
+
+    return res.redirect(`/admin/orders/${orderId}`);
+}
+
 const getInvoice = async (req, res, next) => {
     const orderId = req.params.orderId;
 
@@ -130,5 +151,6 @@ module.exports = {
     getOrders,
     getOrderDetail,
     putOrder,
-    getInvoice
+    getInvoice,
+    postCancelOrder
 }

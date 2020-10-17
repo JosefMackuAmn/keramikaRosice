@@ -129,6 +129,14 @@ a:link {
     background-color: #EAEAEA; }
     .item-list__row:nth-child(even) {
       background-color: white; }
+    .item-list__row--red {
+      background-color: salmon !important; }
+    .item-list__row--green {
+      background-color: lightgreen !important; }
+    .item-list__row--yellow {
+      background-color: blanchedalmond !important; }
+    .item-list__row--white {
+      background-color: white !important; }
     .item-list__row td {
       border-left: 1px solid #CECECE;
       border-right: 1px solid #CECECE;
@@ -250,6 +258,14 @@ a:link {
 
 .order-detail {
   width: 100%; }
+  .order-detail__cancel-notification {
+    width: 100%;
+    color: red;
+    font-size: 2.2rem;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
   .order-detail__row {
     width: 100%;
     padding: 5rem;
@@ -271,6 +287,22 @@ a:link {
     position: absolute;
     top: 50%;
     right: 0rem; }
+  .order-detail__cancel-form {
+    width: 100%;
+    margin-top: 12rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .order-detail__cancel-form__btn {
+      padding: 2rem 5rem;
+      background-color: red;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      color: white;
+      font-size: 2.2rem;
+      text-transform: uppercase;
+      font-weight: bold; }
 
 .product-form {
   width: 100%; }

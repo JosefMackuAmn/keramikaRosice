@@ -18,5 +18,5 @@
         "DOB": 21,
         "BTR": 22
     },
-    "orderStatuses": [ "ORDERED", "SHIPPED", "DELIVERED", "CANCELED" ]
+    "orderStatuses": [ "ORDERED", "SHIPPED", "DELIVERED" ]
 }

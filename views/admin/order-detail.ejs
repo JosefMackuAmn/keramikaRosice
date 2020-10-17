@@ -12,41 +12,59 @@
         <main class="main main--order-detail">
 
             <container class="order-detail">
+                <% if (order.isCanceled) { %>
+                    <p class="order-detail__cancel-notification">ZRUŠENO -&nbsp;<a href="/admin/invoice/cancel-<%= order._id %>">STORNOFAKTURA</a></p>
+                <% } %>
+
+                <!-- EDITABLE DATA -->
                 <section class="order-detail__row">
                     <div class="order-detail__column">
-                        <select name="status" id="status">
-                            <% statuses.forEach(status => { %>
-                                <option value="<%= status %>" <% if (status === order.status) { %><%= selected="selected" %><% } %>><%= status %></option>
-                            <% }) %>
-                        </select>
+
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Status</h4>
+                            <select name="status" id="status">
+                                <% statusesCzechLabels = ["Objednáno", "Odesláno", "Doručeno"] %>
+                                <% statuses.forEach((status, index) => { %>
+                                    <option value="<%= status %>" <% if (status === order.status) { %><%= selected="selected" %><% } %>><%= statusesCzechLabels[index] %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+
                     </div>
                     <div class="order-detail__column">
-                        <select name="isPayed" id="isPayed">
-                            <option value="true" <% if (order.isPayed) { %><%= selected="selected" %><% } %>>Ano</option>
-                            <option value="false" <% if (!order.isPayed) { %><%= selected="selected" %><% } %>>Ne</option>
-                        </select>
+
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Zaplaceno</h4>
+                            <select name="isPayed" id="isPayed">
+                                <option value="true" <% if (order.isPayed) { %><%= selected="selected" %><% } %>>Ano</option>
+                                <option value="false" <% if (!order.isPayed) { %><%= selected="selected" %><% } %>>Ne</option>
+                            </select>
+                        </div>
+                        
                     </div>
                     <button id="put-order" class="order-detail__btn" data-orderid="<%= order._id %>" data-csrf="<%= csrfToken %>">Upravit</button>
                 </section>
+
+                <!-- STATIC DATA -->
                 <section class="order-detail__row">
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Doručení</h4>
-                            <p class="paragraph-normal"><%= order.delivery %></p>
+                            <p class="paragraph-small"><%= order.delivery %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">Datum</h4>
-                            <p class="paragraph-normal"><%= order.date %></p>
+                            <p class="paragraph-small"><%= order.date %></p>
                         </div>
                     </div>
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Platba</h4>
-                            <p class="paragraph-normal"><%= order.payment %></p>
+                            <p class="paragraph-small"><%= order.payment %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">Faktura</h4>
-                            <p class="paragraph-normal"><a href="/admin/invoice/<%= order._id %>">Odkaz</a></p>
+                            <p class="paragraph-small"><a href="/admin/invoice/<%= order._id %>">Odkaz</a></p>
                         </div>
                     </div>
                 </section>
@@ -54,21 +72,21 @@
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Jméno</h4>
-                            <p class="paragraph-normal"><%= order.firstName %></p>
+                            <p class="paragraph-small"><%= order.firstName %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">E-mail</h4>
-                            <p class="paragraph-normal"><%= order.email %></p>
+                            <p class="paragraph-small"><%= order.email %></p>
                         </div>
                     </div>
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Příjmení</h4>
-                            <p class="paragraph-normal"><%= order.lastName %></p>
+                            <p class="paragraph-small"><%= order.lastName %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">Telefon</h4>
-                            <p class="paragraph-normal"><%= order.phone %></p>
+                            <p class="paragraph-small"><%= order.phone %></p>
                         </div>
                     </div>
                 </section>
@@ -76,21 +94,21 @@
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Ulice a č.p.</h4>
-                            <p class="paragraph-normal"><%= order.street %></p>
+                            <p class="paragraph-small"><%= order.street %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">Město</h4>
-                            <p class="paragraph-normal"><%= order.city %></p>
+                            <p class="paragraph-small"><%= order.city %></p>
                         </div>
                     </div>
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">&nbsp;</h4>
-                            <p class="paragraph-normal">&nbsp;</p>
+                            <p class="paragraph-small">&nbsp;</p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">PSČ</h4>
-                            <p class="paragraph-normal"><%= order.zipCode %></p>
+                            <p class="paragraph-small"><%= order.zipCode %></p>
                         </div>
                     </div>
                 </section>
@@ -132,6 +150,16 @@
                         </tbody>
                     </table>
                 </section>
+
+                <% if (!order.isCanceled) { %>
+                    <!-- CANCEL ORDER -->
+                    <form class="order-detail__cancel-form" action="/admin/orders/cancel" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <input type="hidden" name="orderId" value="<%= order._id %>">
+                        <button class="order-detail__cancel-form__btn" type="submit">Zrušit objednávku</button>
+                    </form>
+                <% } %>
+
             </container>
             
         </main>

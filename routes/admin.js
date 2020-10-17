@@ -142,6 +142,9 @@ router.put('/orders', isAuth,
     ash(adminController.putOrder)
 ); // Expecting { orderId: String, status: String, isPayed: Boolean }
 
+// Cancel order
+router.post('/orders/cancel', isAuth, ash(adminController.postCancelOrder)); // Expecting { orderId: String }
+
 router.get('/invoice/:orderId', isAuth, ash(adminController.getInvoice));
 
 // Handling error cases in admin section

@@ -34,6 +34,19 @@
             background-color: $color-white;
         }
 
+        &--red {
+            background-color: salmon !important;
+        }
+        &--green {
+            background-color: lightgreen !important;
+        }
+        &--yellow {
+            background-color: blanchedalmond !important;
+        }
+        &--white {
+            background-color: $color-white !important;
+        }
+
         & td {
             border-left: 1px solid $color-grey;
             border-right: 1px solid $color-grey;
