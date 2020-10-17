@@ -21,8 +21,9 @@ export const postCart = async ({ action, csrf, amount, productId }) => {
                 body: JSON.stringify(bodyObj)
             }).then(res => {
                 if (!(res.ok && res.status >= 200 && res.status < 300)) {                
-                    const errorMsg = res.json().msg;
-                    throw new Error(errorMsg);
+                    return res.json().then(json => {
+                        throw new Error(json.msg);
+                    });
                 }
             }).catch(err => {
                 throw new Error(err);

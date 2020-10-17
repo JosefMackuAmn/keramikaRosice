@@ -40,14 +40,17 @@
                 } else { %>
 
                     <li class="cart__cart-content__item">Zatím v jste do košíku nic nevložili</li>
+                    <li class="cart__cart-content__item">Prohlédněte si e-shop</li>
 
                 <% } %>
             </ul>
-            <div class="cart__cart-content__summary">
-                <h3 class="heading-3">Celkem za keramiku:</h3>
-                <p class="cart__cart-content__summary__price"><%= cart.total %>Kč</p>
-            </div>
-            <p class="cart__cart-content__dph">Nejsem plátce DPH</p>
+            <% if (cart) { %>
+                <div class="cart__cart-content__summary">
+                    <h3 class="heading-3">Celkem za keramiku:</h3>
+                    <p class="cart__cart-content__summary__price"><%= cart.total %>Kč</p>
+                </div>
+                <p class="cart__cart-content__dph">Nejsem plátce DPH</p>
+            <% } %>
         </section>
 
         <!-- ORDER FORM -->
@@ -99,17 +102,17 @@
                     <div class="order-form__radio-cell">
                         <input type="radio" id="ZAS" name="delivery" value="ZAS">
                         <label for="ZAS">Zásilkovna</label>
-                        <p class="order-form__feature-price"><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč</p>
+                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                     </div>
                     <div class="order-form__radio-cell">
                         <input type="radio" id="POS" name="delivery" value="POS">
                         <label for="POS">Česká pošta</label>
-                        <p class="order-form__feature-price"><%= constants.deliveryCosts["POS"][cart.shippingCostId] %>Kč</p>
+                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["POS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                     </div>
                     <div class="order-form__radio-cell">
                         <input type="radio" id="OOD" name="delivery" value="OOD">
                         <label for="OOD">Osobní odběr</label>
-                        <p class="order-form__feature-price"><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč</p>
+                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                     </div>
                 </div>
                 <!-- PAYMENT -->

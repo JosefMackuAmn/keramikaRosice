@@ -156,13 +156,17 @@ exports.postOrder = async (req, res, next) => {
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
 
+    const variableSymbol = Math.floor(Math.random() * 10000000000);
+
     const cart = req.session.cart;
 
+    if (!cart || cart.items.length < 1) {
+        return res.redirect('/kosik?success=false&mailSent=false');
+    }
+
     const order = new Order({
-        //total: cart.total,
-        total: 456 * 5,
-        items: [{product: {_id: '456', name: '456', price: 456}, amount: 5}],
-        /* items: cart.items.map(item => {
+        total: cart.total,
+        items: cart.items.map(item => {
             return {
                 product: {
                     _id: item.product._id,
@@ -171,7 +175,8 @@ exports.postOrder = async (req, res, next) => {
                 },
                 amount: item.amount
             }
-        }), */
+        }),
+        variableSymbol,
         firstName,
         lastName,
         email,
@@ -180,8 +185,7 @@ exports.postOrder = async (req, res, next) => {
         city,
         zipCode,
         delivery,
-        //deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
-        deliveryCost: consts.deliveryCosts[delivery][0],
+        deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
         payment,
         paymentCost: consts.paymentCosts[payment],
         date: new Date().toISOString(),

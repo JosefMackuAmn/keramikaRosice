@@ -56,10 +56,9 @@ fcns.ready(() => {
     /////
 
     ///// SUBMIT TO CART BUTTON
-
     const eshopProducts = document.querySelector('.eshop__products');
 
-    if(eshopProducts) {
+    if (eshopProducts) {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
         for (const btn of submitBtns) {
             btn.addEventListener('click', () => {
