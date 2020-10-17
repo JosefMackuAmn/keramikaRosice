@@ -52,6 +52,15 @@ fcns.ready(() => {
     }
     
     /////
+    // CART & ORDER
+    /////
+
+    const orderForm = document.getElementById('order-form');
+    if (orderForm) {
+        orderForm.addEventListener('submit', ajax.orderSubmitHandler);
+    }
+
+    /////
     // E-SHOP
     /////
 

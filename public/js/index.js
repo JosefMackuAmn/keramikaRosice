@@ -69,14 +69,22 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     }
     
     /////
+    // CART & ORDER
+    /////
+
+    const orderForm = document.getElementById('order-form');
+    if (orderForm) {
+        orderForm.addEventListener('submit', _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.orderSubmitHandler);
+    }
+
+    /////
     // E-SHOP
     /////
 
     ///// SUBMIT TO CART BUTTON
-
     const eshopProducts = document.querySelector('.eshop__products');
 
-    if(eshopProducts) {
+    if (eshopProducts) {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
         for (const btn of submitBtns) {
             btn.addEventListener('click', () => {
@@ -177,6 +185,7 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
   !*** ./src/js/utils/ajax.js ***!
   \******************************/
 /*! namespace exports */
+/*! export orderSubmitHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export postCart [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
@@ -184,7 +193,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "postCart": () => /* binding */ postCart
+/* harmony export */   "postCart": () => /* binding */ postCart,
+/* harmony export */   "orderSubmitHandler": () => /* binding */ orderSubmitHandler
 /* harmony export */ });
 const postCart = async ({ action, csrf, amount, productId }) => {
     switch (action) {
@@ -209,8 +219,9 @@ const postCart = async ({ action, csrf, amount, productId }) => {
                 body: JSON.stringify(bodyObj)
             }).then(res => {
                 if (!(res.ok && res.status >= 200 && res.status < 300)) {                
-                    const errorMsg = res.json().msg;
-                    throw new Error(errorMsg);
+                    return res.json().then(json => {
+                        throw new Error(json.msg);
+                    });
                 }
             }).catch(err => {
                 throw new Error(err);
@@ -218,6 +229,50 @@ const postCart = async ({ action, csrf, amount, productId }) => {
 
             break;
         default: throw new Error('Non-existing cart action');
+    }
+}
+
+const orderSubmitHandler = e => {
+    const payment = e.target.elements.payment.value;
+
+    if (payment === 'CRD') {
+        e.preventDefault();
+
+        // Get form elements and stripe public key
+        const stripePublicKey = e.target.dataset.stripepublickey;
+        const formEls = e.target.elements;
+
+        // Initialize stripe
+        const stripe = Stripe(stripePublicKey);
+
+        // Create new form data
+        const formData = new FormData();
+        formData.append('_csrf', formEls._csrf.value);
+        formData.append('firstName', formEls.firstName.value);
+        formData.append('lastName', formEls.lastName.value);
+        formData.append('email', formEls.email.value);
+        formData.append('phone', formEls.phone.value);
+        formData.append('street', formEls.street.value);
+        formData.append('city', formEls.city.value);
+        formData.append('delivery', formEls.delivery.value);
+        formData.append('payment', formEls.payment.value);
+        formData.append('zipCode', formEls.zipCode.value);
+
+        // Fetch POST /objednavka, expecting json
+        fetch('/objednavka', {
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            return res.json();
+        }).then(session => {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        }).then(result => {
+            if (result.error) {
+                // SHOW ERROR MODAL ----------------------------------------------------------------------
+            }
+        }).catch(err => {
+            // SHOW ERROR MODAL ----------------------------------------------------------------------
+        })
     }
 }
 

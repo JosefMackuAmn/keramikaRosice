@@ -1,4 +1,6 @@
 <%- include('../includes/head.ejs') %>
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch" defer></script>
+    <script type="text/javascript" src="https://js.stripe.com/v3/" defer></script>
 </head>
 <body>
     <%- include('../includes/header.ejs') %>
@@ -57,7 +59,7 @@
         <section class="cart__order">
             
             <h1 class="heading-1">Objednávka</h1>
-            <form class="order-form" action="/objednavka" method="POST">
+            <form class="order-form" action="/objednavka" method="POST" id="order-form" data-stripepublickey="<%= stripePublicKey %>">
                 <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                 <!-- CUSTOMER DATA -->
                 <div class="order-form__row">                    

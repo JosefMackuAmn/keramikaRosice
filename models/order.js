@@ -71,6 +71,14 @@ const orderSchema = new Schema({
     invoiceUrl: {
         type: String,
         required: true
+    },
+    isCanceled: {
+        type: Boolean,
+        required: true
+    },
+    cancelInvoiceUrl: {
+        type: String,
+        required: false
     }
 });
 

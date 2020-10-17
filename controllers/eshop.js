@@ -3,6 +3,7 @@ const path = require('path');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 const Product = require("../models/product");
 const Category = require('../models/category');
@@ -78,10 +79,15 @@ exports.getCart = async (req, res, next) => {
     const constantsRaw = await fs.promises.readFile('constants.json');
     const constants = JSON.parse(constantsRaw);
 
+    res.set({
+        'Content-Security-Policy': "script-src 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/"
+    });
+
     res.render('eshop/cart', {
         title: 'Košík',
         cart: cart,
-        constants: constants
+        constants: constants,
+        stripePublicKey: process.env.STRIPE_PUBLIC_KEY
     })
 }
 
@@ -171,7 +177,8 @@ exports.postOrder = async (req, res, next) => {
                 product: {
                     _id: item.product._id,
                     name: item.product.name,
-                    price: item.product.price
+                    price: item.product.price,
+                    images: item.product.images
                 },
                 amount: item.amount
             }
@@ -191,7 +198,9 @@ exports.postOrder = async (req, res, next) => {
         date: new Date().toISOString(),
         status: consts.orderStatuses[0],
         isPayed: false,
-        invoiceUrl: 'url'
+        invoiceUrl: 'url',
+        isCanceled: false,
+        cancelInvoiceUrl: null
     });
     
     const invoiceName = 'invoice-' + order._id + '.pdf';
@@ -208,18 +217,72 @@ exports.postOrder = async (req, res, next) => {
         from: process.env.MAIL_USER,
         to: email,
         cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Nová objednávka',
+        subject: 'Keramika Rosice: Objednávka přijata',
         html: '<h1>This is working!</h1>',
         attachments: [{
             filename: invoiceName,
             path: invoicePath,
             contentType: 'application/pdf'
         }],
-    }, (err, info) => {
-        if (err) {
-            console.log(err);
-            return res.redirect('/kosik?success=true&mailSent=false');
+    }, async (err, info) => {
+        if (order.payment !== 'CRD') {
+            if (err) {
+                console.log(err);
+                return res.redirect('/kosik?success=true&mailSent=false');
+            }
+            return res.redirect('/kosik?success=true&mailSent=true');
         }
-        return res.redirect('/kosik?success=true&mailSent=true');
-    })
+
+        // Whether the e-mail is sent or not,
+        // if payment is of type 'CRD'
+        // stripe session id should be sent as JSON data
+
+        // Create stripe-compatible item list with delivery and payment cost
+        const stripeItems = order.items.map(item => {
+            return {
+                price_data: {
+                    currency: 'czk',
+                    product_data: {
+                        name: item.product.name,
+                        images: item.product.images.map(image => `https://testapp-4400.rostiapp.cz/${image}`)
+                    },
+                    unit_amount: (item.product.price * 100)
+                },
+                quantity: item.amount
+            }
+        });
+        stripeItems.push({
+            price_data: {
+                currency: 'czk',
+                product_data: {
+                    name: `Platba kartou`,
+                    images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                },
+                unit_amount: (order.paymentCost * 100)
+            },
+            quantity: 1
+        });
+        stripeItems.push({
+            price_data: {
+                currency: 'czk',
+                product_data: {
+                    name: `Poštovné`,
+                    images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                },
+                unit_amount: (order.deliveryCost * 100)
+            },
+            quantity: 1
+        });
+
+        // Create stripe checkout session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: stripeItems,
+            mode: 'payment',
+            success_url: `https://testapp-4400.rostiapp.cz/success.html`,
+            cancel_url: `https://testapp-4400.rostiapp.cz/cancel.html`
+        });
+    
+        return res.json({ id: session.id })
+    });
 }
