@@ -9,7 +9,7 @@ const orderSchema = new Schema({
     },
     items: [],
     variableSymbol: {
-        type: Number,
+        type: String,
         required: true
     },
     firstName: {

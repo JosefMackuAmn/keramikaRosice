@@ -163,7 +163,8 @@ exports.postOrder = async (req, res, next) => {
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
 
-    const variableSymbol = Math.floor(Math.random() * 10000000000);
+    const date = new Date();
+    const variableSymbol = await asyncHelpers.getVariableSymbol(date);
 
     const cart = req.session.cart;
 
@@ -196,7 +197,7 @@ exports.postOrder = async (req, res, next) => {
         deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
         payment,
         paymentCost: consts.paymentCosts[payment],
-        date: new Date().toISOString(),
+        date: date.toISOString(),
         status: consts.orderStatuses[0],
         isPayed: false,
         invoiceUrl: 'url',
@@ -208,7 +209,7 @@ exports.postOrder = async (req, res, next) => {
     const invoicePath = path.join('pdf', 'invoices', invoiceName);
     order.invoiceUrl = invoicePath;
 
-    await generateInvoice(order, invoicePath);
+    generateInvoice(order);
 
     await order.save();
 
@@ -225,7 +226,7 @@ exports.postOrder = async (req, res, next) => {
             path: invoicePath,
             contentType: 'application/pdf'
         }],
-    }, async (err, info) => {
+    }, (err, info) => {
         if (order.payment !== 'CRD') {
             if (err) {
                 console.log(err);
@@ -237,60 +238,65 @@ exports.postOrder = async (req, res, next) => {
         // Whether the e-mail is sent or not,
         // if payment is of type 'CRD'
         // stripe session id should be sent as JSON data
+        const returnStripeSessionId = async () => {
 
-        // Create stripe-compatible item list with delivery and payment costs
-        const stripeItems = order.items.map(item => {
-            return {
+            // Create stripe-compatible item list with delivery and payment costs
+            const stripeItems = order.items.map(item => {
+                return {
+                    price_data: {
+                        currency: 'czk',
+                        product_data: {
+                            name: item.product.name,
+                            images: item.product.images.map(image => `https://testapp-4400.rostiapp.cz/${image}`)
+                        },
+                        unit_amount: (item.product.price * 100)
+                    },
+                    quantity: item.amount
+                }
+            });
+            stripeItems.push({
                 price_data: {
                     currency: 'czk',
                     product_data: {
-                        name: item.product.name,
-                        images: item.product.images.map(image => `https://testapp-4400.rostiapp.cz/${image}`)
+                        name: `Platba kartou`,
+                        images: ['https://testapp-4400.rostiapp.cz/success.jpg']
                     },
-                    unit_amount: (item.product.price * 100)
+                    unit_amount: (order.paymentCost * 100)
                 },
-                quantity: item.amount
-            }
-        });
-        stripeItems.push({
-            price_data: {
-                currency: 'czk',
-                product_data: {
-                    name: `Platba kartou`,
-                    images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                quantity: 1
+            });
+            stripeItems.push({
+                price_data: {
+                    currency: 'czk',
+                    product_data: {
+                        name: `Poštovné`,
+                        images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                    },
+                    unit_amount: (order.deliveryCost * 100)
                 },
-                unit_amount: (order.paymentCost * 100)
-            },
-            quantity: 1
-        });
-        stripeItems.push({
-            price_data: {
-                currency: 'czk',
-                product_data: {
-                    name: `Poštovné`,
-                    images: ['https://testapp-4400.rostiapp.cz/success.jpg']
-                },
-                unit_amount: (order.deliveryCost * 100)
-            },
-            quantity: 1
-        });
-
-        // Create stripe checkout session
-        const session = await stripe.checkout.sessions.create({
-            payment_method_types: ['card'],
-            line_items: stripeItems,
-            mode: 'payment',
-            success_url: `https://testapp-4400.rostiapp.cz/success.html`,
-            cancel_url: `https://testapp-4400.rostiapp.cz/cancel.html`
-        });
-
-        
-        //const sameOrderButFromDatabase = await Order.findById(order._id);
-        
-        order.stripePaymentIntent = session.payment_intent;
-        await order.save();
+                quantity: 1
+            });
     
-        return res.json({ id: session.id });
+            // Create stripe checkout session
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: stripeItems,
+                mode: 'payment',
+                success_url: `https://testapp-4400.rostiapp.cz/success.html`,
+                cancel_url: `https://testapp-4400.rostiapp.cz/cancel.html`
+            });
+    
+            
+            //const sameOrderButFromDatabase = await Order.findById(order._id);
+            
+            order.stripePaymentIntent = session.payment_intent;
+            await order.save();
+        
+            return res.json({ id: session.id });
+        }
+
+        return returnStripeSessionId();
+
     });
 }
 

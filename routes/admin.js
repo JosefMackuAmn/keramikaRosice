@@ -16,6 +16,7 @@ router.get('/', isAuth, adminController.getIndex);
 router.get('/categories', isAuth, ash(adminController.getCategories));
 router.post('/categories', isAuth,
     body('categoryId')
+        .escape()
         .custom((categoryId) => {
             if (typeof categoryId !== 'string' && categoryId) {
                 throw new Error('categoryId should be a string or falsy value');
@@ -24,6 +25,7 @@ router.post('/categories', isAuth,
         }),
     body('categoryName')
         .trim()
+        .escape()
         .isString().withMessage('categoryName must be a string')
         .isLength({min: 3}).withMessage('categoryName must be at least 3 characters long'),
     ash(adminController.postCategories)
@@ -32,6 +34,7 @@ router.post('/categories', isAuth,
 router.delete('/categories/:categoryId', isAuth, ash(adminController.deleteCategory));
 router.put('/categories/', isAuth,
     body('newCategoryName')
+        .escape()
         .trim()
         .isString().withMessage('newCategoryName must be a string')
         .isLength({min: 3}).withMessage('newCategoryName must be at least 3 characters long'),
@@ -41,6 +44,7 @@ router.put('/categories/', isAuth,
 router.delete('/categories/sub/:subcategoryId', isAuth, ash(adminController.deleteSubcategory));
 router.put('/categories/sub/', isAuth,
     body('newCategoryName')
+        .escape()
         .trim()
         .isString().withMessage('newCategoryName must be a string')
         .isLength({min: 3}).withMessage('newCategoryName must be at least 3 characters long'),
@@ -55,16 +59,21 @@ router.post('/products/add', isAuth,
     body('name')
         .trim()
         .isString()
+        .escape()
         .isLength({ min: 2 }).withMessage('name should be at least 2 characters long'),
     body('description')
         .trim()
         .isString()
+        .escape()
         .isLength({ min: 5 }).withMessage('description should be at least 5 characters long'),
     body('price')
+        .escape()
         .isNumeric().withMessage('price should be a number'),
     body('amountInStock')
+        .escape()
         .isNumeric().withMessage('amountInStock should be a number'),
     body('shippingCostId')
+        .escape()
         .custom(shippingCostId => {
             if (shippingCostId != 0 && shippingCostId != 1) {
                 throw new Error('shippingCostId should be a number, either 0 or 1')
@@ -89,16 +98,21 @@ router.post('/products/edit', isAuth,
     body('name')
         .trim()
         .isString()
+        .escape()
         .isLength({ min: 2 }).withMessage('name should be at least 2 characters long'),
     body('description')
         .trim()
         .isString()
+        .escape()
         .isLength({ min: 5 }).withMessage('description should be at least 5 characters long'),
     body('price')
+        .escape()
         .isNumeric().withMessage('price should be a number'),
     body('amountInStock')
+        .escape()
         .isNumeric().withMessage('amountInStock should be a number'),
     body('shippingCostId')
+        .escape()
         .custom(shippingCostId => {
             console.log(shippingCostId);
             if (shippingCostId != 0 && shippingCostId != 1) {

@@ -6,7 +6,7 @@ const ash = require('express-async-handler');
 const pagesController = require('../controllers/pages');
 
 router.get('/', ash(pagesController.getIndex));
-router.get('/kontakt', pagesController.getContact);
+router.get('/kontakt', ash(pagesController.getContact));
 router.get('/o-mne', pagesController.getAbout);
 
 router.get('/podminky', pagesController.getConditions);

@@ -5,7 +5,7 @@ const Category = require('../models/category');
 
 exports.getIndex = async (req, res, next) => {
     const allCatgories = await Category.find({});
-
+    
     res.render('pages/index', {
         title: 'Domů',
         categories: allCatgories
@@ -18,9 +18,12 @@ exports.getAbout = (req, res, next) => {
     })
 }
 
-exports.getContact = (req, res, next) => {
+exports.getContact = async (req, res, next) => {
+    const allCatgories = await Category.find({});
+
     res.render('pages/contact', {
-        title: 'Kontakt'
+        title: 'Kontakt',
+        categories: allCatgories
     })
 }
 

@@ -71,6 +71,33 @@ exports.paidOrderHandler = async (order) => {
 
 }
 
-exports.getVariableSymbol = async () => {
-    
+exports.getVariableSymbol = async (date) => {
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
+
+    const lastNumber = constants.lastInvoiceNumber[0];
+    const lastYear = constants.lastInvoiceNumber[1];
+
+    let newYear = lastYear;
+    let newNumber = lastNumber + 1;
+
+    // Check for year change
+    if (date.getFullYear() > lastYear) {
+        newYear = date.getFullYear();
+        newNumber = 1;
+    }
+
+    // Convert 1 => 0001, convert 25 => 0025, convert 52687 => 52687
+    const addZeros = 4 - newNumber.toString().length;
+    let newNumberString = '';
+    for (let i = 0; i < addZeros; i++) {
+        newNumberString += '0';
+    }
+    newNumberString += `${newNumber}`;
+
+    // Update constants
+    constants.lastInvoiceNumber = [newNumber, newYear];
+    await fs.promises.writeFile('constants.json', JSON.stringify(constants, null, 2));
+
+    return `${newNumberString}${newYear}`;
 }

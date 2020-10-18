@@ -9,13 +9,15 @@ const generateHeader = (invoice, order) => {
     let headingText = 'Faktura';
     if (order.isCanceled) headingText = 'Stornofaktura';
 
+    const invoiceNumber = 'KR-' + order.variableSymbol.slice(0, -4) + '/' + order.variableSymbol.slice(-4);
+
     invoice
       .fillColor("#101010")
       .fontSize(24)
       .font('PTSans-Regular')
       .text(headingText, 50, 50)
       .fontSize(18)
-      .text(`Číslo faktury: ${order.variableSymbol}`, 0, 56, { align: "right" })
+      .text(`Číslo faktury: ${invoiceNumber}`, 0, 56, { align: "right" })
       .moveDown();
 }
 
@@ -40,7 +42,7 @@ const generatePersonInformation = (invoice, order) => {
         .text(`Česká Republika`, 306, 185)
         .text('IČ: 12192520', 100, 200)
         .text(`Tel.: ${order.phone}`, 306, 200)
-        .moveDown()
+        .moveDown();
 }
 
 const generateInvoiceData = (invoice, order) => {
@@ -94,7 +96,7 @@ const generateInvoiceData = (invoice, order) => {
             continued: true
         })
         .font('PTSans-Regular')
-        .text(`4551111`)
+        .text(`${order.variableSymbol}`)
         .font('PTSans-Bold')
         .text('Banka: ', 306, 290, {
             continued: true
@@ -178,7 +180,7 @@ const generateProductsTable = (invoice, order) => {
         .text('Dodavatel není plátce DPH.', 65, 470 + deltaY)
 }
 
-module.exports = async (order, invoicePath) => {
+module.exports = (order) => {
 
     let invoice = new PDFDocument({ margin: 50 });
 
@@ -191,5 +193,6 @@ module.exports = async (order, invoicePath) => {
     generateProductsTable(invoice, order);
   
     invoice.end();
-    invoice.pipe(fs.createWriteStream(invoicePath));
+    invoice.pipe(fs.createWriteStream(order.invoiceUrl));
+    
 }

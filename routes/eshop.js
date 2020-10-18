@@ -42,35 +42,41 @@ router.post('/objednavka',
         .not().isEmpty()
         .isString()
         .isLength({ min: 2 })
+        .escape()
         .withMessage('Jméno musí mít alespoň 2 znaky'),
     body('lastName')
         .not().isEmpty()
         .isString()
         .isLength({ min: 2 })
+        .escape()
         .withMessage('Příjmení musí mít alespoň 2 znaky'),
     body('email')
         .not().isEmpty()
         .trim()
         .isEmail()
         .normalizeEmail()
+        .escape()
         .withMessage('E-mail nebyl správně zadán'),
     body('phone')
         .not().isEmpty()
         .trim()
         .isString()
         .isLength({ min: 9, max: 9 })
+        .escape()
         .withMessage('Telefon musí mít 9 číslic'),
     body('street')
         .notEmpty()
         .trim()
         .isString()
         .isLength({ min: 4 })
+        .escape()
         .withMessage('Ulice a č.p. musí mít dohromady alespoň 4 znaky'),
     body('city')
         .notEmpty()
         .trim()
         .isString()
         .isLength({ min: 2 })
+        .escape()
         .withMessage('Město musí mít alespoň 2 znaky'),
     body('zipCode')
         .notEmpty()
@@ -84,6 +90,7 @@ router.post('/objednavka',
 
             return true;
         })
+        .escape()
         .withMessage('PSČ musí mít právě 5 číslic'),
     body('delivery')
         .notEmpty()
@@ -101,6 +108,7 @@ router.post('/objednavka',
 
             return true;
         })
+        .escape()
         .withMessage('Doručení musí být jedna z nabízených možností'),
     body('payment')
         .notEmpty()
@@ -118,6 +126,7 @@ router.post('/objednavka',
 
             return true;
         })
+        .escape()
         .withMessage('Platba musí být jedna z nabízených možností'),
     ash(eshopController.postOrder)
 ); /* Expecting {
