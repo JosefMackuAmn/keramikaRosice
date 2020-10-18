@@ -6,11 +6,14 @@ const PDFDocument = require('pdfkit');
 const helpers = require('./helpers');
 
 const generateHeader = (invoice, order) => {
+    let headingText = 'Faktura';
+    if (order.isCanceled) headingText = 'Stornofaktura';
+
     invoice
       .fillColor("#101010")
       .fontSize(24)
       .font('PTSans-Regular')
-      .text("Faktura", 50, 50)
+      .text(headingText, 50, 50)
       .fontSize(18)
       .text(`Číslo faktury: ${order.variableSymbol}`, 0, 56, { align: "right" })
       .moveDown();
@@ -145,6 +148,9 @@ const generateProductsTable = (invoice, order) => {
     });
 
     const [ deliveryLabel, paymentLabel ] = helpers.getDelPayLabel(order.delivery, order.payment);
+    let total = +order.total + +order.paymentCost + +order.deliveryCost;
+    if (order.isCanceled) total = -total;
+
     invoice
         // Delivery row
         .font('PTSans-Regular')
@@ -163,7 +169,7 @@ const generateProductsTable = (invoice, order) => {
         .fillColor('#101010')
         .fontSize(10)
         .text(`Celkem k úhradě:`, 65, 430 + deltaY)
-        .text(`${+order.total + +order.paymentCost + +order.deliveryCost}Kč`, 0, 430 + deltaY, { align: 'right' });
+        .text(`${total}Kč`, 0, 430 + deltaY, { align: 'right' });
 
     invoice
         .font('PTSans-Bold')

@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs');
 
 const generateInvoice = require('./generateInvoice');
 const transporter = require('./mailing');
@@ -68,4 +69,8 @@ exports.paidOrderHandler = async (order) => {
         return { success: true };
     })
 
+}
+
+exports.getVariableSymbol = async () => {
+    
 }
