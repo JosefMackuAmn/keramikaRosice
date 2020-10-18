@@ -18,9 +18,12 @@ exports.getAbout = (req, res, next) => {
     })
 }
 
-exports.getContact = (req, res, next) => {
+exports.getContact = async (req, res, next) => {
+    const allCatgories = await Category.find({});
+
     res.render('pages/contact', {
-        title: 'Kontakt'
+        title: 'Kontakt',
+        categories: allCatgories
     })
 }
 
