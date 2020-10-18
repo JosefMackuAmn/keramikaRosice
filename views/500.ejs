@@ -1,10 +1,14 @@
 <%- include('./includes/head.ejs') %>
 </head>
 <body>
-    
+    <%- include('./includes/header.ejs') %>
     <main>
-        <%= title %>
-        <p>Message: <%= msg %></p>
+        <!--MAIN-->
+        <section class="error">
+            <h1 class="heading-1">ERROR 500</h1>
+            <p class="heading-4">Chyba serveru. Opakujte akci nebo kontaktujte webmastera: team@amnionweb.cz.</p>
+            <div class="error__cta"><a href="/">DOMŮ</a></div>
+        </section>
     </main>
 
     <%- include('./includes/footer.ejs') %>

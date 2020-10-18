@@ -1115,25 +1115,116 @@ body {
       display: flex;
       flex-direction: column; }
 
+.error {
+  min-height: 50rem;
+  height: calc(100vh - 299px);
+  padding: 0 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: translateY(-5rem); }
+  .error .heading-1 {
+    margin-bottom: 1rem; }
+    @media only screen and (max-width: 400px) {
+      .error .heading-1 {
+        font-size: 4.5rem; } }
+  .error .heading-4 {
+    margin-bottom: 5rem; }
+    @media only screen and (max-width: 700px) {
+      .error .heading-4 {
+        text-align: center; } }
+  .error__cta {
+    border: 2px solid black;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .error__cta a {
+      width: 100%;
+      height: 100%;
+      padding: 1rem 4rem;
+      font-weight: 600;
+      color: black;
+      display: inline-block;
+      transition: all .2s; }
+      .error__cta a:hover {
+        background-color: black;
+        color: #FFF; }
+
 .index__header {
   padding: 12rem 15rem 15rem 15rem;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center; }
+  @media only screen and (min-width: 1950px) {
+    .index__header {
+      justify-content: center; } }
+  @media only screen and (max-width: 1600px) {
+    .index__header {
+      padding: 12rem 10rem 15rem 10rem; } }
+  @media only screen and (max-width: 1350px) {
+    .index__header {
+      padding: 12rem 5rem 15rem 5rem; } }
+  @media only screen and (max-width: 1000px) {
+    .index__header {
+      flex-direction: column;
+      padding: 12rem 0 15rem 0; } }
+  @media only screen and (max-width: 550px) {
+    .index__header {
+      padding-top: 8rem; } }
   .index__header__text {
     margin-left: 8%;
-    transform: translateY(-2rem);
     display: flex;
     flex-direction: column; }
+    @media only screen and (min-width: 1950px) {
+      .index__header__text {
+        margin-left: 0;
+        margin-right: 30rem; } }
+    @media only screen and (max-width: 1550px) {
+      .index__header__text {
+        margin-left: 4%; } }
+    @media only screen and (max-width: 1450px) {
+      .index__header__text {
+        margin-left: 8%; } }
+    @media only screen and (max-width: 1050px) {
+      .index__header__text {
+        margin-left: 4%; } }
+    @media only screen and (max-width: 1000px) {
+      .index__header__text {
+        margin-left: 0;
+        align-items: center; } }
     .index__header__text .heading-1 {
       margin-bottom: 2rem;
       animation: headerH1SlideIn 1.5s forwards ease-out; }
+      @media only screen and (max-width: 1450px) {
+        .index__header__text .heading-1 {
+          font-size: 4.5rem; } }
+      @media only screen and (max-width: 400px) {
+        .index__header__text .heading-1 {
+          font-size: 3.5rem; } }
     .index__header__text .heading-2 {
       margin-bottom: 12rem;
       opacity: 0;
       transform: translateX(-20%);
       animation: headerH2SlideIn 1s .5s forwards ease-out; }
+      @media only screen and (max-width: 1450px) {
+        .index__header__text .heading-2 {
+          font-size: 3.5rem; } }
+      @media only screen and (max-width: 1000px) {
+        .index__header__text .heading-2 {
+          margin-bottom: 5rem;
+          transform: translateX(0);
+          opacity: 1;
+          animation: none; } }
+      @media only screen and (max-width: 1200px) {
+        .index__header__text .heading-2 {
+          margin-bottom: 6rem; } }
+      @media only screen and (max-width: 400px) {
+        .index__header__text .heading-2 {
+          font-size: 2.5rem;
+          margin-bottom: 0; } }
     .index__header__text__cta {
       padding: 2rem 10rem;
       border: 1px solid #AE4900;
@@ -1144,22 +1235,69 @@ body {
       font-size: 2.2rem;
       align-self: center;
       transition: all .2s; }
-      .index__header__text__cta:hover {
+      .index__header__text__cta--desktop:hover {
         box-shadow: -2px 2px 5px 1px #E9E2D4;
         transform: translate(3px, 1px); }
+      @media only screen and (max-width: 1000px) {
+        .index__header__text__cta--desktop {
+          display: none; } }
+      .index__header__text__cta--mobile {
+        margin-bottom: 5rem;
+        transform: translateY(15rem); }
+        @media only screen and (min-width: 1001px) {
+          .index__header__text__cta--mobile {
+            display: none; } }
+        @media only screen and (max-width: 1000px) {
+          .index__header__text__cta--mobile {
+            margin-bottom: 8rem; } }
+        @media only screen and (max-width: 400px) {
+          .index__header__text__cta--mobile {
+            padding: 2rem 6rem;
+            border-radius: 1.5rem;
+            border-top-right-radius: 6rem;
+            font-size: 1.8rem; } }
   .index__header__photo {
     width: 60rem;
     height: 50rem;
     margin-right: 5%;
     position: relative; }
+    @media only screen and (max-width: 1450px) {
+      .index__header__photo {
+        width: 50rem;
+        height: 40rem; } }
+    @media only screen and (max-width: 1200px) {
+      .index__header__photo {
+        width: 40rem;
+        height: 30rem; } }
+    @media only screen and (max-width: 1000px) {
+      .index__header__photo {
+        width: 100vw;
+        height: 55rem;
+        margin-right: 0;
+        transform: translateY(8rem); } }
+    @media only screen and (max-width: 600px) {
+      .index__header__photo {
+        height: 45rem; } }
+    @media only screen and (max-width: 500px) {
+      .index__header__photo {
+        height: 35rem; } }
+    @media only screen and (max-width: 420px) {
+      .index__header__photo {
+        height: 30rem; } }
+    @media only screen and (max-width: 320px) {
+      .index__header__photo {
+        height: 25rem; } }
     .index__header__photo__background {
       height: 100%;
       width: 100%;
-      background-color: #dbdbdb;
+      background-color: #E9E2D4;
       transform: rotate(-3deg);
       position: absolute;
       z-index: 1;
       animation: headerBackImgTurn 1.5s forwards; }
+      @media only screen and (max-width: 1000px) {
+        .index__header__photo__background {
+          display: none; } }
     .index__header__photo__image {
       width: 100%;
       height: 100%;
@@ -1168,6 +1306,10 @@ body {
       position: absolute;
       z-index: 2;
       animation: headerImgTurn 1.5s forwards; }
+      @media only screen and (max-width: 1000px) {
+        .index__header__photo__image {
+          animation: none;
+          object-fit: cover; } }
 
 .index__categories {
   padding: 8rem;
@@ -1176,9 +1318,27 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center; }
+  @media only screen and (max-width: 1250px) {
+    .index__categories {
+      padding: 4rem; } }
+  @media only screen and (max-width: 500px) {
+    .index__categories {
+      padding: 5rem; } }
+  @media only screen and (max-width: 400px) {
+    .index__categories {
+      padding: 5rem 1.5rem; } }
+  @media only screen and (max-width: 310px) {
+    .index__categories {
+      padding: 5rem 1rem; } }
+  @media only screen and (max-width: 300px) {
+    .index__categories {
+      padding: 5rem 0; } }
   .index__categories__bill {
     cursor: pointer;
     font-size: 8rem; }
+    @media only screen and (max-width: 1000px) {
+      .index__categories__bill {
+        display: none; } }
   .index__categories__content {
     margin: 0 5rem;
     overflow: hidden;
@@ -1186,6 +1346,10 @@ body {
     .index__categories__content__inner {
       display: flex;
       flex-direction: row; }
+      @media only screen and (max-width: 1000px) {
+        .index__categories__content__inner {
+          flex-direction: column;
+          align-items: center; } }
   .index__categories__category {
     width: 27rem;
     height: 27rem;
@@ -1198,6 +1362,27 @@ body {
     .index__categories__category:hover .index__categories__photo {
       filter: brightness(30%);
       transform: scale(0.93); }
+    @media only screen and (max-width: 1250px) {
+      .index__categories__category {
+        width: 20rem;
+        height: 20rem; } }
+    @media only screen and (max-width: 1000px) {
+      .index__categories__category {
+        width: 40rem;
+        height: 40rem;
+        margin-bottom: 5rem; } }
+    @media only screen and (max-width: 800px) {
+      .index__categories__category {
+        width: 27rem;
+        height: 27rem; } }
+    @media only screen and (max-width: 500px) {
+      .index__categories__category {
+        width: 20rem;
+        height: 20rem; } }
+    @media only screen and (max-width: 400px) {
+      .index__categories__category {
+        width: 18rem;
+        height: 18rem; } }
   .index__categories__photo {
     width: 100%;
     height: 100%;
