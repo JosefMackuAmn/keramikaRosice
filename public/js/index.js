@@ -371,28 +371,30 @@ __webpack_require__.r(__webpack_exports__);
 ////
 //SUBMIT
 //
-const formELs = document.getElementById('order-form').elements;
+const orderForm = document.getElementById('order-form');
 
-const RegexMap = new Map([
+const formELs = orderForm ? orderForm.elements : undefined;
+
+const RegexMap = orderForm ? new Map([
     [formELs.email, /^[a-zA-Z0-9!#$_*?^{}~-]+(\.[a-zA-Z0-9!#$_*?^{}~-]+)*@([a-zA-Z-]+\.)+[a-zA-z]{2,}$/],
     [formELs.firstName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
     [formELs.lastName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
-    [formELs.phone, /[0-9]{9}/],
+    [formELs.phone, /^[0-9]{9}$/],
     [formELs.street, /(.+){2,}/],
     [formELs.city, /(.+){2,}/],
     [formELs.zipCode, /[0-9]{5}/],
     [formELs.delivery, /(ZAS|POS|OOD)/],
     [formELs.payment, /(DOB|CRD|BTR)/]
 ]
-);
+) : undefined;
 
-const otherArgsMap = new Map([
+const otherArgsMap = orderForm ? new Map([
     // [input, [markedElId, removeWhiteSpace]]
     [formELs.phone, [undefined, true]],
     [formELs.zipCode, [undefined, true]],
     [formELs.payment, ['order-payment']],
     [formELs.delivery, ['order-delivery']]
-]);
+]) : undefined;
 
 /***/ }),
 
