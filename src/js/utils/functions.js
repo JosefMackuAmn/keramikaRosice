@@ -1,3 +1,4 @@
+import {RegexMap, otherArgsMap}  from './data';
 import state from './state';
 
 ///////////////////////////////////
@@ -125,4 +126,66 @@ export const moveCategoriesSlider = () => {
         behavior: "smooth"
         });
     }
+}
+
+/////
+// SUBMIT
+/////
+
+//// Managing the disabled state
+export const refreshSubmitBtn = (agreeGDPR, agreeConditions, submitToCartBtn)  => {
+    
+    // If both inputs are checked, disabled class on the submit button is removed
+   if (agreeGDPR.checked && agreeConditions.checked) {
+
+       submitToCartBtn.classList.remove('disabled');
+       submitToCartBtn.removeAttribute('disabled');
+
+   } else {
+
+    submitToCartBtn.classList.add('disabled');
+    submitToCartBtn.setAttribute('disabled', '');
+
+   }
+}
+export function validateInput(input) {
+
+    // Getting regex for the current input
+    const inputRegExp = RegexMap.get(input);
+    if(!inputRegExp) {
+        return;
+    }
+
+    // Getting other arguments, if otherArgsMap contains them for current input
+    let markedElId;
+    let removeWhiteSpace;
+    if (otherArgsMap.get(input)) {
+        [markedElId, removeWhiteSpace] = otherArgsMap.get(input);
+    }
+    
+    // Getting input value, if specified, removing all single space characters (f.e in the case of zipcode)
+    let inputValue;
+    if (removeWhiteSpace) {
+        inputValue = input.value.trim().replace(/\s/g, "");
+    } else {
+        inputValue = input.value.trim();
+    }
+
+    
+    // Getting element, on which the 'invalid' class is added in validation fail cases
+    let markedEl;
+    if (markedElId) {
+        markedEl = document.getElementById(markedElId);
+    } else {
+        markedEl = input;
+    }
+
+    // If input value doesn´t match the regular expression, validation 'fails' - the invalid class is added on markedEl, new Error is thrown
+    if(!inputRegExp.test(inputValue)) {
+        markedEl.classList.add('invalid');
+    } else {
+        markedEl.classList.remove('invalid');
+    }
+
+    return inputValue;
 }

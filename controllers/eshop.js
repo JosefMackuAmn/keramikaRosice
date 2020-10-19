@@ -282,8 +282,8 @@ exports.postOrder = async (req, res, next) => {
                 payment_method_types: ['card'],
                 line_items: stripeItems,
                 mode: 'payment',
-                success_url: `https://testapp-4400.rostiapp.cz/success.html`,
-                cancel_url: `https://testapp-4400.rostiapp.cz/cancel.html`
+                success_url: `https://testapp-4400.rostiapp.cz/?payment=success`,
+                cancel_url: `https://testapp-4400.rostiapp.cz/?payment=canceled`
             });
     
             

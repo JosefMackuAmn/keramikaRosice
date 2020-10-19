@@ -1,6 +1,7 @@
 import state from './utils/state';
 import * as fcns from './utils/functions';
 import * as ajax from './utils/ajax';
+import {formELs}  from './utils/data';
   
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
@@ -73,9 +74,33 @@ fcns.ready(() => {
     // CART & ORDER
     /////
 
+    ///// Submit button event listener
     const orderForm = document.getElementById('order-form');
     if (orderForm) {
         orderForm.addEventListener('submit', ajax.orderSubmitHandler);
+    }
+
+
+    // Agreement checkbox event listeners 
+    
+    const agreeGDPR = document.getElementById('agree-gdpr');
+    const agreeConditions = document.getElementById('agree-conditions');
+    const submitToCartBtn = document.getElementById('submit-order');
+    if(orderForm) {
+        agreeGDPR.addEventListener('input', () => {
+            fcns.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
+        })
+        agreeConditions.addEventListener('input', () => {
+            fcns.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
+        });
+    }
+
+    ///// Input Validation
+    if(orderForm) {
+        for (const input of formELs) {
+            input.addEventListener('focusout', fcns.validateInput.bind(this, input));
+        }
+
     }
 
     /////

@@ -1,3 +1,6 @@
+import * as fcns from './functions';
+import {formELs}  from './data';
+
 export const postCartHandler = async ({ action, csrf, amount, productId }) => {
     switch (action) {
         case 'ADD':
@@ -35,8 +38,28 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
 }
 
 export const orderSubmitHandler = e => {
-    const payment = e.target.elements.payment.value;
 
+    e.preventDefault();
+
+    ////Validatings input values 
+
+        const emailValue = fcns.validateInput(formELs.email);
+        const firstNameValue = fcns.validateInput(formELs.firstName);
+        const lastNameValue = fcns.validateInput(formELs.lastName);
+        const phoneValue = fcns.validateInput(formELs.phone);
+        const streetValue = fcns.validateInput(formELs.street);
+        const cityValue = fcns.validateInput(formELs.city);
+        const zipCodeValue = fcns.validateInput(formELs.zipCode);
+        const deliveryValue = fcns.validateInput(formELs.delivery);
+        const paymentValue = fcns.validateInput(formELs.payment);
+
+    // If validation has failed (at least one element has class 'invalid'), returning
+    
+        if(document.querySelector('.invalid')) {
+            return;
+        }
+    
+    
     if (payment === 'CRD') {
         e.preventDefault();
 
@@ -46,19 +69,19 @@ export const orderSubmitHandler = e => {
 
         // Initialize stripe
         const stripe = Stripe(stripePublicKey);
-
+        
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
-        formData.append('firstName', formEls.firstName.value);
-        formData.append('lastName', formEls.lastName.value);
-        formData.append('email', formEls.email.value);
-        formData.append('phone', formEls.phone.value);
-        formData.append('street', formEls.street.value);
-        formData.append('city', formEls.city.value);
-        formData.append('delivery', formEls.delivery.value);
-        formData.append('payment', formEls.payment.value);
-        formData.append('zipCode', formEls.zipCode.value);
+        formData.append('firstName', firstNameValue);
+        formData.append('lastName', lastNameValue);
+        formData.append('email', emailValue);
+        formData.append('phone', phoneValue);
+        formData.append('street', streetValue);
+        formData.append('city', cityValue);
+        formData.append('delivery', deliveryValue);
+        formData.append('payment', paymentValue);
+        formData.append('zipCode', zipCodeValue);
 
         // Fetch POST /objednavka, expecting json
         fetch('/objednavka', {
