@@ -54,14 +54,13 @@ export const orderSubmitHandler = e => {
         const paymentValue = fcns.validateInput(formELs.payment);
 
     // If validation has failed (at least one element has class 'invalid'), returning
-    
+
         if(document.querySelector('.invalid')) {
             return;
         }
+
     
-    
-    if (payment === 'CRD') {
-        e.preventDefault();
+    if (paymentValue === 'CRD') {
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;
@@ -97,6 +96,6 @@ export const orderSubmitHandler = e => {
             }
         }).catch(err => {
             // SHOW ERROR MODAL ----------------------------------------------------------------------
-        })
+        }) 
     }
 }

@@ -32,23 +32,24 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     // Select hamburger button and attach click listener
     const hamburgerBtn = _utils_state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn = document.querySelector("#hamburger-btn");
     const headerList = hamburgerBtn.nextElementSibling;
+    const headerBackDrop = document.querySelector('.header__backdrop');
 
-    hamburgerBtn.addEventListener("click", (e) => {
+    const toggleHeader = (e) => {
         e.stopPropagation();
 
         if(![hamburgerBtn.classList].includes('header__nav-button--hiding')) {
 
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(hamburgerBtn, 'header__nav-button--show', 'header__nav-button--hide', 'header__nav-button--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerBackDrop, 'header__backdrop--hidden', 'header__backdrop--visible', 'header__backdrop--hiding');
 
             for (const listItem of headerList.children) {
                 _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
             }
         }
-    });
-
-    // Window resize listener
-    window.addEventListener("resize", _utils_functions__WEBPACK_IMPORTED_MODULE_1__.resizeHeaderHandler);
+    }
+    headerBackDrop.addEventListener('click', toggleHeader);
+    hamburgerBtn.addEventListener("click", toggleHeader);
 
     /////
     // CATEGORIES SLIDER
@@ -116,9 +117,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     ///// Input Validation
     if(orderForm) {
         for (const input of _utils_data__WEBPACK_IMPORTED_MODULE_3__.formELs) {
-            input.addEventListener('focusout', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.validateInput.bind(undefined, input));
+            input.addEventListener('input', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.validateInput.bind(undefined, input));
         }
-
     }
 
     /////
@@ -152,6 +152,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     const categorySelect = document.querySelector('.category-select');
 
     if (categorySelect) {
+        
+       
         const categorySelectButtons = categorySelect.querySelectorAll('.category-select__button');
 
         for (const btn of categorySelectButtons) {
@@ -188,7 +190,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
         const categorySelectList = categorySelectMobileBtn.parentElement.querySelector('.category-select__category-list');
         const categorySelectHeading = categorySelectMobileBtn.parentElement.querySelector('.heading-2');
-    
+        const categorySelectBackdrop = document.querySelector('.category-select__backdrop');
+        
         const footer = document.querySelector('footer');
     
         window.addEventListener('scroll', () => {
@@ -205,9 +208,11 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
         });
     
         // Toggle category select on mobile devices
-        categorySelectMobileBtn.addEventListener('click', () => {
+
+        const toggleCategorySelect = () => {
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectList, 'category-select__category-list--hidden', 'category-select__category-list--visible', 'category-select__category-list--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectBackdrop, 'category-select__backdrop--hidden', 'category-select__backdrop--visible', 'category-select__backdrop--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
     
             if ([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
@@ -215,7 +220,10 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             } else {
                 categorySelectMobileBtn.textContent = 'Skrýt kategorie';
             }
-        });
+        }
+
+        categorySelectMobileBtn.addEventListener('click', toggleCategorySelect);
+        categorySelectBackdrop.addEventListener('click', toggleCategorySelect);
     }
     /////
     // MODAL
@@ -301,14 +309,13 @@ const orderSubmitHandler = e => {
         const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
 
     // If validation has failed (at least one element has class 'invalid'), returning
-    
+
         if(document.querySelector('.invalid')) {
             return;
         }
+
     
-    
-    if (payment === 'CRD') {
-        e.preventDefault();
+    if (paymentValue === 'CRD') {
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;
@@ -344,7 +351,7 @@ const orderSubmitHandler = e => {
             }
         }).catch(err => {
             // SHOW ERROR MODAL ----------------------------------------------------------------------
-        })
+        }) 
     }
 }
 
@@ -407,7 +414,6 @@ const otherArgsMap = orderForm ? new Map([
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export refreshSubmitBtn [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export resizeHeaderHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export showOrHideEl [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export switchClass [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
@@ -421,7 +427,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "outerWidth": () => /* binding */ outerWidth,
 /* harmony export */   "showOrHideEl": () => /* binding */ showOrHideEl,
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
-/* harmony export */   "resizeHeaderHandler": () => /* binding */ resizeHeaderHandler,
 /* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
 /* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
 /* harmony export */   "validateInput": () => /* binding */ validateInput
@@ -511,24 +516,6 @@ const switchClass = (el, classA, classB) => {
         el.classList.add(classA);
     }
 }
-
-/////
-// Header functions
-/////
-const resizeHeaderHandler = () => {
-    console.log(window.clientX);
-    if (document.documentElement.getBoundingClientRect().width > 700) {
-        const navList = _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling;
-
-        navList.classList.remove("header__nav-list--shown");
-        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.classList.remove("header__nav-button--clicked");
-        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.removeAttribute('style');
-
-        for(const child of _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.children) {
-            child.style.animation = 'none';
-        }
-    }
-};
 
 /////
 // Categories slider
