@@ -65,41 +65,41 @@
                 <div class="order-form__row">                    
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="firstName">Jméno</label>
-                        <input class="order-form__input" type="text" id="firstName" name="firstName" placeholder="Jméno">
+                        <input class="order-form__input" type="text" spellcheck="false" id="firstName" name="firstName" placeholder="Jméno">
                     </div>
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="lastName">Příjmení</label>
-                        <input class="order-form__input" type="text" id="lastName" name="lastName" placeholder="Příjmení">
+                        <input class="order-form__input" type="text" spellcheck="false" id="lastName" name="lastName" placeholder="Příjmení">
                     </div>
                 </div>
                 <div class="order-form__row">
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="email">E-mail</label>
-                        <input class="order-form__input" type="text" id="email" name="email" placeholder="E-mail">
+                        <input class="order-form__input" type="email" spellcheck="false" id="email" name="email" placeholder="E-mail">
                     </div>
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="phone">Telefon</label>
-                        <input class="order-form__input" type="text" id="phone" name="phone" placeholder="Telefon">
+                        <input class="order-form__input" type="tel" id="phone" spellcheck="false" name="phone" placeholder="Telefon">
                     </div>
                 </div>
                 <div class="order-form__row">
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="street">Ulice, č.p.</label>
-                        <input class="order-form__input" type="text" id="street" name="street" placeholder="Ulice, č.p.">
+                        <input class="order-form__input" type="text" id="street" spellcheck="false" name="street" placeholder="Ulice, č.p.">
                     </div>
                 </div>
                 <div class="order-form__row">
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="city">Město</label>
-                        <input class="order-form__input" type="text" id="city" name="city" placeholder="Město">
+                        <input class="order-form__input" type="text" id="city" spellcheck="false" name="city" placeholder="Město">
                     </div>
                     <div class="order-form__data-cell">
                         <label class="order-form__label" for="zipCode">PSČ</label>
-                        <input class="order-form__input" type="text" id="zipCode" name="zipCode" placeholder="PSČ">
+                        <input class="order-form__input" type="text" id="zipCode" spellcheck="false" name="zipCode" placeholder="PSČ">
                     </div>
                 </div>
                 <!-- DELIVERY -->
-                <div class="order-form__radio-row">
+                <div class="order-form__radio-row" id="order-delivery">
                     <p class="order-form__subheading">Doručení</p>
                     <div class="order-form__radio-cell">
                         <input type="radio" id="ZAS" name="delivery" value="ZAS">
@@ -118,7 +118,7 @@
                     </div>
                 </div>
                 <!-- PAYMENT -->
-                <div class="order-form__radio-row">
+                <div class="order-form__radio-row" id="order-payment">
                     <p class="order-form__subheading">Platební metoda</p>
                     <div class="order-form__radio-cell">
                         <input type="radio" id="DOB" name="payment" value="DOB">
@@ -148,7 +148,7 @@
                     </div>
                 </div>
                 <!-- SUBMIT -->
-                <button type="submit" class="order-form__submit" disabled>Odeslat</button>
+                <button id="submit-order" type="submit" class="order-form__submit" disabled>Odeslat</button>
             </form>
 
         </section>

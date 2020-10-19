@@ -50,6 +50,10 @@
 
         flex-grow: 1;
 
+        &.invalid {
+            border: 2px solid red;
+        }
+
         &:focus {
             outline: none;
 
@@ -59,9 +63,14 @@
     &__radio-row {
         width: 100%;
         margin-bottom: 3rem;
+        padding: 2rem;
 
         display: flex;
         flex-direction: column;
+
+        &.invalid {
+            border: 2px solid red;
+        }
     }
     &__radio-cell {
         width: 100%;

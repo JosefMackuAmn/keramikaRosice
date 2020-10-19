@@ -15,6 +15,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/state */ "./src/js/utils/state.js");
 /* harmony import */ var _utils_functions__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./utils/functions */ "./src/js/utils/functions.js");
 /* harmony import */ var _utils_ajax__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./utils/ajax */ "./src/js/utils/ajax.js");
+/* harmony import */ var _utils_data__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./utils/data */ "./src/js/utils/data.js");
+
 
 
 
@@ -90,9 +92,33 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     // CART & ORDER
     /////
 
+    ///// Submit button event listener
     const orderForm = document.getElementById('order-form');
     if (orderForm) {
         orderForm.addEventListener('submit', _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.orderSubmitHandler);
+    }
+
+
+    // Agreement checkbox event listeners 
+    
+    const agreeGDPR = document.getElementById('agree-gdpr');
+    const agreeConditions = document.getElementById('agree-conditions');
+    const submitToCartBtn = document.getElementById('submit-order');
+    if(orderForm) {
+        agreeGDPR.addEventListener('input', () => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
+        })
+        agreeConditions.addEventListener('input', () => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
+        });
+    }
+
+    ///// Input Validation
+    if(orderForm) {
+        for (const input of _utils_data__WEBPACK_IMPORTED_MODULE_3__.formELs) {
+            input.addEventListener('focusout', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.validateInput.bind(undefined, input));
+        }
+
     }
 
     /////
@@ -114,7 +140,7 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
                     amount: btn.parentElement.querySelector('input').value
                 }
                 
-                _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCart(postCartData).catch(err => {
+                _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCartHandler(postCartData).catch(err => {
                     // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
                 });
             })
@@ -207,17 +233,22 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
   \******************************/
 /*! namespace exports */
 /*! export orderSubmitHandler [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export postCart [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export postCartHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "postCart": () => /* binding */ postCart,
+/* harmony export */   "postCartHandler": () => /* binding */ postCartHandler,
 /* harmony export */   "orderSubmitHandler": () => /* binding */ orderSubmitHandler
 /* harmony export */ });
-const postCart = async ({ action, csrf, amount, productId }) => {
+/* harmony import */ var _functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./functions */ "./src/js/utils/functions.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
+
+
+
+const postCartHandler = async ({ action, csrf, amount, productId }) => {
     switch (action) {
         case 'ADD':
         case 'REMOVE':
@@ -254,8 +285,28 @@ const postCart = async ({ action, csrf, amount, productId }) => {
 }
 
 const orderSubmitHandler = e => {
-    const payment = e.target.elements.payment.value;
 
+    e.preventDefault();
+
+    ////Validatings input values 
+
+        const emailValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.email);
+        const firstNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.firstName);
+        const lastNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.lastName);
+        const phoneValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.phone);
+        const streetValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.street);
+        const cityValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.city);
+        const zipCodeValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.zipCode);
+        const deliveryValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.delivery);
+        const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
+
+    // If validation has failed (at least one element has class 'invalid'), returning
+    
+        if(document.querySelector('.invalid')) {
+            return;
+        }
+    
+    
     if (payment === 'CRD') {
         e.preventDefault();
 
@@ -265,19 +316,19 @@ const orderSubmitHandler = e => {
 
         // Initialize stripe
         const stripe = Stripe(stripePublicKey);
-
+        
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
-        formData.append('firstName', formEls.firstName.value);
-        formData.append('lastName', formEls.lastName.value);
-        formData.append('email', formEls.email.value);
-        formData.append('phone', formEls.phone.value);
-        formData.append('street', formEls.street.value);
-        formData.append('city', formEls.city.value);
-        formData.append('delivery', formEls.delivery.value);
-        formData.append('payment', formEls.payment.value);
-        formData.append('zipCode', formEls.zipCode.value);
+        formData.append('firstName', firstNameValue);
+        formData.append('lastName', lastNameValue);
+        formData.append('email', emailValue);
+        formData.append('phone', phoneValue);
+        formData.append('street', streetValue);
+        formData.append('city', cityValue);
+        formData.append('delivery', deliveryValue);
+        formData.append('payment', paymentValue);
+        formData.append('zipCode', zipCodeValue);
 
         // Fetch POST /objednavka, expecting json
         fetch('/objednavka', {
@@ -299,6 +350,52 @@ const orderSubmitHandler = e => {
 
 /***/ }),
 
+/***/ "./src/js/utils/data.js":
+/*!******************************!*\
+  !*** ./src/js/utils/data.js ***!
+  \******************************/
+/*! namespace exports */
+/*! export RegexMap [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export formELs [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export otherArgsMap [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "formELs": () => /* binding */ formELs,
+/* harmony export */   "RegexMap": () => /* binding */ RegexMap,
+/* harmony export */   "otherArgsMap": () => /* binding */ otherArgsMap
+/* harmony export */ });
+////
+//SUBMIT
+//
+const formELs = document.getElementById('order-form').elements;
+
+const RegexMap = new Map([
+    [formELs.email, /^[a-zA-Z0-9!#$_*?^{}~-]+(\.[a-zA-Z0-9!#$_*?^{}~-]+)*@([a-zA-Z-]+\.)+[a-zA-z]{2,}$/],
+    [formELs.firstName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
+    [formELs.lastName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
+    [formELs.phone, /[0-9]{9}/],
+    [formELs.street, /(.+){2,}/],
+    [formELs.city, /(.+){2,}/],
+    [formELs.zipCode, /[0-9]{5}/],
+    [formELs.delivery, /(ZAS|POS|OOD)/],
+    [formELs.payment, /(DOB|CRD|BTR)/]
+]
+);
+
+const otherArgsMap = new Map([
+    // [input, [markedElId, removeWhiteSpace]]
+    [formELs.phone, [undefined, true]],
+    [formELs.zipCode, [undefined, true]],
+    [formELs.payment, ['order-payment']],
+    [formELs.delivery, ['order-delivery']]
+]);
+
+/***/ }),
+
 /***/ "./src/js/utils/functions.js":
 /*!***********************************!*\
   !*** ./src/js/utils/functions.js ***!
@@ -307,9 +404,11 @@ const orderSubmitHandler = e => {
 /*! export moveCategoriesSlider [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export refreshSubmitBtn [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export resizeHeaderHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export showOrHideEl [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export switchClass [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -321,9 +420,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "showOrHideEl": () => /* binding */ showOrHideEl,
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
 /* harmony export */   "resizeHeaderHandler": () => /* binding */ resizeHeaderHandler,
-/* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider
+/* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
+/* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
+/* harmony export */   "validateInput": () => /* binding */ validateInput
 /* harmony export */ });
-/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
+/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
+/* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
+
 
 
 ///////////////////////////////////
@@ -413,13 +516,13 @@ const switchClass = (el, classA, classB) => {
 const resizeHeaderHandler = () => {
     console.log(window.clientX);
     if (document.documentElement.getBoundingClientRect().width > 700) {
-        const navList = _state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn.nextElementSibling;
+        const navList = _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling;
 
         navList.classList.remove("header__nav-list--shown");
-        _state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn.classList.remove("header__nav-button--clicked");
-        _state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn.nextElementSibling.removeAttribute('style');
+        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.classList.remove("header__nav-button--clicked");
+        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.removeAttribute('style');
 
-        for(const child of _state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn.nextElementSibling.children) {
+        for(const child of _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.children) {
             child.style.animation = 'none';
         }
     }
@@ -438,19 +541,81 @@ const moveCategoriesSlider = () => {
     const moveInPixels = outerWidth(categoryEl);
 
     // Conditionally scroll to left or to right
-    if (_state__WEBPACK_IMPORTED_MODULE_0__.default.categoriesSlider.selectedArr === 'left') {
+    if (_state__WEBPACK_IMPORTED_MODULE_1__.default.categoriesSlider.selectedArr === 'left') {
         scrollableContainer.scrollBy({
         top: 0,
         left: -moveInPixels,
         behavior: "smooth"
         });
-    } else if (_state__WEBPACK_IMPORTED_MODULE_0__.default.categoriesSlider.selectedArr === 'right') {
+    } else if (_state__WEBPACK_IMPORTED_MODULE_1__.default.categoriesSlider.selectedArr === 'right') {
         scrollableContainer.scrollBy({
         top: 0,
         left: moveInPixels,
         behavior: "smooth"
         });
     }
+}
+
+/////
+// SUBMIT
+/////
+
+//// Managing the disabled state
+const refreshSubmitBtn = (agreeGDPR, agreeConditions, submitToCartBtn)  => {
+    
+    // If both inputs are checked, disabled class on the submit button is removed
+   if (agreeGDPR.checked && agreeConditions.checked) {
+
+       submitToCartBtn.classList.remove('disabled');
+       submitToCartBtn.removeAttribute('disabled');
+
+   } else {
+
+    submitToCartBtn.classList.add('disabled');
+    submitToCartBtn.setAttribute('disabled', '');
+
+   }
+}
+function validateInput(input) {
+
+    // Getting regex for the current input
+    const inputRegExp = _data__WEBPACK_IMPORTED_MODULE_0__.RegexMap.get(input);
+    if(!inputRegExp) {
+        return;
+    }
+
+    // Getting other arguments, if otherArgsMap contains them for current input
+    let markedElId;
+    let removeWhiteSpace;
+    if (_data__WEBPACK_IMPORTED_MODULE_0__.otherArgsMap.get(input)) {
+        [markedElId, removeWhiteSpace] = _data__WEBPACK_IMPORTED_MODULE_0__.otherArgsMap.get(input);
+    }
+    
+    // Getting input value, if specified, removing all single space characters (f.e in the case of zipcode)
+    let inputValue;
+    if (removeWhiteSpace) {
+        inputValue = input.value.trim().replace(/\s/g, "");
+    } else {
+        inputValue = input.value.trim();
+    }
+
+    
+    // Getting element, on which the 'invalid' class is added in validation fail cases
+    let markedEl;
+    if (markedElId) {
+        markedEl = document.getElementById(markedElId);
+    } else {
+        markedEl = input;
+    }
+
+    // If input value doesn´t match the regular expression, validation 'fails' - the invalid class is added on markedEl, new Error is thrown
+    if(!inputRegExp.test(inputValue)) {
+        markedEl.classList.add('invalid');
+    } else {
+        markedEl.classList.remove('invalid');
+    }
+
+    return inputValue;
 }
 
 /***/ }),
