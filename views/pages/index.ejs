@@ -20,19 +20,19 @@
             <a href="/shop" class="index__header__text__cta index__header__text__cta--mobile">E-shop</a>
         </section>
         
-        <section class="index__categories" id="categories-slider"> <!-- DANGER, delete unnecessary imgs ------------------------------------------------------ -->
-            <p class="index__categories__bill index__categories__bill--left" id="arrow-left"><</p>
-            <container class="index__categories__content" id="categories-scrollable-container">
-                <container class="index__categories__content__inner">
+        <section class="categories" id="categories-slider">
+            <p class="categories__bill categories__bill--left" id="arrow-left"><</p>
+            <container class="categories__content" id="categories-scrollable-container">
+                <container class="categories__content__inner">
                     <% categories.forEach((category, index) => { %>
-                        <a href="/shop/<%= category.name %>" class="index__categories__category categories-category">
-                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="index__categories__photo">
-                            <p class="index__categories__name"><%= category.name %></p>
+                        <a href="/shop/<%= category.name %>" class="categories__category categories-category">
+                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="categories__photo">
+                            <p class="categories__name"><%= category.name %></p>
                         </a>
                     <% }) %>
                 </container>
             </container>
-            <p class="index__categories__bill index__categories__bill--right" id="arrow-right">></p>
+            <p class="categories__bill categories__bill--right" id="arrow-right">></p>
         </section>  
           
     </main>

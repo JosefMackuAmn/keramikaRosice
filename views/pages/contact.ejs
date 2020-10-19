@@ -1,9 +1,44 @@
 <%- include('../includes/head.ejs') %>
 </head>
 <body>
-    
-    <main>
-        <%= title %>
+    <%- include('../includes/header.ejs') %>
+    <main class="main contact">
+        
+        <!--HEADER-->
+        <section class="contact">
+            <div class="contact__icons">
+                <div class="contact__icons__icon">
+                    <img src="/img/at.png" alt="e-mail" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">keramikarosice@seznam.cz</p>
+                </div>
+                <div class="contact__icons__icon">
+                    <img src="/img/phone.png" alt="telefon" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">+420 603 707 766</p>
+                </div>
+                <div class="contact__icons__icon">   
+                    <img src="/img/address.png" alt="adresa" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">Havířská 956, Rosice</p>
+                </div>
+                <a href="https://www.facebook.com/vlastimila.nepevna" target="_blank" class="contact__icons__icon">    
+                    <img src="/img/facebook.png" alt="facebook" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">Facebook</p>
+                </a>    
+            </div>
+        </section>
+        <section class="categories" id="categories-slider">
+            <p class="categories__bill categories__bill--left" id="arrow-left"><</p>
+            <container class="categories__content" id="categories-scrollable-container">
+                <container class="categories__content__inner">
+                    <% categories.forEach((category, index) => { %>
+                        <a href="/shop/<%= category.name %>" class="categories__category categories-category">
+                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="categories__photo">
+                            <p class="categories__name"><%= category.name %></p>
+                        </a>
+                    <% }) %>
+                </container>
+            </container>
+            <p class="categories__bill categories__bill--right" id="arrow-right">></p>
+        </section>  
     </main>
 
     <%- include('../includes/footer.ejs') %>
