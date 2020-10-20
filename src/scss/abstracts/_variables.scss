@@ -8,6 +8,9 @@ $color-primary-light: lighten($color-primary, 60%);
 $color-secondary: #E9E2D4;
 $color-secondary-light: lighten($color-secondary, 7%);
 
+$color-success: #238C09;
+$color-failed: #c50606;
+
 // Shades
 $color-white: #FFF;
 $color-black: rgba(0, 0 , 0, 1);
@@ -38,3 +41,5 @@ $font-regular: 1.8rem;
 ////////////////
 ///// BPs
 $bp-eshop-mobile: 700px;
+
+

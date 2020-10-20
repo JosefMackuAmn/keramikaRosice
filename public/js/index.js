@@ -225,9 +225,6 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
         categorySelectMobileBtn.addEventListener('click', toggleCategorySelect);
         categorySelectBackdrop.addEventListener('click', toggleCategorySelect);
     }
-    /////
-    // MODAL
-    /////
 });
 
 
@@ -410,10 +407,14 @@ const otherArgsMap = orderForm ? new Map([
   !*** ./src/js/utils/functions.js ***!
   \***********************************/
 /*! namespace exports */
+/*! export createCartHint [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export createModal [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export moveCategoriesSlider [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export refreshSubmitBtn [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export removeCartHint [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export removeModal [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export showOrHideEl [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export switchClass [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
@@ -429,7 +430,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
 /* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
 /* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
-/* harmony export */   "validateInput": () => /* binding */ validateInput
+/* harmony export */   "validateInput": () => /* binding */ validateInput,
+/* harmony export */   "createModal": () => /* binding */ createModal,
+/* harmony export */   "removeModal": () => /* binding */ removeModal,
+/* harmony export */   "removeCartHint": () => /* binding */ removeCartHint,
+/* harmony export */   "createCartHint": () => /* binding */ createCartHint
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
@@ -606,6 +611,86 @@ function validateInput(input) {
 
     return inputValue;
 }
+/////
+// MODAL
+/////
+const createModal = (text, subText, buttonText) => {
+    const modal = document.createElement('div');
+    const body = document.body;
+
+    modal.classList.add('modal');
+    modal.innerHTML = `<div class="modal__backdrop"></div>
+    <div class="modal__window">
+        <div class="modal__text">${text}</div>
+        <div class="modal__subtext">${subText}</div>
+        <button class="modal__button">${buttonText}</button>
+        <div class="close-button"></div>
+    </div>`;
+   
+    body.appendChild(modal);
+
+    const modalButton = modal.querySelector('.modal__button');
+    const modalCloseButton = modal.querySelector('.close-button');
+
+    modalButton.addEventListener('click', removeModal.bind(undefined, modal));
+    modalCloseButton.addEventListener('click', removeModal.bind(undefined, modal))
+}
+
+const removeModal = modal => {
+    modal.parentElement.removeChild(modal);
+}
+/////
+// CART-HINT
+/////
+const removeCartHint = cartHint => {
+    cartHint.parentElement.removeChild(cartHint);
+}
+const createCartHint = (state, text) => {
+
+    // Removing current cart hint if any
+    const currentCartHint = document.querySelector('.cart-hint');
+
+    if(currentCartHint) {
+        currentCartHint.parentElement.removeChild(currentCartHint);
+    }
+
+    // State = 'success' | 'failed'
+    if(state !== 'success' && state !== 'failed') {
+        return;
+    }
+
+    let cartHint = document.createElement('div');
+    const body = document.body;
+
+    cartHint.classList.add('cart-hint');
+    cartHint.classList.add('cart-hint--visible');
+    cartHint.classList.add(`cart-hint--${state}`);
+    cartHint.innerHTML = `<div class="cart-hint__text">
+    ${text}
+    </div>
+    <div class="cart-hint__symbol cart-hint__symbol--${state}">
+
+    </div>
+    <button class="close-button">
+
+    </button>`;
+
+    body.appendChild(cartHint);
+
+    const cartHintCloseButton = cartHint.querySelector('button');
+    cartHintCloseButton.addEventListener('click', removeCartHint.bind(undefined, cartHint));
+
+    // Cart hint gradually dissapears after 5 seconds
+    setTimeout(() => {
+        cartHint = document.querySelector('.cart-hint');
+        cartHint.addEventListener('animationend', () => {
+            removeCartHint(cartHint);
+        })
+        switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+    }, 5000)
+}
+
+
 
 /***/ }),
 

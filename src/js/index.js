@@ -207,9 +207,6 @@ fcns.ready(() => {
         categorySelectMobileBtn.addEventListener('click', toggleCategorySelect);
         categorySelectBackdrop.addEventListener('click', toggleCategorySelect);
     }
-    /////
-    // MODAL
-    /////
 });
 
 
