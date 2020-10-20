@@ -22,6 +22,9 @@ router.post('/kosik',
             if (isNaN(Number(amount)) && amount) {
                 throw new Error('Množství (amount) musí být číslo nebo nepravdivá hodnota');
             }
+            if (amount && amount < 1) {
+                throw new Error('Množství (amount) musí být kladné číslo nebo nepravdivá hodnota');
+            }
 
             return true;
         }),

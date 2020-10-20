@@ -11,8 +11,10 @@
                     <img src="/img/index-photo.jpg" class="picture__img" alt="Category picture">
                     <div class="picture__bg"></div>
                 </figure>
-                <h2 class="heading-2">Porcelánový špek</h2>
-                <h3 class="heading-3">Podkategorie</h3>
+                <h2 class="heading-2"><% if (categoryName) { %><%= categoryName %><% } else { %>E-shop<% } %></h2>
+                <% if (subcategoryName) { %>
+                    <h3 class="heading-3"><%= subcategoryName %></h3>
+                <% } %>
             </div>
             <div class="eshop__body">
 
@@ -23,52 +25,32 @@
                     </button>
                     <h2 class="heading-2 heading-2--hidden">Kategorie</h2>
                     <ul class="category-select__category-list category-select__category-list--hidden">
-                        <li class="category-select__category">
-                            <h3 class="heading-3">Porcelánový šperk</h3>
-                            <button class="category-select__button category-select__button--hide"></button>
-                            <ul class="category-select__subcategory-list">
-                                <li class="category-select__subcategory category-select__subcategory--selected">Náušnice</li>
-                                <li class="category-select__subcategory">Náhrdelníky</li>
-                                <li class="category-select__subcategory">Brože</li>
-                            </ul>
-                        </li>
-                        <li class="category-select__category">
-                            <h3 class="heading-3">Porcelánový šperk</h3>
-                            <button class="category-select__button category-select__button--show"></button>
-                            <ul class="category-select__subcategory-list category-select__subcategory-list--hidden">
-                                <li class="category-select__subcategory">Příušnice</li>
-                                <li class="category-select__subcategory">Náprdelníky</li>
-                                <li class="category-select__subcategory">Bože</li>
-                            </ul>
-                        </li>
-                        <li class="category-select__category">
-                            <h3 class="heading-3">Porcelánový šperk</h3>
-                            <button class="category-select__button category-select__button--show"></button>
-                            <ul class="category-select__subcategory-list category-select__subcategory-list--hidden">
-                                <li class="category-select__subcategory">Náružnice</li>
-                                <li class="category-select__subcategory">Trdelníky</li>
-                                <li class="category-select__subcategory">Nože</li>
-                            </ul>
-                        </li>
-                        <li class="category-select__category">
-                            <h3 class="heading-3">Porcelánový šperk</h3>
-                            <button class="category-select__button category-select__button--show"></button>
-                            <ul class="category-select__subcategory-list category-select__subcategory-list--hidden">
-                                <li class="category-select__subcategory"></li>
-                                <li class="category-select__subcategory"></li>
-                                <li class="category-select__subcategory"></li>
-                            </ul>
-                        </li>
-                        <li class="category-select__category">
-                            <h3 class="heading-3">Porcelánový šperk</h3>
-                            <button class="category-select__button category-select__button--show"></button>
-                            <ul class="category-select__subcategory-list category-select__subcategory-list--hidden">
-                                <li class="category-select__subcategory"></li>
-                                <li class="category-select__subcategory"></li>
-                                <li class="category-select__subcategory"></li>
-                            </ul>
-                        </li>
-    
+
+                        <% categories.forEach(category => { %>
+                            <li class="category-select__category">
+                                <a href="/shop/<%= category.name %>"><h3 class="heading-3"><%= category.name %></h3></a>
+                                <button class="category-select__button <% if (category.name !== categoryName) { %>category-select__button--hide<% } else { %>category-select__button--show<% } %>"></button>
+                                <%
+                                
+                                    const curSubcategories = [];
+                                    subcategories.forEach(subcategory => {
+                                        if (subcategory.categoryId.toString() === category._id.toString()) {
+                                            curSubcategories.push(subcategory);
+                                        }
+                                    });
+
+                                    if (curSubcategories.length) { %>
+                                        <ul class="category-select__subcategory-list <% if (category.name !== categoryName) { %>category-select__subcategory-list--hidden<% } %>">
+                                            <% curSubcategories.forEach(subcategory => { %>
+                                                <a href="/shop/<%= category.name %>/<%= subcategory.name %>"><li class="category-select__subcategory <% if (subcategory.name === subcategoryName) { %>category-select__subcategory--selected<% } %>"><%= subcategory.name %></li></a>
+                                            <% }) %>
+                                        </ul>
+                                    <% }
+                                
+                                %>
+                            </li>
+                        <% }) %>
+
                     </ul>
                    
                 </div>
@@ -81,7 +63,7 @@
                                 <div class="product__modal">
                                     <button class="close-button product__modal__close-button"></button>
                                     <p class="product__modal__amount">Množství</p>
-                                    <input class="product__modal__input" type="number">
+                                    <input class="product__modal__input" type="number" min="1">
                                     <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>">
                                         Do košíku
                                     </button>
@@ -110,180 +92,7 @@
                     } else { %>
                         <p>Žádné produkty nenalezeny</p>
                     <% } %>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
-                    <div class="product">
-                        <div class="product__modal">
-                            <button class="close-button product__modal__close-button"></button>
-                            <p class="product__modal__amount">Množství</p>
-                            <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                        </div>
-                        <div class="product__body">
-                            <img src="img/index-photo.jpg" alt="Photo of the product" class="product__image">
-                            <div class="product__description">
-                                <p class="product__description-text">
-                                    Vař hrnečku polívčičku, šest krát pět je devět. Pravda byla vždycky v cíčku, jsem kouzelník jak Nedvěd,
-                                </p>
-                            </div>
-                        </div>
-                        <div class="product__info">
-                            <button class="to-cart-button">
-                                Do košíku
-                            </button>
-                            <p class="product__price">
-                                625 Kč
-                            </p>
-                            <p class="product__name">
-                                Hrneček na polívčičku
-                            </p>
-                        </div>
-                    </div>
+
                 </div>
             </div>
         </section>

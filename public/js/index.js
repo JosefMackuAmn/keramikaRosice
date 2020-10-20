@@ -286,29 +286,34 @@ const postCartHandler = async ({ action, csrf, amount, productId }) => {
 
 const orderSubmitHandler = e => {
 
-    e.preventDefault();
+    ///// Validatings input values 
 
-    ////Validatings input values 
-
-        const emailValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.email);
-        const firstNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.firstName);
-        const lastNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.lastName);
-        const phoneValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.phone);
-        const streetValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.street);
-        const cityValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.city);
-        const zipCodeValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.zipCode);
-        const deliveryValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.delivery);
-        const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
+    const emailValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.email);
+    const firstNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.firstName);
+    const lastNameValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.lastName);
+    const phoneValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.phone);
+    const streetValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.street);
+    const cityValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.city);
+    const zipCodeValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.zipCode);
+    const deliveryValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.delivery);
+    const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
 
     // If validation has failed (at least one element has class 'invalid'), returning
     
-        if(document.querySelector('.invalid')) {
-            return;
-        }
+    if(document.querySelector('.invalid')) {
+        submitBtn.classList.remove('loading');
+        return;
+    }
     
     
-    if (payment === 'CRD') {
+    if (paymentValue === 'CRD') {
         e.preventDefault();
+        
+        ///// Show spinner on submit button
+        const submitBtn = e.target.elements.order_submit;
+        const submitBtnText = submitBtn.textContent;
+        submitBtn.textContent = "";
+        submitBtn.classList.add('loading');
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;
@@ -344,6 +349,9 @@ const orderSubmitHandler = e => {
             }
         }).catch(err => {
             // SHOW ERROR MODAL ----------------------------------------------------------------------
+        }).finally(() => {
+            submitBtn.textContent = submitBtnText;
+            submitBtn.classList.remove('loading');
         })
     }
 }

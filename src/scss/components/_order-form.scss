@@ -159,14 +159,12 @@
                     transform: translate3d(-50%, -50%, -1rem);
                 }
             }
-            &::after,
             &::before {
                 background-color: $color-grey;
             }
         }
 
         &::before {
-            display: block;
             content: "";
             width: calc(100% + 1rem);
             height: calc(100% + 1rem);
@@ -178,8 +176,29 @@
             position: absolute;
             top: 50%;
             left: 50%;
+            
+            display: block;
 
             transition: all .3s cubic-bezier(0, 0.55, 0.45, 1);
+        }
+
+        &.loading {
+            &::after {
+                content: "";
+                width: 5rem;
+                height: 5rem;
+                border-radius: 50%;
+                border-top: 5px solid $color-primary;
+                transform: translate(-50%, -50%) rotate(0deg);
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+
+                display: block;
+
+                animation: spinner .5s linear infinite;
+            }
         }
     }
 }

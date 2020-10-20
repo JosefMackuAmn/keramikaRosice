@@ -16,17 +16,23 @@ const generateInvoice = require('../util/generateInvoice');
 const asyncHelpers = require('../util/asyncHelpers');
 
 exports.getShop = async (req, res, next) => {
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
     const products = await Product.find({});
 
     res.render('eshop/shop', {
         title: 'E-shop',
-        products: products
+        categoryName: undefined,
+        subcategoryName: undefined,
+        products: products,
+        categories: allCategories,
+        subcategories: allSubcategories
     })
 }
 
 exports.getCategory = async (req, res, next) => {
     const categoryName = req.params.category.toLowerCase();
-    const category = await Category.findOne({ name: 'amnion category' });
+    const category = await Category.findOne({ name: categoryName });
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
@@ -35,12 +41,18 @@ exports.getCategory = async (req, res, next) => {
     }
     const categoryId = category._id;
 
-
-    const categoryProducts = await Product.find({ categoryId: categoryId }) || [];
+    const categoryProducts = await Product.find({ categoryId: categoryId });
+    
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
 
     res.render('eshop/shop', {
         title: categoryName,
-        products: categoryProducts
+        categoryName: categoryName,
+        subcategoryName: undefined,
+        products: categoryProducts,
+        categories: allCategories,
+        subcategories: allSubcategories
     });
 }
 
@@ -68,10 +80,17 @@ exports.getSubcategory = async (req, res, next) => {
     const subcategoryId = subcategory._id;
 
     const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
+    
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
 
     res.render('eshop/shop', {
         title: subcategoryName,
-        products: subcategoryProducts
+        categoryName: categoryName,
+        subcategoryName: subcategoryName,
+        products: subcategoryProducts,
+        categories: allCategories,
+        subcategories: allSubcategories
     });
 }
 
@@ -209,7 +228,8 @@ exports.postOrder = async (req, res, next) => {
     const invoicePath = path.join('pdf', 'invoices', invoiceName);
     order.invoiceUrl = invoicePath;
 
-    generateInvoice(order);
+    // generateInvoice(order);
+    // console.log('after invoice generated');
 
     await order.save();
 
@@ -329,7 +349,6 @@ exports.postCheckoutWebhook = async (req, res, next) => {
                 // Mark order as payed and send email
                 try {
                     const result = await asyncHelpers.paidOrderHandler(order);
-                    console.log(result);
                 } catch (err) {
                     console.log(err);
                     res.status(500);
@@ -350,7 +369,6 @@ exports.postCheckoutWebhook = async (req, res, next) => {
             // Mark order as payed and send email
             try {
                 const result = await asyncHelpers.paidOrderHandler(order);
-                console.log(result);
             } catch (err) {
                 console.log(err);
                 res.status(500);

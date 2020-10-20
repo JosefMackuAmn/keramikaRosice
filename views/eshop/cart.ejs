@@ -55,103 +55,105 @@
             <% } %>
         </section>
 
-        <!-- ORDER FORM -->
-        <section id="cart-order" class="cart__order">
-            
-            <h1 class="heading-1">Objednávka</h1>
-            <form class="order-form" action="/objednavka" method="POST" id="order-form" data-stripepublickey="<%= stripePublicKey %>">
-                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-                <!-- CUSTOMER DATA -->
-                <div class="order-form__row">                    
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="firstName">Jméno</label>
-                        <input class="order-form__input" type="text" spellcheck="false" id="firstName" name="firstName" placeholder="Jméno">
+        <% if (cart) { %>
+            <!-- ORDER FORM -->
+            <section id="cart-order" class="cart__order">
+                
+                <h1 class="heading-1">Objednávka</h1>
+                <form class="order-form" action="/objednavka" method="POST" id="order-form" data-stripepublickey="<%= stripePublicKey %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <!-- CUSTOMER DATA -->
+                    <div class="order-form__row">                    
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="firstName">Jméno</label>
+                            <input class="order-form__input" type="text" spellcheck="false" id="firstName" name="firstName" placeholder="Jméno">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="lastName">Příjmení</label>
+                            <input class="order-form__input" type="text" spellcheck="false" id="lastName" name="lastName" placeholder="Příjmení">
+                        </div>
                     </div>
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="lastName">Příjmení</label>
-                        <input class="order-form__input" type="text" spellcheck="false" id="lastName" name="lastName" placeholder="Příjmení">
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="email">E-mail</label>
+                            <input class="order-form__input" type="email" spellcheck="false" id="email" name="email" placeholder="E-mail">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="phone">Telefon</label>
+                            <input class="order-form__input" type="tel" id="phone" spellcheck="false" name="phone" placeholder="Telefon">
+                        </div>
                     </div>
-                </div>
-                <div class="order-form__row">
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="email">E-mail</label>
-                        <input class="order-form__input" type="email" spellcheck="false" id="email" name="email" placeholder="E-mail">
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="street">Ulice, č.p.</label>
+                            <input class="order-form__input" type="text" id="street" spellcheck="false" name="street" placeholder="Ulice, č.p.">
+                        </div>
                     </div>
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="phone">Telefon</label>
-                        <input class="order-form__input" type="tel" id="phone" spellcheck="false" name="phone" placeholder="Telefon">
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="city">Město</label>
+                            <input class="order-form__input" type="text" id="city" spellcheck="false" name="city" placeholder="Město">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="zipCode">PSČ</label>
+                            <input class="order-form__input" type="text" id="zipCode" spellcheck="false" name="zipCode" placeholder="PSČ">
+                        </div>
                     </div>
-                </div>
-                <div class="order-form__row">
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="street">Ulice, č.p.</label>
-                        <input class="order-form__input" type="text" id="street" spellcheck="false" name="street" placeholder="Ulice, č.p.">
+                    <!-- DELIVERY -->
+                    <div class="order-form__radio-row" id="order-delivery">
+                        <p class="order-form__subheading">Doručení</p>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="ZAS" name="delivery" value="ZAS">
+                            <label for="ZAS">Zásilkovna</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="POS" name="delivery" value="POS">
+                            <label for="POS">Česká pošta</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["POS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="OOD" name="delivery" value="OOD">
+                            <label for="OOD">Osobní odběr</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
                     </div>
-                </div>
-                <div class="order-form__row">
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="city">Město</label>
-                        <input class="order-form__input" type="text" id="city" spellcheck="false" name="city" placeholder="Město">
+                    <!-- PAYMENT -->
+                    <div class="order-form__radio-row" id="order-payment">
+                        <p class="order-form__subheading">Platební metoda</p>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="DOB" name="payment" value="DOB">
+                            <label for="DOB">Dobírka</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["DOB"] %>Kč</p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="CRD" name="payment" value="CRD">
+                            <label for="CRD">Platební brána</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["CRD"] %>Kč</p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="BTR" name="payment" value="BTR">
+                            <label for="BTR">Bankovní převod</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["BTR"] %>Kč</p>
+                        </div>
                     </div>
-                    <div class="order-form__data-cell">
-                        <label class="order-form__label" for="zipCode">PSČ</label>
-                        <input class="order-form__input" type="text" id="zipCode" spellcheck="false" name="zipCode" placeholder="PSČ">
+                    <!-- AGREES -->
+                    <div class="order-form__agree-row">
+                        <div class="order-form__agree-cell">
+                            <input type="checkbox" name="agree-gdpr" id="agree-gdpr">
+                            <label for="agree-gdpr">Souhlasím se zpracováním osobních údajů</label>
+                        </div>
+                        <div class="order-form__agree-cell">
+                            <input type="checkbox" name="agree-conditions" id="agree-conditions">
+                            <label for="agree-conditions">Souhlasím s obchodními podmínkami</label>
+                        </div>
                     </div>
-                </div>
-                <!-- DELIVERY -->
-                <div class="order-form__radio-row" id="order-delivery">
-                    <p class="order-form__subheading">Doručení</p>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="ZAS" name="delivery" value="ZAS">
-                        <label for="ZAS">Zásilkovna</label>
-                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
-                    </div>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="POS" name="delivery" value="POS">
-                        <label for="POS">Česká pošta</label>
-                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["POS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
-                    </div>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="OOD" name="delivery" value="OOD">
-                        <label for="OOD">Osobní odběr</label>
-                        <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
-                    </div>
-                </div>
-                <!-- PAYMENT -->
-                <div class="order-form__radio-row" id="order-payment">
-                    <p class="order-form__subheading">Platební metoda</p>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="DOB" name="payment" value="DOB">
-                        <label for="DOB">Dobírka</label>
-                        <p class="order-form__feature-price"><%= constants.paymentCosts["DOB"] %>Kč</p>
-                    </div>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="CRD" name="payment" value="CRD">
-                        <label for="CRD">Kartou</label>
-                        <p class="order-form__feature-price"><%= constants.paymentCosts["CRD"] %>Kč</p>
-                    </div>
-                    <div class="order-form__radio-cell">
-                        <input type="radio" id="BTR" name="payment" value="BTR">
-                        <label for="BTR">Bankovní převod</label>
-                        <p class="order-form__feature-price"><%= constants.paymentCosts["BTR"] %>Kč</p>
-                    </div>
-                </div>
-                <!-- AGREES -->
-                <div class="order-form__agree-row">
-                    <div class="order-form__agree-cell">
-                        <input type="checkbox" name="agree-gdpr" id="agree-gdpr">
-                        <label for="agree-gdpr">Souhlasím se zpracováním osobních údajů</label>
-                    </div>
-                    <div class="order-form__agree-cell">
-                        <input type="checkbox" name="agree-conditions" id="agree-conditions">
-                        <label for="agree-conditions">Souhlasím s obchodními podmínkami</label>
-                    </div>
-                </div>
-                <!-- SUBMIT -->
-                <button id="submit-order" type="submit" class="order-form__submit" disabled>Odeslat</button>
-            </form>
+                    <!-- SUBMIT -->
+                    <button id="submit-order" type="submit" class="order-form__submit" name="order_submit" disabled>Odeslat</button>
+                </form>
 
-        </section>
+            </section>
+        <% } %>
 
     </main>
 

@@ -39,29 +39,34 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
 
 export const orderSubmitHandler = e => {
 
-    e.preventDefault();
+    ///// Validatings input values 
 
-    ////Validatings input values 
-
-        const emailValue = fcns.validateInput(formELs.email);
-        const firstNameValue = fcns.validateInput(formELs.firstName);
-        const lastNameValue = fcns.validateInput(formELs.lastName);
-        const phoneValue = fcns.validateInput(formELs.phone);
-        const streetValue = fcns.validateInput(formELs.street);
-        const cityValue = fcns.validateInput(formELs.city);
-        const zipCodeValue = fcns.validateInput(formELs.zipCode);
-        const deliveryValue = fcns.validateInput(formELs.delivery);
-        const paymentValue = fcns.validateInput(formELs.payment);
+    const emailValue = fcns.validateInput(formELs.email);
+    const firstNameValue = fcns.validateInput(formELs.firstName);
+    const lastNameValue = fcns.validateInput(formELs.lastName);
+    const phoneValue = fcns.validateInput(formELs.phone);
+    const streetValue = fcns.validateInput(formELs.street);
+    const cityValue = fcns.validateInput(formELs.city);
+    const zipCodeValue = fcns.validateInput(formELs.zipCode);
+    const deliveryValue = fcns.validateInput(formELs.delivery);
+    const paymentValue = fcns.validateInput(formELs.payment);
 
     // If validation has failed (at least one element has class 'invalid'), returning
     
-        if(document.querySelector('.invalid')) {
-            return;
-        }
+    if(document.querySelector('.invalid')) {
+        submitBtn.classList.remove('loading');
+        return;
+    }
     
     
-    if (payment === 'CRD') {
+    if (paymentValue === 'CRD') {
         e.preventDefault();
+        
+        ///// Show spinner on submit button
+        const submitBtn = e.target.elements.order_submit;
+        const submitBtnText = submitBtn.textContent;
+        submitBtn.textContent = "";
+        submitBtn.classList.add('loading');
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;
@@ -97,6 +102,9 @@ export const orderSubmitHandler = e => {
             }
         }).catch(err => {
             // SHOW ERROR MODAL ----------------------------------------------------------------------
+        }).finally(() => {
+            submitBtn.textContent = submitBtnText;
+            submitBtn.classList.remove('loading');
         })
     }
 }

@@ -70,6 +70,7 @@
       margin-top: 6rem;
 
       color: $color-white;
+      font-size: $font-big;
 
       @media screen and (max-width: 1400px) {
         margin-top: 4rem;
@@ -88,14 +89,26 @@
       }
     }
     &__input {
-      height: 3rem;
-      width: 6rem;
+      height: 4rem;
+      width: 7rem;
+      padding: 1rem;
       margin-top: 0.5rem;
       outline: none;
       border: none;
 
+      -moz-appearance: textfield;
+
       font-family: "PT Sans";
       font-size: 1.6rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      &::-webkit-outer-spin-button, &::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+      }
+
     }    
     & .close-button {
       top: 1rem;
@@ -103,9 +116,10 @@
     }
   }
   &__info {
-    height: 4rem;
+    height: 5rem;
     width: 100%;
     background-color: $color-black;
+    
     display: flex;
     align-items: center;
   
@@ -153,18 +167,18 @@
   &__description {
     height: 100%;
     width: 100%;
-    transition: all 0.5s;
     background-color: rgba($color-black, 0.6);
+    transform: translateX(100%);
 
     position: absolute;
     top: 0;
     left: 0;
-    transform: translateX(200%);
+    
+    transition: all 0.2s ease-out;
   }
   &__description-text {
     width: 100%;
     padding: 4rem;
-    transition: all 0.5s;
 
     color: $color-white;
 
@@ -172,6 +186,8 @@
     top: 50%;
     left: 50%;
     transform: translateX(-50%) translateY(-50%);
+
+    transition: all 0.5s;
 
     @media screen and (max-width: 1100px) {
       padding: 2rem;
@@ -181,16 +197,14 @@
     width: 100%;
 
     text-align: center;
+    font-size: $font-bigger;
 
     position: absolute;
     left: 50%;
-    bottom: -4rem;
-    transform: translateX(-50%);
+    bottom: -.5rem;
+    transform: translate(-50%, 100%);
   }
 
-  &:hover {
-    transform: rotate(5deg);
-  }
   &::after {
     content: "";
     width: 100%;

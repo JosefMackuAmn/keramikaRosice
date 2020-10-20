@@ -114,7 +114,6 @@ router.post('/products/edit', isAuth,
     body('shippingCostId')
         .escape()
         .custom(shippingCostId => {
-            console.log(shippingCostId);
             if (shippingCostId != 0 && shippingCostId != 1) {
                 throw new Error('shippingCostId should be a number, either 0 or 1')
             }
