@@ -47,9 +47,6 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
         }
     });
 
-    // Window resize listener
-    window.addEventListener("resize", _utils_functions__WEBPACK_IMPORTED_MODULE_1__.resizeHeaderHandler);
-
     /////
     // CATEGORIES SLIDER
     /////
@@ -385,8 +382,8 @@ const formELs = orderForm ? orderForm.elements : undefined;
 
 const RegexMap = orderForm ? new Map([
     [formELs.email, /^[a-zA-Z0-9!#$_*?^{}~-]+(\.[a-zA-Z0-9!#$_*?^{}~-]+)*@([a-zA-Z-]+\.)+[a-zA-z]{2,}$/],
-    [formELs.firstName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
-    [formELs.lastName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
+    [formELs.firstName, /(.+){2,}/],
+    [formELs.lastName, /(.+){2,}/],
     [formELs.phone, /^[0-9]{9}$/],
     [formELs.street, /(.+){2,}/],
     [formELs.city, /(.+){2,}/],
@@ -415,7 +412,6 @@ const otherArgsMap = orderForm ? new Map([
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export refreshSubmitBtn [provided] [no usage info] [missing usage info prevents renaming] */
-/*! export resizeHeaderHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export showOrHideEl [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export switchClass [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
@@ -429,7 +425,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "outerWidth": () => /* binding */ outerWidth,
 /* harmony export */   "showOrHideEl": () => /* binding */ showOrHideEl,
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
-/* harmony export */   "resizeHeaderHandler": () => /* binding */ resizeHeaderHandler,
 /* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
 /* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
 /* harmony export */   "validateInput": () => /* binding */ validateInput
@@ -523,20 +518,6 @@ const switchClass = (el, classA, classB) => {
 /////
 // Header functions
 /////
-const resizeHeaderHandler = () => {
-    console.log(window.clientX);
-    if (document.documentElement.getBoundingClientRect().width > 700) {
-        const navList = _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling;
-
-        navList.classList.remove("header__nav-list--shown");
-        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.classList.remove("header__nav-button--clicked");
-        _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.removeAttribute('style');
-
-        for(const child of _state__WEBPACK_IMPORTED_MODULE_1__.default.hamburgerBtn.nextElementSibling.children) {
-            child.style.animation = 'none';
-        }
-    }
-};
 
 /////
 // Categories slider

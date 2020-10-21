@@ -85,20 +85,6 @@ export const switchClass = (el, classA, classB) => {
 /////
 // Header functions
 /////
-export const resizeHeaderHandler = () => {
-    console.log(window.clientX);
-    if (document.documentElement.getBoundingClientRect().width > 700) {
-        const navList = state.hamburgerBtn.nextElementSibling;
-
-        navList.classList.remove("header__nav-list--shown");
-        state.hamburgerBtn.classList.remove("header__nav-button--clicked");
-        state.hamburgerBtn.nextElementSibling.removeAttribute('style');
-
-        for(const child of state.hamburgerBtn.nextElementSibling.children) {
-            child.style.animation = 'none';
-        }
-    }
-};
 
 /////
 // Categories slider

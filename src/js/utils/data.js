@@ -7,8 +7,8 @@ export const formELs = orderForm ? orderForm.elements : undefined;
 
 export const RegexMap = orderForm ? new Map([
     [formELs.email, /^[a-zA-Z0-9!#$_*?^{}~-]+(\.[a-zA-Z0-9!#$_*?^{}~-]+)*@([a-zA-Z-]+\.)+[a-zA-z]{2,}$/],
-    [formELs.firstName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
-    [formELs.lastName, /^[a-zA-ZčČďĎňŇřŘšŠťŤáéíóúůýě]{2,}$/],
+    [formELs.firstName, /(.+){2,}/],
+    [formELs.lastName, /(.+){2,}/],
     [formELs.phone, /^[0-9]{9}$/],
     [formELs.street, /(.+){2,}/],
     [formELs.city, /(.+){2,}/],

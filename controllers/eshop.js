@@ -228,10 +228,11 @@ exports.postOrder = async (req, res, next) => {
     const invoicePath = path.join('pdf', 'invoices', invoiceName);
     order.invoiceUrl = invoicePath;
 
-    // generateInvoice(order);
-    // console.log('after invoice generated');
+    generateInvoice(order, invoicePath);
+    console.log('after invoice generated');
 
     await order.save();
+    console.log('order saved');
 
     req.session.cart = null;
 
@@ -250,9 +251,9 @@ exports.postOrder = async (req, res, next) => {
         if (order.payment !== 'CRD') {
             if (err) {
                 console.log(err);
-                return res.redirect('/kosik?success=true&mailSent=false');
+                return res.redirect(`/?success=true&mailSent=false&payment=${order.payment}`);
             }
-            return res.redirect('/kosik?success=true&mailSent=true');
+            return res.redirect(`/?success=true&mailSent=true&payment=${order.payment}`);
         }
 
         // Whether the e-mail is sent or not,
@@ -279,7 +280,7 @@ exports.postOrder = async (req, res, next) => {
                     currency: 'czk',
                     product_data: {
                         name: `Platba kartou`,
-                        images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                        images: ['https://www.keramika-rosice.cz/img/white.png']
                     },
                     unit_amount: (order.paymentCost * 100)
                 },
@@ -290,7 +291,7 @@ exports.postOrder = async (req, res, next) => {
                     currency: 'czk',
                     product_data: {
                         name: `Poštovné`,
-                        images: ['https://testapp-4400.rostiapp.cz/success.jpg']
+                        images: ['https://www.keramika-rosice.cz/img/white.png']
                     },
                     unit_amount: (order.deliveryCost * 100)
                 },
@@ -302,12 +303,9 @@ exports.postOrder = async (req, res, next) => {
                 payment_method_types: ['card'],
                 line_items: stripeItems,
                 mode: 'payment',
-                success_url: `https://testapp-4400.rostiapp.cz/?payment=success`,
-                cancel_url: `https://testapp-4400.rostiapp.cz/?payment=canceled`
+                success_url: `https://www.keramika-rosice.cz/?payment=success`,
+                cancel_url: `https://www.keramika-rosice.cz/?payment=canceled`
             });
-    
-            
-            //const sameOrderButFromDatabase = await Order.findById(order._id);
             
             order.stripePaymentIntent = session.payment_intent;
             await order.save();

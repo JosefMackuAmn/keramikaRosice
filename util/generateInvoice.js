@@ -184,7 +184,7 @@ const generateProductsTable = (invoice, order) => {
         .text('Dodavatel není plátce DPH.', 65, 470 + deltaY)
 }
 
-module.exports = (order) => {
+module.exports = (order, invoicePath) => {
 
     let invoice = new PDFDocument({ margin: 50 });
 
@@ -203,7 +203,7 @@ module.exports = (order) => {
   
     invoice.end();
     console.log('invoice 6');
-    invoice.pipe(fs.createWriteStream(order.invoiceUrl));
+    invoice.pipe(fs.createWriteStream(invoicePath));
     console.log('invoice 7');
     
 }

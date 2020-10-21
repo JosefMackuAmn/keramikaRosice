@@ -17,6 +17,7 @@ $color-grey-light: lighten($color-grey, 5%);
 $color-grey-lightest: lighten($color-grey, 30%);
 
 $color-black: black;
+$color-black-overlay-dark: rgba($color-black, .5);
 $color-black-overlay: rgba($color-black, .3);
 $color-black-overlay-light: rgba($color-black, .15);
 $color-black-overlay-lightest: rgba($color-black, .05);

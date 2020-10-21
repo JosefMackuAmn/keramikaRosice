@@ -29,9 +29,6 @@ fcns.ready(() => {
         }
     });
 
-    // Window resize listener
-    window.addEventListener("resize", fcns.resizeHeaderHandler);
-
     /////
     // CATEGORIES SLIDER
     /////
