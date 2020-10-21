@@ -32,20 +32,24 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     // Select hamburger button and attach click listener
     const hamburgerBtn = _utils_state__WEBPACK_IMPORTED_MODULE_0__.default.hamburgerBtn = document.querySelector("#hamburger-btn");
     const headerList = hamburgerBtn.nextElementSibling;
+    const headerBackDrop = document.querySelector('.header__backdrop');
 
-    hamburgerBtn.addEventListener("click", (e) => {
+    const toggleHeader = (e) => {
         e.stopPropagation();
 
         if(![hamburgerBtn.classList].includes('header__nav-button--hiding')) {
 
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(hamburgerBtn, 'header__nav-button--show', 'header__nav-button--hide', 'header__nav-button--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(headerBackDrop, 'header__backdrop--hidden', 'header__backdrop--visible', 'header__backdrop--hiding');
 
             for (const listItem of headerList.children) {
                 _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
             }
         }
-    });
+    }
+    headerBackDrop.addEventListener('click', toggleHeader);
+    hamburgerBtn.addEventListener("click", toggleHeader);
 
     /////
     // CATEGORIES SLIDER
@@ -113,9 +117,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     ///// Input Validation
     if(orderForm) {
         for (const input of _utils_data__WEBPACK_IMPORTED_MODULE_3__.formELs) {
-            input.addEventListener('focusout', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.validateInput.bind(undefined, input));
+            input.addEventListener('input', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.validateInput.bind(undefined, input));
         }
-
     }
 
     /////
@@ -149,6 +152,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     const categorySelect = document.querySelector('.category-select');
 
     if (categorySelect) {
+        
+       
         const categorySelectButtons = categorySelect.querySelectorAll('.category-select__button');
 
         for (const btn of categorySelectButtons) {
@@ -185,7 +190,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
         const categorySelectList = categorySelectMobileBtn.parentElement.querySelector('.category-select__category-list');
         const categorySelectHeading = categorySelectMobileBtn.parentElement.querySelector('.heading-2');
-    
+        const categorySelectBackdrop = document.querySelector('.category-select__backdrop');
+        
         const footer = document.querySelector('footer');
     
         window.addEventListener('scroll', () => {
@@ -202,9 +208,11 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
         });
     
         // Toggle category select on mobile devices
-        categorySelectMobileBtn.addEventListener('click', () => {
+
+        const toggleCategorySelect = () => {
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectList, 'category-select__category-list--hidden', 'category-select__category-list--visible', 'category-select__category-list--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.showOrHideEl(categorySelectBackdrop, 'category-select__backdrop--hidden', 'category-select__backdrop--visible', 'category-select__backdrop--hiding');
             _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
     
             if ([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
@@ -212,11 +220,11 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             } else {
                 categorySelectMobileBtn.textContent = 'Skrýt kategorie';
             }
-        });
+        }
+
+        categorySelectMobileBtn.addEventListener('click', toggleCategorySelect);
+        categorySelectBackdrop.addEventListener('click', toggleCategorySelect);
     }
-    /////
-    // MODAL
-    /////
 });
 
 
@@ -297,20 +305,19 @@ const orderSubmitHandler = e => {
 
     // If validation has failed (at least one element has class 'invalid'), returning
     
-    if(document.querySelector('.invalid')) {
-        submitBtn.classList.remove('loading');
+    if (document.querySelector('.invalid')) {
         return;
     }
-    
-    
+       
+    // Show spinner on submit button
+    const submitBtn = e.target.elements.order_submit;
+    const submitBtnText = submitBtn.textContent;
+    submitBtn.textContent = "";
+    submitBtn.classList.add('loading');
+
+    ///// Handle getting stripe session id and stripe redirection
     if (paymentValue === 'CRD') {
         e.preventDefault();
-        
-        ///// Show spinner on submit button
-        const submitBtn = e.target.elements.order_submit;
-        const submitBtnText = submitBtn.textContent;
-        submitBtn.textContent = "";
-        submitBtn.classList.add('loading');
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;
@@ -408,10 +415,14 @@ const otherArgsMap = orderForm ? new Map([
   !*** ./src/js/utils/functions.js ***!
   \***********************************/
 /*! namespace exports */
+/*! export createCartHint [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export createModal [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export moveCategoriesSlider [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export refreshSubmitBtn [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export removeCartHint [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export removeModal [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export showOrHideEl [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export switchClass [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
@@ -427,7 +438,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "switchClass": () => /* binding */ switchClass,
 /* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
 /* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
-/* harmony export */   "validateInput": () => /* binding */ validateInput
+/* harmony export */   "validateInput": () => /* binding */ validateInput,
+/* harmony export */   "createModal": () => /* binding */ createModal,
+/* harmony export */   "removeModal": () => /* binding */ removeModal,
+/* harmony export */   "removeCartHint": () => /* binding */ removeCartHint,
+/* harmony export */   "createCartHint": () => /* binding */ createCartHint
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
@@ -514,10 +529,6 @@ const switchClass = (el, classA, classB) => {
         el.classList.add(classA);
     }
 }
-
-/////
-// Header functions
-/////
 
 /////
 // Categories slider
@@ -608,6 +619,86 @@ function validateInput(input) {
 
     return inputValue;
 }
+/////
+// MODAL
+/////
+const createModal = (text, subText, buttonText) => {
+    const modal = document.createElement('div');
+    const body = document.body;
+
+    modal.classList.add('modal');
+    modal.innerHTML = `<div class="modal__backdrop"></div>
+    <div class="modal__window">
+        <div class="modal__text">${text}</div>
+        <div class="modal__subtext">${subText}</div>
+        <button class="modal__button">${buttonText}</button>
+        <div class="close-button"></div>
+    </div>`;
+   
+    body.appendChild(modal);
+
+    const modalButton = modal.querySelector('.modal__button');
+    const modalCloseButton = modal.querySelector('.close-button');
+
+    modalButton.addEventListener('click', removeModal.bind(undefined, modal));
+    modalCloseButton.addEventListener('click', removeModal.bind(undefined, modal))
+}
+
+const removeModal = modal => {
+    modal.parentElement.removeChild(modal);
+}
+/////
+// CART-HINT
+/////
+const removeCartHint = cartHint => {
+    cartHint.parentElement.removeChild(cartHint);
+}
+const createCartHint = (state, text) => {
+
+    // Removing current cart hint if any
+    const currentCartHint = document.querySelector('.cart-hint');
+
+    if(currentCartHint) {
+        currentCartHint.parentElement.removeChild(currentCartHint);
+    }
+
+    // State = 'success' | 'failed'
+    if(state !== 'success' && state !== 'failed') {
+        return;
+    }
+
+    let cartHint = document.createElement('div');
+    const body = document.body;
+
+    cartHint.classList.add('cart-hint');
+    cartHint.classList.add('cart-hint--visible');
+    cartHint.classList.add(`cart-hint--${state}`);
+    cartHint.innerHTML = `<div class="cart-hint__text">
+    ${text}
+    </div>
+    <div class="cart-hint__symbol cart-hint__symbol--${state}">
+
+    </div>
+    <button class="close-button">
+
+    </button>`;
+
+    body.appendChild(cartHint);
+
+    const cartHintCloseButton = cartHint.querySelector('button');
+    cartHintCloseButton.addEventListener('click', removeCartHint.bind(undefined, cartHint));
+
+    // Cart hint gradually dissapears after 5 seconds
+    setTimeout(() => {
+        cartHint = document.querySelector('.cart-hint');
+        cartHint.addEventListener('animationend', () => {
+            removeCartHint(cartHint);
+        })
+        switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+    }, 5000)
+}
+
+
 
 /***/ }),
 

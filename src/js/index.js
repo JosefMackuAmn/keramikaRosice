@@ -14,20 +14,24 @@ fcns.ready(() => {
     // Select hamburger button and attach click listener
     const hamburgerBtn = state.hamburgerBtn = document.querySelector("#hamburger-btn");
     const headerList = hamburgerBtn.nextElementSibling;
+    const headerBackDrop = document.querySelector('.header__backdrop');
 
-    hamburgerBtn.addEventListener("click", (e) => {
+    const toggleHeader = (e) => {
         e.stopPropagation();
 
         if(![hamburgerBtn.classList].includes('header__nav-button--hiding')) {
 
             fcns.showOrHideEl(hamburgerBtn, 'header__nav-button--show', 'header__nav-button--hide', 'header__nav-button--hiding');
             fcns.showOrHideEl(headerList, 'header__nav-list--hidden', 'header__nav-list--visible', 'header__nav-list--hiding');
+            fcns.showOrHideEl(headerBackDrop, 'header__backdrop--hidden', 'header__backdrop--visible', 'header__backdrop--hiding');
 
             for (const listItem of headerList.children) {
                 fcns.showOrHideEl(listItem, 'header__nav-item--hidden', 'header__nav-item--visible', 'header__nav-item--hiding');
             }
         }
-    });
+    }
+    headerBackDrop.addEventListener('click', toggleHeader);
+    hamburgerBtn.addEventListener("click", toggleHeader);
 
     /////
     // CATEGORIES SLIDER
@@ -95,9 +99,8 @@ fcns.ready(() => {
     ///// Input Validation
     if(orderForm) {
         for (const input of formELs) {
-            input.addEventListener('focusout', fcns.validateInput.bind(this, input));
+            input.addEventListener('input', fcns.validateInput.bind(this, input));
         }
-
     }
 
     /////
@@ -131,6 +134,8 @@ fcns.ready(() => {
     const categorySelect = document.querySelector('.category-select');
 
     if (categorySelect) {
+        
+       
         const categorySelectButtons = categorySelect.querySelectorAll('.category-select__button');
 
         for (const btn of categorySelectButtons) {
@@ -167,7 +172,8 @@ fcns.ready(() => {
 
         const categorySelectList = categorySelectMobileBtn.parentElement.querySelector('.category-select__category-list');
         const categorySelectHeading = categorySelectMobileBtn.parentElement.querySelector('.heading-2');
-    
+        const categorySelectBackdrop = document.querySelector('.category-select__backdrop');
+        
         const footer = document.querySelector('footer');
     
         window.addEventListener('scroll', () => {
@@ -184,9 +190,11 @@ fcns.ready(() => {
         });
     
         // Toggle category select on mobile devices
-        categorySelectMobileBtn.addEventListener('click', () => {
+
+        const toggleCategorySelect = () => {
             fcns.showOrHideEl(categorySelectList, 'category-select__category-list--hidden', 'category-select__category-list--visible', 'category-select__category-list--hiding');
             fcns.showOrHideEl(categorySelectHeading, 'heading-2--hidden', 'heading-2--visible', 'heading-2--hiding');
+            fcns.showOrHideEl(categorySelectBackdrop, 'category-select__backdrop--hidden', 'category-select__backdrop--visible', 'category-select__backdrop--hiding');
             fcns.switchClass(categorySelectMobileBtn, 'category-select__mobile-button--show', 'category-select__mobile-button--hide');
     
             if ([...categorySelectMobileBtn.classList].includes('category-select__mobile-button--show')) {
@@ -194,11 +202,11 @@ fcns.ready(() => {
             } else {
                 categorySelectMobileBtn.textContent = 'Skrýt kategorie';
             }
-        });
+        }
+
+        categorySelectMobileBtn.addEventListener('click', toggleCategorySelect);
+        categorySelectBackdrop.addEventListener('click', toggleCategorySelect);
     }
-    /////
-    // MODAL
-    /////
 });
 
 

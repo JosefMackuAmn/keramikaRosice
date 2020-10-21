@@ -53,20 +53,19 @@ export const orderSubmitHandler = e => {
 
     // If validation has failed (at least one element has class 'invalid'), returning
     
-    if(document.querySelector('.invalid')) {
-        submitBtn.classList.remove('loading');
+    if (document.querySelector('.invalid')) {
         return;
     }
-    
-    
+       
+    // Show spinner on submit button
+    const submitBtn = e.target.elements.order_submit;
+    const submitBtnText = submitBtn.textContent;
+    submitBtn.textContent = "";
+    submitBtn.classList.add('loading');
+
+    ///// Handle getting stripe session id and stripe redirection
     if (paymentValue === 'CRD') {
         e.preventDefault();
-        
-        ///// Show spinner on submit button
-        const submitBtn = e.target.elements.order_submit;
-        const submitBtnText = submitBtn.textContent;
-        submitBtn.textContent = "";
-        submitBtn.classList.add('loading');
 
         // Get form elements and stripe public key
         const stripePublicKey = e.target.dataset.stripepublickey;

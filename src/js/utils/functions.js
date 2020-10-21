@@ -83,10 +83,6 @@ export const switchClass = (el, classA, classB) => {
 }
 
 /////
-// Header functions
-/////
-
-/////
 // Categories slider
 /////
 export const moveCategoriesSlider = () => {
@@ -175,3 +171,82 @@ export function validateInput(input) {
 
     return inputValue;
 }
+/////
+// MODAL
+/////
+export const createModal = (text, subText, buttonText) => {
+    const modal = document.createElement('div');
+    const body = document.body;
+
+    modal.classList.add('modal');
+    modal.innerHTML = `<div class="modal__backdrop"></div>
+    <div class="modal__window">
+        <div class="modal__text">${text}</div>
+        <div class="modal__subtext">${subText}</div>
+        <button class="modal__button">${buttonText}</button>
+        <div class="close-button"></div>
+    </div>`;
+   
+    body.appendChild(modal);
+
+    const modalButton = modal.querySelector('.modal__button');
+    const modalCloseButton = modal.querySelector('.close-button');
+
+    modalButton.addEventListener('click', removeModal.bind(this, modal));
+    modalCloseButton.addEventListener('click', removeModal.bind(this, modal))
+}
+
+export const removeModal = modal => {
+    modal.parentElement.removeChild(modal);
+}
+/////
+// CART-HINT
+/////
+export const removeCartHint = cartHint => {
+    cartHint.parentElement.removeChild(cartHint);
+}
+export const createCartHint = (state, text) => {
+
+    // Removing current cart hint if any
+    const currentCartHint = document.querySelector('.cart-hint');
+
+    if(currentCartHint) {
+        currentCartHint.parentElement.removeChild(currentCartHint);
+    }
+
+    // State = 'success' | 'failed'
+    if(state !== 'success' && state !== 'failed') {
+        return;
+    }
+
+    let cartHint = document.createElement('div');
+    const body = document.body;
+
+    cartHint.classList.add('cart-hint');
+    cartHint.classList.add('cart-hint--visible');
+    cartHint.classList.add(`cart-hint--${state}`);
+    cartHint.innerHTML = `<div class="cart-hint__text">
+    ${text}
+    </div>
+    <div class="cart-hint__symbol cart-hint__symbol--${state}">
+
+    </div>
+    <button class="close-button">
+
+    </button>`;
+
+    body.appendChild(cartHint);
+
+    const cartHintCloseButton = cartHint.querySelector('button');
+    cartHintCloseButton.addEventListener('click', removeCartHint.bind(this, cartHint));
+
+    // Cart hint gradually dissapears after 5 seconds
+    setTimeout(() => {
+        cartHint = document.querySelector('.cart-hint');
+        cartHint.addEventListener('animationend', () => {
+            removeCartHint(cartHint);
+        })
+        switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+    }, 5000)
+}
+
