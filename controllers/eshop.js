@@ -179,11 +179,15 @@ exports.postOrder = async (req, res, next) => {
     const payment = req.body.payment;
     const zipCode = req.body.zipCode;
 
+    
+    
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
 
     const date = new Date();
+    console.log('nodemon 1')
     const variableSymbol = await asyncHelpers.getVariableSymbol(date);
+    console.log('nodemon 2')
 
     const cart = req.session.cart;
 
@@ -235,8 +239,30 @@ exports.postOrder = async (req, res, next) => {
     console.log('order saved');
 
     req.session.cart = null;
+    console.log('cart cleared');
 
-    transporter.sendMail({
+    return transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: email,
+        cc: process.env.MAIL_USER,
+        subject: 'Keramika Rosice: Objednávka přijata',
+        html: '<h1>This is working!</h1>',
+    }).catch(err => {
+        console.log(err);
+        if (order.payment !== 'CRD') {
+            console.log('here 1');
+            return res.redirect(`/?success=true&mailSent=false&payment=${order.payment}`);
+        }
+        console.log('here 2');
+    }).then(() => {
+        if (order.payment !== 'CRD') {
+            console.log('here 3');
+            return res.redirect(`/?success=true&mailSent=true&payment=${order.payment}`);
+        }
+        console.log('here 4');
+    })
+
+    /* transporter.sendMail({
         from: process.env.MAIL_USER,
         to: email,
         cc: process.env.MAIL_USER,
@@ -248,6 +274,7 @@ exports.postOrder = async (req, res, next) => {
             contentType: 'application/pdf'
         }],
     }, (err, info) => {
+        console.log('after mail sent');
         if (order.payment !== 'CRD') {
             if (err) {
                 console.log(err);
@@ -315,7 +342,7 @@ exports.postOrder = async (req, res, next) => {
 
         return returnStripeSessionId();
 
-    });
+    }); */
 }
 
 exports.postCheckoutWebhook = async (req, res, next) => {

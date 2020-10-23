@@ -54,6 +54,7 @@ export const orderSubmitHandler = e => {
     // If validation has failed (at least one element has class 'invalid'), returning
     
     if (document.querySelector('.invalid')) {
+        e.preventDefault();
         return;
     }
        
