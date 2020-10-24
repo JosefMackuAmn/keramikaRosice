@@ -20,10 +20,16 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
   
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
 _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
+
+    /////
+    // SHOW MODAL
+    /////
+
 
     /////
     // MENU
@@ -121,6 +127,85 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
         }
     }
 
+    //// Managing cart items
+    const cartItems = document.querySelectorAll('.cart-item');
+
+    if(orderForm) {
+
+        const updateCartItem = (cartItem, updatedCart) => {
+
+            const cartItemObj = updatedCart.items.find(item => {
+                return item.product._id = cartItem.dataset.productid;
+            })
+
+            const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
+            const priceEl = cartItem.querySelector('.cart-item__price');
+
+            amountEl.textContent = `${cartItemObj.amount}ks`;
+            priceEl.textContent = +cartItemObj.product.price * cartItemObj.amount + 'Kč';
+
+            updateTotalPrice(updatedCart);
+        }
+
+        const updateTotalPrice  = (updatedCart) => {
+            
+            const priceEl = document.querySelector(".cart__cart-content__summary__price");
+
+            priceEl.textContent = `${updatedCart.total}Kč`;
+            console.log(updatedCart);
+
+        }
+
+        for(const cartItem of cartItems) {
+
+            const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
+            const removeButton = cartItem.querySelector('.cart-item__amount-box__btn--remove');
+            const removeAllButton = cartItem.querySelector('.close-button');
+
+            addButton.addEventListener('click', async () => {
+
+                const postCartData = {
+                    action: 'ADD',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: 1
+                }
+                
+                addToCart(postCartData).then((updatedCart) => {
+                    updateCartItem(cartItem, updatedCart);
+                });
+            });
+            removeButton.addEventListener('click', () => {
+
+                const postCartData = {
+                    action: 'REMOVE',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: 1
+                }
+                
+                removeFromCart(postCartData).then((updatedCart) => {
+                    updateCartItem(cartItem, updatedCart);
+                });
+            })
+            removeAllButton.addEventListener('click', () => {
+
+                const postCartData = {
+                    action: 'REMOVE',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: false
+                }
+
+                removeFromCart(postCartData).then( () => {
+                    cartItem.parentElement.removeChild(cartItem);
+                })
+
+            })
+        }
+    }
+    
+
     /////
     // E-SHOP
     /////
@@ -128,10 +213,35 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
     ///// SUBMIT TO CART BUTTON
     const eshopProducts = document.querySelector('.eshop__products');
 
+    const addToCart = (postCartData) => {
+
+        return _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCartHandler(postCartData)
+        .then((updatedCart) => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně přidán do košíku`);         
+            return updatedCart;           
+        }).catch(err => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl přidán do košíku`);
+        });
+
+    };
+    const removeFromCart = (postCartData) => {
+
+        return _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCartHandler(postCartData)
+        .then((updatedCart) => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně odebrán z košíku`);         
+            return updatedCart;           
+        }).catch(err => {
+            _utils_functions__WEBPACK_IMPORTED_MODULE_1__.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl odebrán z košíku`);
+        });
+
+    }
+
     if (eshopProducts) {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
+
         for (const btn of submitBtns) {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
+
                 // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
                 const postCartData = {
                     action: 'ADD',
@@ -139,13 +249,10 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
                     csrf: btn.dataset.csrf,
                     amount: btn.parentElement.querySelector('input').value
                 }
-                
-                _utils_ajax__WEBPACK_IMPORTED_MODULE_2__.postCartHandler(postCartData).catch(err => {
-                    // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
-                });
+
+                addToCart(postCartData);
             })
         }
-
     }
 
     ///// CATEGORY SELECT
@@ -174,6 +281,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             const btnShowProdModal = prod.querySelector('.product__info .to-cart-button');
             const btnCloseProdModal = prod.querySelector('.product__modal__close-button');
             const modal = prod.querySelector('.product__modal');
+            const btnAddToCart = modal.querySelector('.to-cart-button');
+            const input = modal.querySelector('input');
             
             btnShowProdModal.addEventListener('click', () => {
                 // Shows product modal
@@ -182,7 +291,22 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
             btnCloseProdModal.addEventListener('click', () => {
                 // Hides product modal
                 _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
-            });            
+            });   
+            btnAddToCart.addEventListener('click', () => {
+                // Hides product modal
+                _utils_functions__WEBPACK_IMPORTED_MODULE_1__.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
+            })
+            input.addEventListener('input', () => {
+
+               if(!(/^[0-9]{1,}$/.test(input.value))) {
+                input.classList.add('invalid');
+                btnAddToCart.setAttribute('disabled', '');
+               } else {
+                   input.classList.remove('invalid');
+                   btnAddToCart.removeAttribute('disabled', '');
+               }
+
+            })         
         }
 
         ///// MOBILE CATEGORY SELECT
@@ -266,7 +390,7 @@ const postCartHandler = async ({ action, csrf, amount, productId }) => {
             };
 
             // Send request
-            fetch('/kosik', {
+            return fetch('/kosik', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': csrf,
@@ -275,14 +399,18 @@ const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 },
                 body: JSON.stringify(bodyObj)
             }).then(res => {
-                if (!(res.ok && res.status >= 200 && res.status < 300)) {                
-                    return res.json().then(json => {
-                        throw new Error(json.msg);
-                    });
+                return Promise.all([res.clone(), res.json()]);
+            }).then(promises => {
+                const [ response, body ] = promises;
+                if (!(response.ok && response.status >= 200 && response.status < 300)) {
+
+                    throw new Error(body.msg);
                 }
+                const updatedCart = body.cart;                
+                return updatedCart;
             }).catch(err => {
                 throw new Error(err);
-            })
+            });
 
             break;
         default: throw new Error('Non-existing cart action');
@@ -346,19 +474,22 @@ const orderSubmitHandler = e => {
         }).then(res => {
             return res.json();
         }).then(session => {
-            return stripe.redirectToCheckout({ sessionId: session.id });
+            return {
+                error: 'error'
+            }
+            //return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
-                // SHOW ERROR MODAL ----------------------------------------------------------------------
+                _functions__WEBPACK_IMPORTED_MODULE_0__.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
             }
         }).catch(err => {
-            // SHOW ERROR MODAL ----------------------------------------------------------------------
-        }).finally(() => {
-            submitBtn.textContent = submitBtnText;
-            submitBtn.classList.remove('loading');
-        })
+            _functions__WEBPACK_IMPORTED_MODULE_0__.createModal('Nastala chyba', 'Objednávka se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
+        }) 
     }
 }
+
+
+
 
 /***/ }),
 
@@ -399,6 +530,8 @@ const RegexMap = orderForm ? new Map([
     [formELs.payment, /(DOB|CRD|BTR)/]
 ]
 ) : undefined;
+
+
 
 const otherArgsMap = orderForm ? new Map([
     // [input, [markedElId, removeWhiteSpace]]
@@ -581,7 +714,7 @@ const refreshSubmitBtn = (agreeGDPR, agreeConditions, submitToCartBtn)  => {
 function validateInput(input) {
 
     // Getting regex for the current input
-    const inputRegExp = _data__WEBPACK_IMPORTED_MODULE_0__.RegexMap.get(input);
+   const inputRegExp = _data__WEBPACK_IMPORTED_MODULE_0__.RegexMap.get(input);
     if(!inputRegExp) {
         return;
     }
@@ -690,11 +823,12 @@ const createCartHint = (state, text) => {
 
     // Cart hint gradually dissapears after 5 seconds
     setTimeout(() => {
-        cartHint = document.querySelector('.cart-hint');
-        cartHint.addEventListener('animationend', () => {
-            removeCartHint(cartHint);
-        })
-        switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+        if(cartHint) {
+            cartHint.addEventListener('animationend', () => {
+                removeCartHint(cartHint);
+            })
+            switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+        }
     }, 5000)
 }
 

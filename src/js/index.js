@@ -2,10 +2,16 @@ import state from './utils/state';
 import * as fcns from './utils/functions';
 import * as ajax from './utils/ajax';
 import {formELs}  from './utils/data';
+
   
 ///////////////////////////////////
 ///// CALLING READY FUNCTION
 fcns.ready(() => {
+
+    /////
+    // SHOW MODAL
+    /////
+
 
     /////
     // MENU
@@ -103,6 +109,85 @@ fcns.ready(() => {
         }
     }
 
+    //// Managing cart items
+    const cartItems = document.querySelectorAll('.cart-item');
+
+    if(orderForm) {
+
+        const updateCartItem = (cartItem, updatedCart) => {
+
+            const cartItemObj = updatedCart.items.find(item => {
+                return item.product._id = cartItem.dataset.productid;
+            })
+
+            const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
+            const priceEl = cartItem.querySelector('.cart-item__price');
+
+            amountEl.textContent = `${cartItemObj.amount}ks`;
+            priceEl.textContent = +cartItemObj.product.price * cartItemObj.amount + 'Kč';
+
+            updateTotalPrice(updatedCart);
+        }
+
+        const updateTotalPrice  = (updatedCart) => {
+            
+            const priceEl = document.querySelector(".cart__cart-content__summary__price");
+
+            priceEl.textContent = `${updatedCart.total}Kč`;
+            console.log(updatedCart);
+
+        }
+
+        for(const cartItem of cartItems) {
+
+            const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
+            const removeButton = cartItem.querySelector('.cart-item__amount-box__btn--remove');
+            const removeAllButton = cartItem.querySelector('.close-button');
+
+            addButton.addEventListener('click', async () => {
+
+                const postCartData = {
+                    action: 'ADD',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: 1
+                }
+                
+                addToCart(postCartData).then((updatedCart) => {
+                    updateCartItem(cartItem, updatedCart);
+                });
+            });
+            removeButton.addEventListener('click', () => {
+
+                const postCartData = {
+                    action: 'REMOVE',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: 1
+                }
+                
+                removeFromCart(postCartData).then((updatedCart) => {
+                    updateCartItem(cartItem, updatedCart);
+                });
+            })
+            removeAllButton.addEventListener('click', () => {
+
+                const postCartData = {
+                    action: 'REMOVE',
+                    productId: cartItem.dataset.productid,
+                    csrf: cartItem.dataset.csrf,
+                    amount: false
+                }
+
+                removeFromCart(postCartData).then( () => {
+                    cartItem.parentElement.removeChild(cartItem);
+                })
+
+            })
+        }
+    }
+    
+
     /////
     // E-SHOP
     /////
@@ -110,10 +195,35 @@ fcns.ready(() => {
     ///// SUBMIT TO CART BUTTON
     const eshopProducts = document.querySelector('.eshop__products');
 
+    const addToCart = (postCartData) => {
+
+        return ajax.postCartHandler(postCartData)
+        .then((updatedCart) => {
+            fcns.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně přidán do košíku`);         
+            return updatedCart;           
+        }).catch(err => {
+            fcns.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl přidán do košíku`);
+        });
+
+    };
+    const removeFromCart = (postCartData) => {
+
+        return ajax.postCartHandler(postCartData)
+        .then((updatedCart) => {
+            fcns.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně odebrán z košíku`);         
+            return updatedCart;           
+        }).catch(err => {
+            fcns.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl odebrán z košíku`);
+        });
+
+    }
+
     if (eshopProducts) {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
+
         for (const btn of submitBtns) {
-            btn.addEventListener('click', () => {
+            btn.addEventListener('click', async () => {
+
                 // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
                 const postCartData = {
                     action: 'ADD',
@@ -121,13 +231,10 @@ fcns.ready(() => {
                     csrf: btn.dataset.csrf,
                     amount: btn.parentElement.querySelector('input').value
                 }
-                
-                ajax.postCartHandler(postCartData).catch(err => {
-                    // ADD ERROR MODAL OPENING -----------------------------------------------------------------------
-                });
+
+                addToCart(postCartData);
             })
         }
-
     }
 
     ///// CATEGORY SELECT
@@ -156,6 +263,8 @@ fcns.ready(() => {
             const btnShowProdModal = prod.querySelector('.product__info .to-cart-button');
             const btnCloseProdModal = prod.querySelector('.product__modal__close-button');
             const modal = prod.querySelector('.product__modal');
+            const btnAddToCart = modal.querySelector('.to-cart-button');
+            const input = modal.querySelector('input');
             
             btnShowProdModal.addEventListener('click', () => {
                 // Shows product modal
@@ -164,7 +273,22 @@ fcns.ready(() => {
             btnCloseProdModal.addEventListener('click', () => {
                 // Hides product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
-            });            
+            });   
+            btnAddToCart.addEventListener('click', () => {
+                // Hides product modal
+                fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
+            })
+            input.addEventListener('input', () => {
+
+               if(!(/^[0-9]{1,}$/.test(input.value))) {
+                input.classList.add('invalid');
+                btnAddToCart.setAttribute('disabled', '');
+               } else {
+                   input.classList.remove('invalid');
+                   btnAddToCart.removeAttribute('disabled', '');
+               }
+
+            })         
         }
 
         ///// MOBILE CATEGORY SELECT

@@ -133,7 +133,7 @@ export const refreshSubmitBtn = (agreeGDPR, agreeConditions, submitToCartBtn)  =
 export function validateInput(input) {
 
     // Getting regex for the current input
-    const inputRegExp = RegexMap.get(input);
+   const inputRegExp = RegexMap.get(input);
     if(!inputRegExp) {
         return;
     }
@@ -242,11 +242,12 @@ export const createCartHint = (state, text) => {
 
     // Cart hint gradually dissapears after 5 seconds
     setTimeout(() => {
-        cartHint = document.querySelector('.cart-hint');
-        cartHint.addEventListener('animationend', () => {
-            removeCartHint(cartHint);
-        })
-        switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+        if(cartHint) {
+            cartHint.addEventListener('animationend', () => {
+                removeCartHint(cartHint);
+            })
+            switchClass(cartHint, 'cart-hint--visible', 'cart-hint--hiding');
+        }
     }, 5000)
 }
 

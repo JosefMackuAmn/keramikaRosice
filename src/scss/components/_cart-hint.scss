@@ -3,6 +3,7 @@
     width: 20rem;
     min-height: 25rem;
     background-color: $color-white;
+    border-radius: 3px;
 
     position: fixed;
     top: 0;
@@ -34,12 +35,11 @@
     }
     &__text {
         width: 70%;
-        padding-top: 3rem;
+        padding-top: 4rem;
         margin-left: auto;
         margin-right: auto;
 
-        font-family: $font-secondary;
-        font-size: 2rem;
+        font-size: 1.8rem;
         text-align: center;
     }
     &__symbol {
@@ -50,7 +50,7 @@
         border-radius: 50%;
 
         position: absolute;
-        bottom: 4rem;
+        bottom: 1rem;
         left: 50%;
         transform: translateX(-50%);
         

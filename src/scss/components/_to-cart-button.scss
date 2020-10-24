@@ -11,7 +11,7 @@
     position: relative;
     
     transition: all .2s;
-
+    
     &::before {
         content: "";
         background-image: url('../img/cart-icon.png');
@@ -23,9 +23,13 @@
         top: 50%;
         transform: translateY(-50%);
     }
-    &:hover {
-        color: $color-secondary;
+    &:not(:disabled) {
+        cursor: pointer;
 
-        transform: translateY(-1px);
+        &:hover {
+            color: $color-secondary;
+    
+            transform: translateY(-1px);
+        }
     }
 }

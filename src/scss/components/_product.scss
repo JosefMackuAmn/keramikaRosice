@@ -109,6 +109,9 @@
         -webkit-appearance: none;
       }
 
+      &.invalid {
+        border: 2px solid $color-failed;
+      }
     }    
     & .close-button {
       top: 1rem;
