@@ -31,6 +31,8 @@ class Cart {
         if (!amount || +amount >= +this.items[itemIndex].amount) {
             const removedProduct = this.items.splice(itemIndex, 1);
             this.total = +this.total - (+removedProduct.product.price * +removedProduct.amount);
+
+            // Loop through items to determine shippingCostId
             let newShippingCostId = 0;
             for (let i = 0; i < this.items.length; i++) {
                 if (this.items[i].product.shippingCostId === 1) {

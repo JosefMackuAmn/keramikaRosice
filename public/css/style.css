@@ -17,8 +17,8 @@ to{opacity:1;-webkit-transform:translateX(30%);transform:translateX(30%)}}@-webk
 to{-webkit-transform:rotate(0);transform:rotate(0)}}@keyframes headerImgTurn{from{-webkit-transform:rotate(-20deg);transform:rotate(-20deg)}
 to{-webkit-transform:rotate(0);transform:rotate(0)}}@-webkit-keyframes headerBackImgTurn{from{opacity:0;-webkit-transform:rotate(20deg);transform:rotate(20deg)}
 to{opacity:1;-webkit-transform:rotate(-3deg);transform:rotate(-3deg)}}@keyframes headerBackImgTurn{from{opacity:0;-webkit-transform:rotate(20deg);transform:rotate(20deg)}
-to{opacity:1;-webkit-transform:rotate(-3deg);transform:rotate(-3deg)}}@-webkit-keyframes subcategorySelectShiftOut{from{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}
-to{-webkit-transform:translateY(-50%) scale(0.1);transform:translateY(-50%) scale(0.1);opacity:0}
+to{opacity:1;-webkit-transform:rotate(-3deg);transform:rotate(-3deg)}}@-webkit-keyframes subcategorySelectShiftOut{0{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}
+100%{-webkit-transform:translateY(-50%) scale(0.1);transform:translateY(-50%) scale(0.1);opacity:0}
 }@keyframes subcategorySelectShiftOut{0%{-webkit-transform:translateY(0);transform:translateY(0);opacity:1}
 100%{-webkit-transform:translateY(-50%) scale(0.1);transform:translateY(-50%) scale(0.1);opacity:0}
 }@-webkit-keyframes categorySelectMobileShiftIn{0%{-webkit-transform:translateX(100%);transform:translateX(100%)}
