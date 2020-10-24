@@ -12,11 +12,14 @@ html {
 body {
     font-size: 1.6rem;
     overflow-x: hidden;
+
+    
 }
 
 main {
     z-index: 1;
     position: relative;
+    min-height: 70rem;
 }
 
 * a, * a:visited, * a:link {

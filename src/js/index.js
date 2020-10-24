@@ -78,12 +78,6 @@ fcns.ready(() => {
         }
     }
 
-    /* /?payment=success
-    /?payment=canceled
-    /?success=true&mailSent=true&payment=BTR
-    /?success=true&mailSent=true&payment=DOB
-    /?success=false&mailSent=false */
-
     /////
     // MENU
     /////
@@ -156,6 +150,8 @@ fcns.ready(() => {
     const orderForm = document.getElementById('order-form');
     if (orderForm) {
         orderForm.addEventListener('submit', ajax.orderSubmitHandler);
+
+        fcns.updateCartPage();
     }
 
 
@@ -185,30 +181,6 @@ fcns.ready(() => {
 
     if(orderForm) {
 
-        const updateCartItem = (cartItem, updatedCart) => {
-
-            const cartItemObj = updatedCart.items.find(item => {
-                return item.product._id = cartItem.dataset.productid;
-            })
-
-            const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
-            const priceEl = cartItem.querySelector('.cart-item__price');
-
-            amountEl.textContent = `${cartItemObj.amount}ks`;
-            priceEl.textContent = +cartItemObj.product.price * cartItemObj.amount + 'Kč';
-
-            updateTotalPrice(updatedCart);
-        }
-
-        const updateTotalPrice  = (updatedCart) => {
-            
-            const priceEl = document.querySelector(".cart__cart-content__summary__price");
-
-            priceEl.textContent = `${updatedCart.total}Kč`;
-            console.log(updatedCart);
-
-        }
-
         for(const cartItem of cartItems) {
 
             const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
@@ -224,8 +196,8 @@ fcns.ready(() => {
                     amount: 1
                 }
                 
-                addToCart(postCartData).then((updatedCart) => {
-                    updateCartItem(cartItem, updatedCart);
+                fcns.addToCart(postCartData).then((updatedCart) => {
+                    fcns.updateCartItem(cartItem, updatedCart);
                 });
             });
             removeButton.addEventListener('click', () => {
@@ -237,8 +209,10 @@ fcns.ready(() => {
                     amount: 1
                 }
                 
-                removeFromCart(postCartData).then((updatedCart) => {
-                    updateCartItem(cartItem, updatedCart);
+                fcns.removeFromCart(postCartData).then((updatedCart) => {
+                    fcns.updateCartItem(cartItem, updatedCart);
+
+                    
                 });
             })
             removeAllButton.addEventListener('click', () => {
@@ -250,8 +224,8 @@ fcns.ready(() => {
                     amount: false
                 }
 
-                removeFromCart(postCartData).then( () => {
-                    cartItem.parentElement.removeChild(cartItem);
+                fcns.removeFromCart(postCartData).then( (updatedCart) => {
+                    fcns.updateCartItem(cartItem, updatedCart);
                 })
 
             })
@@ -265,29 +239,6 @@ fcns.ready(() => {
 
     ///// SUBMIT TO CART BUTTON
     const eshopProducts = document.querySelector('.eshop__products');
-
-    const addToCart = (postCartData) => {
-
-        return ajax.postCartHandler(postCartData)
-        .then((updatedCart) => {
-            fcns.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně přidán do košíku`);         
-            return updatedCart;           
-        }).catch(err => {
-            fcns.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl přidán do košíku`);
-        });
-
-    };
-    const removeFromCart = (postCartData) => {
-
-        return ajax.postCartHandler(postCartData)
-        .then((updatedCart) => {
-            fcns.createCartHint('success', `Produkt (${postCartData.amount}ks) byl úspěšně odebrán z košíku`);         
-            return updatedCart;           
-        }).catch(err => {
-            fcns.createCartHint('failed', `Nastala chyba, produkt (${postCartData.amount}ks) nebyl odebrán z košíku`);
-        });
-
-    }
 
     if (eshopProducts) {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
@@ -303,7 +254,7 @@ fcns.ready(() => {
                     amount: btn.parentElement.querySelector('input').value
                 }
 
-                addToCart(postCartData);
+                fcns.addToCart(postCartData);
             })
         }
     }
