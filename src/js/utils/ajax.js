@@ -14,7 +14,7 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
             };
 
             // Send request
-            fetch('/kosik', {
+            return fetch('/kosik', {
                 method: 'POST',
                 headers: {
                     'X-CSRF-Token': csrf,
@@ -23,14 +23,18 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 },
                 body: JSON.stringify(bodyObj)
             }).then(res => {
-                if (!(res.ok && res.status >= 200 && res.status < 300)) {                
-                    return res.json().then(json => {
-                        throw new Error(json.msg);
-                    });
+                return Promise.all([res.clone(), res.json()]);
+            }).then(promises => {
+                const [ response, body ] = promises;
+                if (!(response.ok && response.status >= 200 && response.status < 300)) {
+
+                    throw new Error(body.msg);
                 }
+                const updatedCart = body.cart;                
+                return updatedCart;
             }).catch(err => {
                 throw new Error(err);
-            })
+            });
 
             break;
         default: throw new Error('Non-existing cart action');
@@ -89,13 +93,18 @@ export const orderSubmitHandler = e => {
         }).then(res => {
             return res.json();
         }).then(session => {
-            return stripe.redirectToCheckout({ sessionId: session.id });
+            return {
+                error: 'error'
+            }
+            //return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
-                // SHOW ERROR MODAL ----------------------------------------------------------------------
+                fcns.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
             }
         }).catch(err => {
-            // SHOW ERROR MODAL ----------------------------------------------------------------------
+            fcns.createModal('Nastala chyba', 'Objednávka se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
         }) 
     }
 }
+
+

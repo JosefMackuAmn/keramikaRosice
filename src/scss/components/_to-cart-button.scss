@@ -2,7 +2,6 @@
     background-color: transparent;
     outline: none;
     border: none;
-    cursor: pointer;
     transition: all .2s;
 
     color: $color-white;
@@ -11,6 +10,7 @@
 
     position: relative;
 
+    
     &::before {
         content: "";
         background-image: url('../img/cart-icon.png');
@@ -22,9 +22,13 @@
         top: 50%;
         transform: translateY(-50%);
     }
-    &:hover {
-        color: $color-primary;
+    &:not(:disabled) {
+        cursor: pointer;
 
-        transform: translateY(-1px);
+        &:hover {
+            color: $color-primary;
+    
+            transform: translateY(-1px);
+        }
     }
 }

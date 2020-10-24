@@ -84,7 +84,7 @@
                                     <button class="close-button product__modal__close-button"></button>
                                     <p class="product__modal__amount">Množství</p>
                                     <input class="product__modal__input" type="number">
-                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>">
+                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>" disabled>
                                         Do košíku
                                     </button>
                                 </div>
@@ -117,7 +117,7 @@
                             <button class="close-button product__modal__close-button"></button>
                             <p class="product__modal__amount">Množství</p>
                             <input class="product__modal__input" type="number">
-                            <button class="to-cart-button">
+                            <button class="to-cart-button post-order-btn">
                                 Do košíku
                             </button>
                         </div>
@@ -142,7 +142,7 @@
                         </div>
                     </div>
                     <div class="product">
-                        <div class="product__modal">
+                        <div class="product__modal post-order-btn">
                             <button class="close-button product__modal__close-button"></button>
                             <p class="product__modal__amount">Množství</p>
                             <input class="product__modal__input" type="number">
@@ -171,7 +171,7 @@
                         </div>
                     </div>
                     <div class="product">
-                        <div class="product__modal">
+                        <div class="product__modal post-order-btn">
                             <button class="close-button product__modal__close-button"></button>
                             <p class="product__modal__amount">Množství</p>
                             <input class="product__modal__input" type="number">

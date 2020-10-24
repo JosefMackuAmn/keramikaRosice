@@ -18,7 +18,7 @@
                     cart.items.forEach(item => { %>
 
                         <!-- CART ITEM -->
-                        <li class="cart-item">
+                        <li class="cart-item" data-csrf="<%= csrfToken %>" data-productid="<%= item.product._id %>" >
                             <img class="cart-item__photo" src="<%= item.product.images[0] %>" alt="Fotka - <%= item.product.name %>">
                             <div class="cart-item__content">
                                 <div class="cart-item__upper-row">

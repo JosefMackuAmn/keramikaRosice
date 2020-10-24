@@ -96,6 +96,10 @@
 
       font-family: "PT Sans";
       font-size: 1.6rem;
+
+      &.invalid {
+        border: 2px solid $color-failed;
+      }
     }    
     & .close-button {
       top: 1rem;
