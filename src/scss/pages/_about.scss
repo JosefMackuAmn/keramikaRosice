@@ -79,6 +79,10 @@ $bp-about-mobile: 900px;
         @media screen and (max-width: 450px) {
             width: 30rem;
          }
+         @media screen and (max-width: 400px) {
+             margin-left: 2rem;
+            width: 25rem;
+         }
 
         &:not(:last-child) {
             margin-bottom: 4rem;

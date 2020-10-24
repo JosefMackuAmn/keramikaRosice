@@ -916,14 +916,19 @@ body {
     right: 0;
     top: 0;
     position: absolute; }
+  .modal em {
+    color: #c50606;
+    font-style: normal; }
   .modal__text {
-    margin-top: 15rem;
+    margin-top: 10rem;
+    margin-bottom: 4rem;
     text-align: center;
     font-family: "Charm", "cursive";
     font-size: 4rem; }
   .modal__subtext {
+    padding-left: 2rem;
+    padding-right: 2rem;
     text-align: center;
-    font-family: "Charm", "cursive";
     font-size: 2rem; }
   .modal__backdrop {
     background-color: rgba(0, 0, 0, 0.6);
@@ -1372,6 +1377,10 @@ body {
   @media screen and (max-width: 450px) {
     .about__paragraph {
       width: 30rem; } }
+  @media screen and (max-width: 400px) {
+    .about__paragraph {
+      margin-left: 2rem;
+      width: 25rem; } }
   .about__paragraph:not(:last-child) {
     margin-bottom: 4rem; }
 
