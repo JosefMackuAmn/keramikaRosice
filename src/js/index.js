@@ -12,6 +12,77 @@ fcns.ready(() => {
     // SHOW MODAL
     /////
 
+    const params = new URLSearchParams(window.location.search);
+    
+    if (params.has('payment')) {
+
+        const payment = params.get('payment');
+
+        if (payment === 'success') {
+            fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+        } else if (payment === 'canceled') {
+            fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a vyřeší to s Vámi osobní domluvou.', 'OK')
+        }
+
+        if(payment === 'BTR') {
+
+            if(params.has('success') && params.has('mailSent')) {
+
+                const success = params.get('success');
+                const mailSent = params.get('mailSent');
+
+                if(success === 'true' && mailSent === 'true') {
+                    fcns.createModal('Odesláno', 'Objednávka byla odeslána. <em> Byl vám zaslán mail, prosím, postupujte podle pokynů v něm. </em>', 'OK', true)
+                }
+
+                if(success === 'true' && mailSent === 'false') {
+                    fcns.createModal('Chyba', '<em> Nepodařil se odeslat mail s informacemi k platbě, prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
+                }
+
+                if(success === 'false' && mailSent === 'true') {
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                }
+
+                if(success === 'false' && mailSent === 'false') {
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána. ', 'OK')
+                }
+
+            }
+            
+        }
+
+        if(payment === 'DOB') {
+            
+            if(params.has('success') && params.has('mailSent')) {
+
+                const success = params.get('success');
+                const mailSent = params.get('mailSent');
+
+                if(success === 'true' && mailSent === 'true') {
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+                }
+
+                if(success === 'true' && mailSent === 'false') {
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+                }
+
+                if(success === 'false' && mailSent === 'true') {
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána', 'OK')
+                }
+
+                if(success === 'false' && mailSent === 'false') {
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                }
+            }
+            
+        }
+    }
+
+    /* /?payment=success
+    /?payment=canceled
+    /?success=true&mailSent=true&payment=BTR
+    /?success=true&mailSent=true&payment=DOB
+    /?success=false&mailSent=false */
 
     /////
     // MENU

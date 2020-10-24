@@ -15,16 +15,23 @@
         top: 0;
         position: absolute;
     }
+    & em {
+        color: $color-failed;
+        font-style: normal;
+    }
     &__text {
-        margin-top: 15rem;
+        margin-top: 10rem;
+        margin-bottom: 4rem;
 
         text-align: center;
         font-family: $font-secondary;
         font-size: 4rem;
     }
     &__subtext {
+        padding-left: 2rem;
+        padding-right: 2rem;
+
         text-align: center;
-        font-family: $font-secondary;
         font-size: 2rem;
     }
     &__backdrop {
