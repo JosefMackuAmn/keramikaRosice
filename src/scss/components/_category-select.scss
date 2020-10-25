@@ -16,8 +16,8 @@
         z-index: 7;
         left: 0;
         bottom: 0;
-    }  
-
+    }
+    
     & ul {
         list-style: none;
     }
@@ -161,6 +161,9 @@
 
         @media screen and (max-width: $bp-eshop-mobile) {
             right: -4rem;
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            transform: translateY(-3.3rem);
         }    
 
         &--show {

@@ -1,5 +1,9 @@
 .picture {
     position: relative;
+    
+    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+        height: 36rem;
+   }
 
     &__img {
         width: 100%;
