@@ -16,8 +16,16 @@
         z-index: 7;
         left: 0;
         bottom: 0;
+    }  
+
+    a {
+        color: $color-black;
+
+        &:hover {
+            transform: translateY(-1px);
+            color: $color-primary;
+        }
     }
-    
     & ul {
         list-style: none;
     }
@@ -156,7 +164,7 @@
         outline: none;
         background-color: transparent;
     
-        right: -2rem;
+        right: -4rem;
         position: absolute;
 
         @media screen and (max-width: $bp-eshop-mobile) {

@@ -8,6 +8,9 @@ $bp-about-mobile: 900px;
     &__head {
         padding-left: 12rem;
 
+        @media screen and (min-width: 1920px) {
+           padding-left: 40rem;
+        }
         @media screen and (max-width: 1200px) {
             padding-left: 8rem;
          }
@@ -60,6 +63,15 @@ $bp-about-mobile: 900px;
 
         line-height: 2.5rem;
 
+        @media screen and (min-width: 1920px) {
+            margin-left: 40rem;
+
+            font-size: 2rem;
+        }
+        @media screen and (min-width: 1600px) {
+            
+            font-size: 1.8rem;
+        }
         @media screen and (max-width: 1400px) {
             width: 50rem;
         }
@@ -99,6 +111,9 @@ $bp-about-mobile: 900px;
             left: 75%;
             transform: translateY(-50%) translateX(-50%);
 
+            @media screen and (min-width: 1920px) {
+               left: 70%;
+             }
             @media screen and (max-width: 1400px) {
                width: 40rem;
             }
@@ -141,7 +156,9 @@ $bp-about-mobile: 900px;
             top: 70%;
             left: 75%;
             transform: translateY(-50%) translateX(-50%);
-
+            @media screen and (min-width: 1920px) {
+                left: 70%;
+              }
             @media screen and (max-width: 1400px) {
                 width: 30rem;
 

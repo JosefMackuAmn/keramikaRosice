@@ -1,5 +1,6 @@
 import {RegexMap, otherArgsMap}  from './data';
 import state from './state';
+import * as ajax from './ajax';
 
 ///////////////////////////////////
 ///// DEFINING FUNCTIONS
@@ -250,4 +251,103 @@ export const createCartHint = (state, text) => {
         }
     }, 5000)
 }
+/////
+//CART
+/////
+export const addToCart = (postCartData) => {
 
+    return ajax.postCartHandler(postCartData)
+    .then((updatedCart) => {
+        createCartHint('success', `Produkt byl úspěšně přidán do košíku`);         
+        return updatedCart;           
+    }).catch(err => {
+        createCartHint('failed', `Nastala chyba, produkt nebyl přidán do košíku`);
+    });
+
+};
+export const removeFromCart = (postCartData) => {
+
+    return ajax.postCartHandler(postCartData)
+    .then((updatedCart) => {
+        createCartHint('success', `Produkt byl úspěšně odebrán z košíku`);         
+        return updatedCart;           
+    }).catch(err => {
+        createCartHint('failed', `Nastala chyba, produkt nebyl odebrán z košíku`);
+    });
+
+}
+export const updateCartItem = (cartItem, updatedCart) => {
+
+    const cartItemObj = updatedCart.items.find(item => {
+        return item.product._id = cartItem.dataset.productid;
+    })
+
+    const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
+    const priceEl = cartItem.querySelector('.cart-item__price');
+
+    if(!cartItemObj) {
+
+        cartItem.parentElement.removeChild(cartItem);
+
+    } else {
+
+        amountEl.textContent = `${cartItemObj.amount}ks`;
+        priceEl.textContent = +cartItemObj.product.price * cartItemObj.amount + 'Kč';
+
+    }
+
+    updateTotalPrice(updatedCart);
+    updateCartPage();
+    updateCartIcon(updatedCart);
+}
+
+export const updateCartPage = () => {
+    
+    const cartItem = document.querySelector('.cart-item');
+
+    const cartOrder = document.getElementById('cart-order');
+    const emptyCartContent = document.querySelector('.cart__cart-content__empty');
+    const summary = document.querySelector('.cart__cart-content__summary');
+    const dph = document.querySelector('.cart__cart-content__dph');
+    const button = document.getElementById('to-order');
+
+    if(!cartItem) {
+
+        cartOrder.style.display = 'none';
+        summary.style.display  = 'none';
+        emptyCartContent.style.display = 'block';
+        dph.style.display = 'none';
+        button.style.display = 'none';
+
+    } else {
+
+        cartOrder.style.display = 'block';
+        summary.style.display  = 'block';
+        emptyCartContent.style.display = 'none';
+        dph.style.display = 'block';
+        button.style.display = 'block';
+    }
+}
+
+export const updateTotalPrice  = (updatedCart) => {
+    
+    const priceEl = document.querySelector(".cart__cart-content__summary__price");
+
+    priceEl.textContent = `${updatedCart.total}Kč`;
+
+}
+/////
+//HEADER
+/////
+export const updateCartIcon = (updatedCart) => {
+    const cartAmountEl = document.querySelector('.header__cart-amount');
+    const cartAmount = updatedCart.items.reduce((prevValue, curValue, id) => {
+        return prevValue + updatedCart.items[id].amount;
+    }, 0)
+    if(cartAmount <= 0) {
+        cartAmountEl.style.display = 'none';
+    } else {
+        cartAmountEl.style.display = 'block';
+    }
+    cartAmountEl.textContent = cartAmount;
+}

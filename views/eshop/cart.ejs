@@ -39,12 +39,12 @@
                         </li> 
 
                     <% });
-                } else { %>
-
-                    <li class="cart__cart-content__empty">Zatím jste do košíku nic nevložili.</li>
-                    <li class="cart__cart-content__empty">Prohlédněte si e-shop <a href="/shop">zde</a>.</li>
-
-                <% } %>
+                } %>
+                    <div class="cart__cart-content__empty">
+                        <p>Zatím jste do košíku nic nevložili.</p>
+                        <p>Prohlédněte si e-shop <a href="/shop">zde</a>.</p>
+                    </div>
+                   
             </ul>
             <% if (cart) { %>
                 <div class="cart__cart-content__summary">
