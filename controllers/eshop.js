@@ -23,6 +23,7 @@ exports.getShop = async (req, res, next) => {
     res.render('eshop/shop', {
         title: 'E-shop',
         categoryName: undefined,
+        categoryImage: undefined,
         subcategoryName: undefined,
         products: products,
         categories: allCategories,
@@ -40,6 +41,7 @@ exports.getCategory = async (req, res, next) => {
         })
     }
     const categoryId = category._id;
+    const categoryImage = category.images[0];
 
     const categoryProducts = await Product.find({ categoryId: categoryId });
     
@@ -49,6 +51,7 @@ exports.getCategory = async (req, res, next) => {
     res.render('eshop/shop', {
         title: categoryName,
         categoryName: categoryName,
+        categoryImage: categoryImage,
         subcategoryName: undefined,
         products: categoryProducts,
         categories: allCategories,
@@ -68,6 +71,7 @@ exports.getSubcategory = async (req, res, next) => {
         })
     }
     const categoryId = category._id;
+    const categoryImage = category.images[0];
 
 
     const subcategory = await Subcategory.findOne({ name: subcategoryName, categoryId: categoryId });
@@ -87,6 +91,7 @@ exports.getSubcategory = async (req, res, next) => {
     res.render('eshop/shop', {
         title: subcategoryName,
         categoryName: categoryName,
+        categoryImage: categoryImage,
         subcategoryName: subcategoryName,
         products: subcategoryProducts,
         categories: allCategories,

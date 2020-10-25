@@ -8,7 +8,13 @@
         <section class="eshop">
             <div class="eshop__head">
                 <figure class="picture eshop__category-picture">
-                    <img src="/img/index-photo.jpg" class="picture__img" alt="Category picture">
+                    <%
+                        let catImg = categoryImage;
+                        if (!categoryImage) {
+                            catImg = "img/index-photo.jpg";
+                        }
+                    %>
+                    <img src="/<%= catImg %>" class="picture__img" alt="Category picture">
                     <div class="picture__bg"></div>
                 </figure>
                 <h2 class="heading-2"><% if (categoryName) { %><%= categoryName %><% } else { %>E-shop<% } %></h2>

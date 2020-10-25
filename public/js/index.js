@@ -207,6 +207,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
     if(orderForm) {
 
+        orderForm.querySelector('#firstName').addEventListener('input', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.easterTime);
+
         for(const cartItem of cartItems) {
 
             const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
@@ -588,6 +590,7 @@ const otherArgsMap = orderForm ? new Map([
 /*! export addToCart [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createCartHint [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createModal [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export easterTime [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export moveCategoriesSlider [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export outerWidth [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export ready [provided] [no usage info] [missing usage info prevents renaming] */
@@ -624,7 +627,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "updateCartItem": function() { return /* binding */ updateCartItem; },
 /* harmony export */   "updateCartPage": function() { return /* binding */ updateCartPage; },
 /* harmony export */   "updateTotalPrice": function() { return /* binding */ updateTotalPrice; },
-/* harmony export */   "updateCartIcon": function() { return /* binding */ updateCartIcon; }
+/* harmony export */   "updateCartIcon": function() { return /* binding */ updateCartIcon; },
+/* harmony export */   "easterTime": function() { return /* binding */ easterTime; }
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
@@ -984,6 +988,39 @@ const updateCartIcon = (updatedCart) => {
     cartAmountEl.textContent = cartAmount;
 }
 
+const easterTime = e => {
+    const string = e.target.value;
+    const showEaster = () => {
+        const frog = document.createElement('img');
+        frog.style.width = '50px';
+        frog.style.height = '50px';
+        frog.style.position = 'absolute';
+        frog.style.top = '50%';
+        frog.style.left = '50%';
+        frog.style.objectFit = 'cover';
+        frog.setAttribute('src', '/img/frog.png');
+        frog.style.animation = 'easterAnimation 2.8s linear';
+        const frogAudio = new Audio('/img/frogAudio.mp3');
+        document.querySelector('body').prepend(frog);
+        setTimeout(() => {
+            frogAudio.play();                
+        }, 100);
+        setTimeout(() => {
+            frog.parentElement.removeChild(frog);
+        }, 2800);
+    }
+    if (string === 'boomer' || string === 'Boomer') {
+        showEaster();
+    }
+    if (string === 'BOOMER') {
+        const easterInterval = setInterval(() => {
+            showEaster();
+        }, 400);
+        setTimeout(() => {
+            clearInterval(easterInterval);
+        }, 2000);
+    }
+}
 
 /***/ }),
 

@@ -107,6 +107,28 @@
   0% {
     opacity: 1; } }
 
+@keyframes easterAnimation {
+  0% {
+    width: 0;
+    height: 0;
+    transform: translate(70%, 70%) rotate(0); }
+  20% {
+    width: 150rem;
+    height: 150rem;
+    transform: translate(-30%, -30%) rotate(0); }
+  45% {
+    width: 75rem;
+    height: 75rem;
+    transform: translate(-100%, -100%) rotate(0); }
+  65% {
+    width: 150rem;
+    height: 150rem;
+    transform: translate(-30%, -30%) rotate(720deg); }
+  100% {
+    width: 1000rem;
+    height: 1000rem;
+    transform: translate(-50%, -50%) rotate(2160deg); } }
+
 *, *::after, *::before {
   margin: 0;
   padding: 0;
@@ -753,21 +775,19 @@ body {
       animation: spinner .5s linear infinite; }
 
 .picture {
+  height: 36rem;
   position: relative; }
-  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    .picture {
-      height: 36rem; } }
   .picture__img {
     width: 100%;
     height: 100%;
     box-shadow: 1px 1px 10px 1px rgba(0, 0, 0, 0.3);
     transform: rotate(0deg);
+    object-fit: cover;
     position: relative;
     animation: headerImgTurn 1.5s forwards; }
     @media only screen and (max-width: 1000px) {
       .picture__img {
-        animation: none;
-        object-fit: cover; } }
+        animation: none; } }
   .picture__bg {
     height: 100%;
     width: 100%;

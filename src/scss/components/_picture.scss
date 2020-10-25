@@ -1,15 +1,15 @@
 .picture {
+    height: 36rem;
+
     position: relative;
-    
-    @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
-        height: 36rem;
-   }
 
     &__img {
         width: 100%;
         height: 100%;
         box-shadow: 1px 1px 10px 1px $color-black-overlay;
         transform: rotate(0deg);
+            
+        object-fit: cover;
         
         position: relative;
 
@@ -17,8 +17,6 @@
 
         @media only screen and (max-width: 1000px) {
             animation: none;
-            
-            object-fit: cover;
         }
     }
     &__bg {

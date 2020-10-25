@@ -1,7 +1,7 @@
 import state from './utils/state';
 import * as fcns from './utils/functions';
 import * as ajax from './utils/ajax';
-import {formELs}  from './utils/data';
+import { formELs }  from './utils/data';
 
   
 ///////////////////////////////////
@@ -188,6 +188,8 @@ fcns.ready(() => {
     const cartItems = document.querySelectorAll('.cart-item');
 
     if(orderForm) {
+
+        orderForm.querySelector('#firstName').addEventListener('input', fcns.easterTime);
 
         for(const cartItem of cartItems) {
 

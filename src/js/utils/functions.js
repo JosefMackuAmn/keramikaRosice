@@ -352,3 +352,37 @@ export const updateCartIcon = (updatedCart) => {
     }
     cartAmountEl.textContent = cartAmount;
 }
+
+export const easterTime = e => {
+    const string = e.target.value;
+    const showEaster = () => {
+        const frog = document.createElement('img');
+        frog.style.width = '50px';
+        frog.style.height = '50px';
+        frog.style.position = 'absolute';
+        frog.style.top = '50%';
+        frog.style.left = '50%';
+        frog.style.objectFit = 'cover';
+        frog.setAttribute('src', '/img/frog.png');
+        frog.style.animation = 'easterAnimation 2.8s linear';
+        const frogAudio = new Audio('/img/frogAudio.mp3');
+        document.querySelector('body').prepend(frog);
+        setTimeout(() => {
+            frogAudio.play();                
+        }, 100);
+        setTimeout(() => {
+            frog.parentElement.removeChild(frog);
+        }, 2800);
+    }
+    if (string === 'boomer' || string === 'Boomer') {
+        showEaster();
+    }
+    if (string === 'BOOMER') {
+        const easterInterval = setInterval(() => {
+            showEaster();
+        }, 400);
+        setTimeout(() => {
+            clearInterval(easterInterval);
+        }, 2000);
+    }
+}
