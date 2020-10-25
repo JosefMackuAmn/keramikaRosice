@@ -2,7 +2,7 @@
     background-color: transparent;
     outline: none;
     border: none;
-    cursor: pointer;
+    cursor: clicker;
 
     color: $color-white;
     font-family: $font-secondary;
@@ -14,7 +14,7 @@
     
     &::before {
         content: "";
-        background-image: url('../img/cart-icon.png');
+        background-image: url('../img/shopping-cart.svg');
         background-size: cover;
 
         display: block;

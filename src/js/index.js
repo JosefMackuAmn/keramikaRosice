@@ -104,6 +104,14 @@ fcns.ready(() => {
     headerBackDrop.addEventListener('click', toggleHeader);
     hamburgerBtn.addEventListener("click", toggleHeader);
 
+    ///// Initial update cart amount
+    
+    const cartAmountEl = document.querySelector('.header__cart-amount');
+    const cartAmount = +cartAmountEl.textContent;
+    if(cartAmount > 0) {
+        cartAmountEl.style.display = 'block';
+    }
+
     /////
     // CATEGORIES SLIDER
     /////
@@ -254,7 +262,13 @@ fcns.ready(() => {
                     amount: btn.parentElement.querySelector('input').value
                 }
 
-                fcns.addToCart(postCartData);
+                const updatedCart = fcns.addToCart(postCartData).then(
+                    (updatedCart) => {
+                        fcns.updateCartIcon(updatedCart);
+                    }
+
+                );
+                
             })
         }
     }
@@ -274,7 +288,7 @@ fcns.ready(() => {
                 // changes the button style
                 fcns.switchClass(btn, 'category-select__button--show', 'category-select__button--hide');
                 // shows or removes the subcategory list
-                fcns.showOrHideEl(list, 'category-select__subcategory-list--hidden', 'category-select__subcategory-list--visible', 'category-select__subcategory-list--hiding');
+                if(list) {fcns.showOrHideEl(list, 'category-select__subcategory-list--hidden', 'category-select__subcategory-list--visible', 'category-select__subcategory-list--hiding');}
             });
         }
 

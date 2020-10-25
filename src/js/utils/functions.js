@@ -298,6 +298,7 @@ export const updateCartItem = (cartItem, updatedCart) => {
 
     updateTotalPrice(updatedCart);
     updateCartPage();
+    updateCartIcon(updatedCart);
 }
 
 export const updateCartPage = () => {
@@ -335,4 +336,18 @@ export const updateTotalPrice  = (updatedCart) => {
     priceEl.textContent = `${updatedCart.total}Kč`;
 
 }
-
+/////
+//HEADER
+/////
+export const updateCartIcon = (updatedCart) => {
+    const cartAmountEl = document.querySelector('.header__cart-amount');
+    const cartAmount = updatedCart.items.reduce((prevValue, curValue, id) => {
+        return prevValue + updatedCart.items[id].amount;
+    }, 0)
+    if(cartAmount <= 0) {
+        cartAmountEl.style.display = 'none';
+    } else {
+        cartAmountEl.style.display = 'block';
+    }
+    cartAmountEl.textContent = cartAmount;
+}

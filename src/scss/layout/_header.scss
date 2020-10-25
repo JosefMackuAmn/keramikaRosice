@@ -24,6 +24,35 @@ $hamburger-hover-offset: .3rem;
         align-items: center;
     }
 
+    &__cart-icon {
+        position: relative;
+
+         svg {
+            fill: $color-black;
+            width: 4rem;
+            height: 4rem;
+
+            @media screen and (max-width: $bp-header-medium) {
+                fill: white;
+            }
+        }
+    }
+    &__cart-amount {
+            background-color: $color-failed;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.6rem;
+
+            display: none;
+
+            position: absolute;
+            top: 50%;
+    }
     &__nav {
         position: relative;
         z-index: 2;
@@ -112,12 +141,12 @@ $hamburger-hover-offset: .3rem;
         list-style: none;
 
         display: flex;
+        align-items: center;
 
         @media screen and (max-width: $bp-header-medium) {
             width: 100%;
 
             justify-content: flex-end;
-            align-items: center;
         }
         @media screen and (max-width: $bp-header-mobile) { 
             background-color: $color-white;
@@ -161,6 +190,7 @@ $hamburger-hover-offset: .3rem;
         &:hover {
             transform: translateY(-3px);
         }
+    
         @media screen and (max-width: $bp-header-medium) {
             
         }
