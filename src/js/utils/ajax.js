@@ -99,10 +99,7 @@ export const orderSubmitHandler = e => {
         }).then(res => {
             return res.json();
         }).then(session => {
-            return {
-                error: 'error'
-            }
-            //return stripe.redirectToCheckout({ sessionId: session.id });
+            return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
                 fcns.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');

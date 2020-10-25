@@ -1,4 +1,4 @@
-/******/ (() => { // webpackBootstrap
+/******/ (function() { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
@@ -9,7 +9,7 @@
 /*! namespace exports */
 /*! exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _utils_state__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./utils/state */ "./src/js/utils/state.js");
@@ -436,12 +436,12 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 /*! export postCartHandler [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "postCartHandler": () => /* binding */ postCartHandler,
-/* harmony export */   "orderSubmitHandler": () => /* binding */ orderSubmitHandler
+/* harmony export */   "postCartHandler": function() { return /* binding */ postCartHandler; },
+/* harmony export */   "orderSubmitHandler": function() { return /* binding */ orderSubmitHandler; }
 /* harmony export */ });
 /* harmony import */ var _functions__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./functions */ "./src/js/utils/functions.js");
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
@@ -505,6 +505,7 @@ const orderSubmitHandler = e => {
     // If validation has failed (at least one element has class 'invalid'), returning
     
     if (document.querySelector('.invalid')) {
+        e.preventDefault();
         return;
     }
        
@@ -545,17 +546,17 @@ const orderSubmitHandler = e => {
         }).then(res => {
             return res.json();
         }).then(session => {
-            return {
-                error: 'error'
-            }
-            //return stripe.redirectToCheckout({ sessionId: session.id });
+            return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
                 _functions__WEBPACK_IMPORTED_MODULE_0__.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
             }
         }).catch(err => {
             _functions__WEBPACK_IMPORTED_MODULE_0__.createModal('Nastala chyba', 'Objednávka se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
-        }) 
+        }).finally(() => {
+            submitBtn.textContent = submitBtnText;
+            submitBtn.classList.remove('loading');
+        })
     }
 }
 
@@ -574,13 +575,13 @@ const orderSubmitHandler = e => {
 /*! export otherArgsMap [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "formELs": () => /* binding */ formELs,
-/* harmony export */   "RegexMap": () => /* binding */ RegexMap,
-/* harmony export */   "otherArgsMap": () => /* binding */ otherArgsMap
+/* harmony export */   "formELs": function() { return /* binding */ formELs; },
+/* harmony export */   "RegexMap": function() { return /* binding */ RegexMap; },
+/* harmony export */   "otherArgsMap": function() { return /* binding */ otherArgsMap; }
 /* harmony export */ });
 ////
 //SUBMIT
@@ -632,21 +633,21 @@ const otherArgsMap = orderForm ? new Map([
 /*! export validateInput [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "ready": () => /* binding */ ready,
-/* harmony export */   "outerWidth": () => /* binding */ outerWidth,
-/* harmony export */   "showOrHideEl": () => /* binding */ showOrHideEl,
-/* harmony export */   "switchClass": () => /* binding */ switchClass,
-/* harmony export */   "moveCategoriesSlider": () => /* binding */ moveCategoriesSlider,
-/* harmony export */   "refreshSubmitBtn": () => /* binding */ refreshSubmitBtn,
-/* harmony export */   "validateInput": () => /* binding */ validateInput,
-/* harmony export */   "createModal": () => /* binding */ createModal,
-/* harmony export */   "removeModal": () => /* binding */ removeModal,
-/* harmony export */   "removeCartHint": () => /* binding */ removeCartHint,
-/* harmony export */   "createCartHint": () => /* binding */ createCartHint
+/* harmony export */   "ready": function() { return /* binding */ ready; },
+/* harmony export */   "outerWidth": function() { return /* binding */ outerWidth; },
+/* harmony export */   "showOrHideEl": function() { return /* binding */ showOrHideEl; },
+/* harmony export */   "switchClass": function() { return /* binding */ switchClass; },
+/* harmony export */   "moveCategoriesSlider": function() { return /* binding */ moveCategoriesSlider; },
+/* harmony export */   "refreshSubmitBtn": function() { return /* binding */ refreshSubmitBtn; },
+/* harmony export */   "validateInput": function() { return /* binding */ validateInput; },
+/* harmony export */   "createModal": function() { return /* binding */ createModal; },
+/* harmony export */   "removeModal": function() { return /* binding */ removeModal; },
+/* harmony export */   "removeCartHint": function() { return /* binding */ removeCartHint; },
+/* harmony export */   "createCartHint": function() { return /* binding */ createCartHint; }
 /* harmony export */ });
 /* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./data */ "./src/js/utils/data.js");
 /* harmony import */ var _state__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./state */ "./src/js/utils/state.js");
@@ -914,16 +915,13 @@ const createCartHint = (state, text) => {
 /*! namespace exports */
 /*! export default [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/*! runtime requirements: __webpack_exports__, __webpack_require__.r, __webpack_require__.* */
+/***/ (function(__unused_webpack_module, __webpack_exports__, __webpack_require__) {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => __WEBPACK_DEFAULT_EXPORT__
-/* harmony export */ });
 ///////////////////////////////////
 ///// DEFINE STATE
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+/* harmony default export */ __webpack_exports__["default"] = ({
     categoriesSlider: {
         selectedArr: null // 'left' || 'right'
     },
@@ -959,32 +957,32 @@ __webpack_require__.r(__webpack_exports__);
 /******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define getter functions for harmony exports
-/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 		__webpack_require__.d = function(exports, definition) {
 /******/ 			for(var key in definition) {
 /******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__webpack_require__.o = (obj, prop) => Object.prototype.hasOwnProperty.call(obj, prop)
-/******/ 	})();
+/******/ 	!function() {
+/******/ 		__webpack_require__.o = function(obj, prop) { return Object.prototype.hasOwnProperty.call(obj, prop); }
+/******/ 	}();
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
-/******/ 	(() => {
+/******/ 	!function() {
 /******/ 		// define __esModule on exports
-/******/ 		__webpack_require__.r = (exports) => {
+/******/ 		__webpack_require__.r = function(exports) {
 /******/ 			if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
 /******/ 				Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
 /******/ 			}
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
-/******/ 	})();
+/******/ 	}();
 /******/ 	
 /************************************************************************/
 /******/ 	// startup

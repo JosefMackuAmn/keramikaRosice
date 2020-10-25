@@ -241,28 +241,7 @@ exports.postOrder = async (req, res, next) => {
     req.session.cart = null;
     console.log('cart cleared');
 
-    return transporter.sendMail({
-        from: process.env.MAIL_USER,
-        to: email,
-        cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Objednávka přijata',
-        html: '<h1>This is working!</h1>',
-    }).catch(err => {
-        console.log(err);
-        if (order.payment !== 'CRD') {
-            console.log('here 1');
-            return res.redirect(`/?success=true&mailSent=false&payment=${order.payment}`);
-        }
-        console.log('here 2');
-    }).then(() => {
-        if (order.payment !== 'CRD') {
-            console.log('here 3');
-            return res.redirect(`/?success=true&mailSent=true&payment=${order.payment}`);
-        }
-        console.log('here 4');
-    })
-
-    /* transporter.sendMail({
+    transporter.sendMail({
         from: process.env.MAIL_USER,
         to: email,
         cc: process.env.MAIL_USER,
@@ -342,7 +321,7 @@ exports.postOrder = async (req, res, next) => {
 
         return returnStripeSessionId();
 
-    }); */
+    });
 }
 
 exports.postCheckoutWebhook = async (req, res, next) => {
