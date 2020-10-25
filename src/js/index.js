@@ -109,7 +109,7 @@ fcns.ready(() => {
     const cartAmountEl = document.querySelector('.header__cart-amount');
     const cartAmount = +cartAmountEl.textContent;
     if(cartAmount > 0) {
-        cartAmountEl.style.display = 'block';
+        cartAmountEl.style.display = 'flex';
     }
 
     /////

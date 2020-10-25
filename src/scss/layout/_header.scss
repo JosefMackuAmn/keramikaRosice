@@ -42,6 +42,7 @@ $hamburger-hover-offset: .3rem;
             border-radius: 50%;
             width: 2.5rem;
             height: 2.5rem;
+            padding-bottom: 2px;
 
             color: white;
             text-align: center;
@@ -49,6 +50,8 @@ $hamburger-hover-offset: .3rem;
             font-size: 1.6rem;
 
             display: none;
+            justify-content: center;
+            align-items: center;
 
             position: absolute;
             top: 50%;
@@ -150,20 +153,24 @@ $hamburger-hover-offset: .3rem;
         }
         @media screen and (max-width: $bp-header-mobile) { 
             background-color: $color-white;
+            padding: 1rem 0;
 
             z-index: 10;
             position: relative;
+
+            flex-direction: column;
+            align-items: flex-end;
 
             &--hidden {
                 display: none;
             }
 
             &--visible {
-                display: block;
+                display: flex;
             }
 
             &--hiding {
-                display: block;
+                display: flex;
             }
  
             &::after {

@@ -191,19 +191,11 @@ module.exports = (order, invoicePath) => {
     invoice.registerFont('PTSans-Regular', path.join(__dirname, '/../public/fonts/PTSans-Regular.ttf'));
     invoice.registerFont('PTSans-Bold', path.join(__dirname, '/../public/fonts/PTSans-Bold.ttf'));
 
-    console.log('invoice 1');
     generateHeader(invoice, order);
-    console.log('invoice 2');
     generatePersonInformation(invoice, order);
-    console.log('invoice 3');
     generateInvoiceData(invoice, order);
-    console.log('invoice 4');
     generateProductsTable(invoice, order);
-    console.log('invoice 5');
-  
-    invoice.end();
-    console.log('invoice 6');
-    invoice.pipe(fs.createWriteStream(invoicePath));
-    console.log('invoice 7');
     
+    invoice.end();
+    invoice.pipe(fs.createWriteStream(invoicePath));
 }

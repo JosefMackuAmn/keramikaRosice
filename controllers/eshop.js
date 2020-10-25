@@ -185,9 +185,7 @@ exports.postOrder = async (req, res, next) => {
     const consts = JSON.parse(constants);
 
     const date = new Date();
-    console.log('nodemon 1')
     const variableSymbol = await asyncHelpers.getVariableSymbol(date);
-    console.log('nodemon 2')
 
     const cart = req.session.cart;
 
@@ -233,13 +231,10 @@ exports.postOrder = async (req, res, next) => {
     order.invoiceUrl = invoicePath;
 
     generateInvoice(order, invoicePath);
-    console.log('after invoice generated');
 
     await order.save();
-    console.log('order saved');
 
     req.session.cart = null;
-    console.log('cart cleared');
 
     transporter.sendMail({
         from: process.env.MAIL_USER,
@@ -253,7 +248,6 @@ exports.postOrder = async (req, res, next) => {
             contentType: 'application/pdf'
         }],
     }, (err, info) => {
-        console.log('after mail sent');
         if (order.payment !== 'CRD') {
             if (err) {
                 console.log(err);

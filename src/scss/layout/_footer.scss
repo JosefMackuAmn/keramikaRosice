@@ -44,8 +44,15 @@ $bp-footer-mobile: 800px;
     &__terms {
         color: $color-grey-light;
 
-        @media only screen and (max-width: $bp-footer-mobile) {
-            display: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & span {
+            display: block;
+        }
+        & a {
+            color: $color-grey-light;
         }
     }
     &__reference {
@@ -56,7 +63,7 @@ $bp-footer-mobile: 800px;
         }
     }
     &__decoration {
-        margin-bottom: 3rem;
+        margin-bottom: -1rem;
 
         display: flex;
 

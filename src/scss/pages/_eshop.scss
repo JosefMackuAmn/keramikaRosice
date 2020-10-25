@@ -107,7 +107,6 @@
     }
     & .picture {
         width: 50rem;
-        border: 2px solid $color-primary;
 
         @media screen and (max-width: 600px) {
             border-left: none;

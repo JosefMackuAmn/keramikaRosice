@@ -1,4 +1,4 @@
-import {RegexMap, otherArgsMap}  from './data';
+import { RegexMap, otherArgsMap }  from './data';
 import state from './state';
 import * as ajax from './ajax';
 
@@ -317,15 +317,16 @@ export const updateCartPage = () => {
         summary.style.display  = 'none';
         emptyCartContent.style.display = 'block';
         dph.style.display = 'none';
-        button.style.display = 'none';
+        button.classList.remove('hidden');
+        button.classList.add('hidden');
 
     } else {
 
-        cartOrder.style.display = 'block';
-        summary.style.display  = 'block';
+        cartOrder.style.display = 'flex';
+        summary.style.display  = 'flex';
         emptyCartContent.style.display = 'none';
         dph.style.display = 'block';
-        button.style.display = 'block';
+        button.classList.remove('hidden');
     }
 }
 
@@ -347,7 +348,7 @@ export const updateCartIcon = (updatedCart) => {
     if(cartAmount <= 0) {
         cartAmountEl.style.display = 'none';
     } else {
-        cartAmountEl.style.display = 'block';
+        cartAmountEl.style.display = 'flex';
     }
     cartAmountEl.textContent = cartAmount;
 }
