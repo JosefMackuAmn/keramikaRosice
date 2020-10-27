@@ -353,7 +353,7 @@ export const updateCartIcon = (updatedCart) => {
     cartAmountEl.textContent = cartAmount;
 }
 
-export const easterTime = e => {
+export const easterTime = (frogAudio, e) => {
     const string = e.target.value;
     const showEaster = () => {
         const frog = document.createElement('img');
@@ -365,10 +365,10 @@ export const easterTime = e => {
         frog.style.objectFit = 'cover';
         frog.setAttribute('src', '/img/frog.png');
         frog.style.animation = 'easterAnimation 2.8s linear';
-        const frogAudio = new Audio('/img/frogAudio.mp3');
         document.querySelector('body').prepend(frog);
         setTimeout(() => {
-            frogAudio.play();                
+            const audio = frogAudio.cloneNode();
+            audio.play();                
         }, 100);
         setTimeout(() => {
             frog.parentElement.removeChild(frog);

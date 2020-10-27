@@ -189,7 +189,8 @@ fcns.ready(() => {
 
     if(orderForm) {
 
-        orderForm.querySelector('#firstName').addEventListener('input', fcns.easterTime);
+        const frogAudio = new Audio('/img/frogAudio.mp3');
+        orderForm.querySelector('#firstName').addEventListener('input', fcns.easterTime.bind(this, frogAudio));
 
         for(const cartItem of cartItems) {
 

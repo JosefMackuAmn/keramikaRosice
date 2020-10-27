@@ -33,7 +33,7 @@
                     <ul class="category-select__category-list category-select__category-list--hidden">
 
                         <% categories.forEach(category => { %>
-                            <li class="category-select__category">
+                            <li class="category-select__category <% if (category.name === categoryName) { %>category-select__category--selected<% } %>">
                                 <a href="/shop/<%= category.name %>"><h3 class="heading-3"><%= category.name %></h3></a>
                                 <button class="category-select__button <% if (category.name !== categoryName) { %>category-select__button--hide<% } else { %>category-select__button--show<% } %>"></button>
                                 <%

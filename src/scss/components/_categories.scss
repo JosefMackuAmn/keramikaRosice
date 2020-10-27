@@ -29,6 +29,9 @@
         @media only screen and (max-width: 1000px) {
             display: none;
         }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            display: none;
+        }
     }
     &__content {
         margin: 0 5rem;
@@ -80,6 +83,13 @@
 
             display: block;
         }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            width: 40rem;
+            height: 40rem;
+            margin-bottom: 5rem;
+
+            display: block;
+        }
         @media only screen and (max-width: 800px) {
             width: 27rem;
             height: 27rem;
@@ -121,6 +131,12 @@
         transition: all .5s;
 
         @media only screen and (max-width: 1000px) {
+            max-width: unset;
+            width: 100%;
+            opacity: 1;
+            background-color: $color-black-overlay-dark;
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
             max-width: unset;
             width: 100%;
             opacity: 1;

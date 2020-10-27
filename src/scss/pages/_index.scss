@@ -87,10 +87,10 @@
             }
             &__cta {
                 padding: 2rem 10rem;
-                border: 1px solid $color-primary;
+                border: 2px solid $color-primary;
                 border-radius: 3rem;
                 border-top-right-radius: 10rem;
-                box-shadow: -2px 2px 5px 3px $color-secondary;
+                box-shadow: -2px 2px 5px 3px $color-primary-overlay;
                 
                 color: $color-primary;
                 font-size: $font-big;

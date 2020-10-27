@@ -207,7 +207,8 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_1__.ready(() => {
 
     if(orderForm) {
 
-        orderForm.querySelector('#firstName').addEventListener('input', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.easterTime);
+        const frogAudio = new Audio('/img/frogAudio.mp3');
+        orderForm.querySelector('#firstName').addEventListener('input', _utils_functions__WEBPACK_IMPORTED_MODULE_1__.easterTime.bind(undefined, frogAudio));
 
         for(const cartItem of cartItems) {
 
@@ -988,7 +989,7 @@ const updateCartIcon = (updatedCart) => {
     cartAmountEl.textContent = cartAmount;
 }
 
-const easterTime = e => {
+const easterTime = (frogAudio, e) => {
     const string = e.target.value;
     const showEaster = () => {
         const frog = document.createElement('img');
@@ -1000,10 +1001,10 @@ const easterTime = e => {
         frog.style.objectFit = 'cover';
         frog.setAttribute('src', '/img/frog.png');
         frog.style.animation = 'easterAnimation 2.8s linear';
-        const frogAudio = new Audio('/img/frogAudio.mp3');
         document.querySelector('body').prepend(frog);
         setTimeout(() => {
-            frogAudio.play();                
+            const audio = frogAudio.cloneNode();
+            audio.play();                
         }, 100);
         setTimeout(() => {
             frog.parentElement.removeChild(frog);
