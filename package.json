@@ -29,6 +29,7 @@
     "@babel/polyfill": "^7.12.1",
     "babel-runtime": "^6.26.0",
     "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
     "connect-mongodb-session": "^2.4.1",
     "csurf": "^1.11.0",
     "ejs": "^3.1.5",

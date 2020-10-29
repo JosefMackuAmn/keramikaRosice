@@ -12,6 +12,7 @@ const MongoDBStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const multer = require('multer');
 const morgan = require('morgan');
+const compression = require('compression');
 
 // Custom imports
 const eshopRoutes = require('./routes/eshop');
@@ -71,6 +72,8 @@ app.set('view engine', 'ejs');
 
 // Using helmet
 app.use(helmet());
+// Using compression
+app.use(compression());
 // Using morgan
 app.use(morgan('combined', { stream: accessLogStream }));
 

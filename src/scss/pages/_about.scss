@@ -178,6 +178,9 @@ $bp-about-mobile: 900px;
              }
         }
         &__img {
+            object-fit: cover;
+            object-position: center;
+            
             position: relative;
             z-index: 11;
         }
