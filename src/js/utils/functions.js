@@ -261,6 +261,7 @@ export const addToCart = (postCartData) => {
         createCartHint('success', `Produkt byl úspěšně přidán do košíku`);         
         return updatedCart;           
     }).catch(err => {
+        console.log(err);
         createCartHint('failed', `Nastala chyba, produkt nebyl přidán do košíku`);
     });
 

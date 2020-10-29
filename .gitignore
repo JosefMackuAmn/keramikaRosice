@@ -2,5 +2,6 @@ nodemon.json
 node_modules
 projectInfo.txt
 documents
+devKBs
 access.log
 OLD_*

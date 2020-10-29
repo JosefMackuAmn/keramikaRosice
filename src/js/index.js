@@ -1,3 +1,6 @@
+import 'url-search-params-polyfill';
+import 'fetch-polyfill';
+
 import state from './utils/state';
 import * as fcns from './utils/functions';
 import * as ajax from './utils/ajax';
@@ -255,7 +258,7 @@ fcns.ready(() => {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
 
         for (const btn of submitBtns) {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
 
                 // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
                 const postCartData = {
@@ -265,12 +268,9 @@ fcns.ready(() => {
                     amount: btn.parentElement.querySelector('input').value
                 }
 
-                const updatedCart = fcns.addToCart(postCartData).then(
-                    (updatedCart) => {
-                        fcns.updateCartIcon(updatedCart);
-                    }
-
-                );
+                fcns.addToCart(postCartData).then((updatedCart) => {
+                    fcns.updateCartIcon(updatedCart);
+                }).catch(err => console.log(err));
                 
             })
         }

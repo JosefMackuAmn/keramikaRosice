@@ -12,6 +12,8 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 amount: amount,
                 productId: productId
             };
+            
+            console.log(bodyObj);
 
             // Send request
             return fetch('/kosik', {
@@ -23,7 +25,7 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 },
                 body: JSON.stringify(bodyObj)
             }).then(res => {
-                return Promise.all([res.clone(), res.json()]);
+                return Promise.all([res, res.json()]);
             }).then(promises => {
                 const [ response, body ] = promises;
                 if (!(response.ok && response.status >= 200 && response.status < 300)) {
