@@ -83,6 +83,10 @@ const orderSchema = new Schema({
     cancelInvoiceUrl: {
         type: String,
         required: false
+    },
+    packetaId: {
+        type: String,
+        required: false
     }
 });
 

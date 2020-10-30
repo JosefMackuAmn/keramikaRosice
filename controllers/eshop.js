@@ -105,7 +105,7 @@ exports.getCart = async (req, res, next) => {
     const constants = JSON.parse(constantsRaw);
 
     res.set({
-        'Content-Security-Policy': "script-src 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/"
+        'Content-Security-Policy': "script-src 'unsafe-inline' 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/ https://widget.packeta.com/"
     });
 
     res.render('eshop/cart', {
@@ -183,8 +183,13 @@ exports.postOrder = async (req, res, next) => {
     const delivery = req.body.delivery;
     const payment = req.body.payment;
     const zipCode = req.body.zipCode;
+    const packetaId = req.body.packetaId;
 
-    
+
+    // If selected packeta as delivery service, but no branch-id was passed, redirect
+    if (delivery === 'ZAS' && !packetaId) {
+        return res.redirect('/kosik?success=false&mailSent=false');
+    }
     
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
@@ -196,6 +201,11 @@ exports.postOrder = async (req, res, next) => {
 
     if (!cart || cart.items.length < 1) {
         return res.redirect('/kosik?success=false&mailSent=false');
+    }
+
+    let paymentCost = consts.paymentCosts[payment];
+    if (delivery === "OOD") {
+        paymentCost = 0;
     }
 
     const order = new Order({
@@ -222,13 +232,14 @@ exports.postOrder = async (req, res, next) => {
         delivery,
         deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
         payment,
-        paymentCost: consts.paymentCosts[payment],
+        paymentCost,
         date: date.toISOString(),
         status: consts.orderStatuses[0],
         isPayed: false,
         invoiceUrl: 'url',
         isCanceled: false,
-        cancelInvoiceUrl: null
+        cancelInvoiceUrl: null,
+        packetaId: packetaId
     });
     
     const invoiceName = 'invoice-' + order._id + '.pdf';

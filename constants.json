@@ -1,22 +1,22 @@
 {
   "deliveryCosts": {
     "ZAS": {
-      "0": 10,
-      "1": 11
+      "0": 65,
+      "1": 65
     },
     "POS": {
-      "0": 12,
-      "1": 13
+      "0": 90,
+      "1": 175
     },
     "OOD": {
-      "0": 14,
-      "1": 15
+      "0": 0,
+      "1": 0
     }
   },
   "paymentCosts": {
-    "CRD": 20,
-    "DOB": 21,
-    "BTR": 22
+    "CRD": 10,
+    "DOB": 30,
+    "BTR": 0
   },
   "orderStatuses": [
     "ORDERED",
@@ -24,7 +24,7 @@
     "DELIVERED"
   ],
   "lastInvoiceNumber": [
-    151,
+    152,
     2020
   ]
 }

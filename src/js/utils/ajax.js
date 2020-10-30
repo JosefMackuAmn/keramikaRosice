@@ -84,6 +84,7 @@ export const orderSubmitHandler = e => {
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
+        formData.append('packetaId', formEls.packetaId.value);
         formData.append('firstName', firstNameValue);
         formData.append('lastName', lastNameValue);
         formData.append('email', emailValue);

@@ -50,7 +50,7 @@
                     <div class="order-detail__column">
                         <div class="order-detail__data">
                             <h4 class="heading-4">Doručení</h4>
-                            <p class="paragraph-small"><%= order.delivery %></p>
+                            <p class="paragraph-small"><%= order.delivery %><% if (order.delivery === "ZAS") { %>: <%= order.packetaId %><%} %></p>
                         </div>
                         <div class="order-detail__data">
                             <h4 class="heading-4">Datum</h4>
