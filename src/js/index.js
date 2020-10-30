@@ -265,7 +265,7 @@ fcns.ready(() => {
                     action: 'ADD',
                     productId: btn.dataset.productid,
                     csrf: btn.dataset.csrf,
-                    amount: btn.parentElement.querySelector('input').value
+                    amount: btn.parentElement.querySelector('select').value
                 }
 
                 fcns.addToCart(postCartData).then((updatedCart) => {
