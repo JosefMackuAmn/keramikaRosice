@@ -95,7 +95,7 @@ const putOrder = async (req, res, next) => {
         });
     }
 
-    if (!order.isPayed && isPayed) {
+    if (!order.isPayed && eval(isPayed)) {
         // Mark as payed and send notification
         await asyncHelpers.paidOrderHandler(order);
     }

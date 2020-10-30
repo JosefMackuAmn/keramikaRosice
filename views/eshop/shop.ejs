@@ -71,8 +71,12 @@
                                 <div class="product__modal">
                                     <button class="close-button product__modal__close-button"></button>
                                     <p class="product__modal__amount">Množství</p>
-                                    <input class="product__modal__input" type="number" min="1">
-                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>" disabled>
+                                    <select class="product__modal__input" type="number" min="1">
+                                        <% for (let i = 0; i < product.amountInStock; i++) { %>
+                                            <option value="<%= i+1 %>"><%= i+1 %>ks</option>
+                                        <% } %>
+                                    </select>
+                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>">
                                         Do košíku
                                     </button>
                                 </div>
@@ -85,8 +89,8 @@
                                     </div>
                                 </div>
                                 <div class="product__info">
-                                    <button class="to-cart-button">
-                                        Do košíku
+                                    <button class="to-cart-button" <% if (product.amountInStock < 1) { %>disabled<% } %>>
+                                        <% if (product.amountInStock < 1) { %><span style="color: red">Není skladem</span><% } else { %>Do košíku<% } %>
                                     </button>
                                     <p class="product__price">
                                         <%= product.price %>Kč

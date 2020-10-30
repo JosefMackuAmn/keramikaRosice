@@ -9,7 +9,7 @@
         <main class="main main--login">
 
             <form class="login-form" action="/admin/login" method="POST">
-                <input class="login-form__input" type="password" name="password" value="123" placeholder="Přístupový kód">
+                <input class="login-form__input" type="password" name="password" placeholder="Přístupový kód">
                 <input class="login-form__input login-form__input--hidden" type="text" name="_csrf" value="<%= csrfToken %>">
                 <input type="submit" class="login-form__submit" value="Login">
             </form>

@@ -316,18 +316,7 @@ fcns.ready(() => {
             btnAddToCart.addEventListener('click', () => {
                 // Hides product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
-            })
-            input.addEventListener('input', () => {
-
-               if(!(/^[0-9]{1,}$/.test(input.value))) {
-                input.classList.add('invalid');
-                btnAddToCart.setAttribute('disabled', '');
-               } else {
-                   input.classList.remove('invalid');
-                   btnAddToCart.removeAttribute('disabled', '');
-               }
-
-            })         
+            })      
         }
 
         ///// MOBILE CATEGORY SELECT
