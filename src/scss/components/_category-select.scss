@@ -1,6 +1,8 @@
 .category-select {
-    padding: 0 5rem;
+    width: 35rem;
+    min-height: 80rem;
     margin-right: 4rem;
+    background-color: $color-secondary;
 
     @media screen and (max-width: 900px) {
         margin-right: 2rem;
@@ -26,16 +28,18 @@
             color: $color-primary;
         }
     }
-    & ul {
-        list-style: none;
-    }
     & .heading-2 {
-        margin-bottom: 2rem;
+        width: 100%;
+        padding: 5rem 2rem;
         
         text-align: center;
+        color: $color-primary;
+
+        display: block;
 
         @media screen and (max-width: $bp-eshop-mobile) {
-            margin-bottom: 0;
+            display: none;
+            /* margin-bottom: 0;
             padding-top: 4rem;
             padding-bottom: 4rem;
             border-top: 1px solid $color-primary;
@@ -48,18 +52,22 @@
             &.scrollLocked {
                 position: absolute;
                 bottom: var(--category-select-mobile-list-height);
-            }
+            } */
         }
     }
     & .heading-3 {
         font-family: 'PT Sans', sans-serif;
         font-size: 2rem;
+        color: $color-primary;
 
         @media screen and (max-width: $bp-eshop-mobile) {
            font-size: 2.5rem;
         }
     }
     &__category-list {
+        list-style: none;
+        padding: 2rem 0;
+
         @media screen and (max-width: $bp-eshop-mobile) {
             height: var(--category-select-mobile-list-height);
 
@@ -164,11 +172,11 @@
         outline: none;
         background-color: transparent;
     
-        right: -4rem;
+        right: 4rem;
         position: absolute;
 
-        @media screen and (max-width: $bp-eshop-mobile) {
-            right: -4rem;
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            transform: translateY(-3.3rem);
         }    
 
         &--show {
@@ -206,7 +214,10 @@
         }
     }
     &__category {
-        padding-bottom: 2rem;
+        margin-bottom: 1rem;
+        padding: 2rem 5rem;
+
+        text-transform: capitalize;
 
         display: flex;
         flex-direction: column;
@@ -214,12 +225,29 @@
         position: relative;
 
         @media screen and (max-width: $bp-eshop-mobile) {
+            width: 100%;
             margin-left: -2rem;
-        } 
+        }
+
+        &--selected {
+            & .heading-3 {
+                color: $color-primary;
+                font-weight: bold;
+            }
+        }
+
+        & a {
+            padding-right: 4rem;
+        }
     }
     &__subcategory {
+        margin-bottom: .5rem;
+
+        color: $color-primary;
+        text-transform: capitalize;
+        
         display: flex;
-        align-items: center;
+        align-items: center;        
 
         &::before {
             content: "";
@@ -233,6 +261,9 @@
             transform: rotate(45deg);
         }
         &--selected {
+            color: $color-primary;
+            font-weight: bold;
+
             &::before {
                 background-color: $color-primary;
             } 

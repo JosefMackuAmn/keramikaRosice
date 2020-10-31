@@ -90,7 +90,6 @@
     }
     &__input {
       height: 4rem;
-      width: 7rem;
       padding: 1rem;
       margin-top: 0.5rem;
       outline: none;
@@ -162,10 +161,6 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-
-    @media screen and (max-width: 850px) {
-      margin-top: 3rem;
-    }
   }
   &__description {
     height: 100%;
@@ -184,6 +179,7 @@
     padding: 4rem;
 
     color: $color-white;
+    text-align: center;
 
     position: absolute;
     top: 50%;
@@ -206,23 +202,6 @@
     left: 50%;
     bottom: -.5rem;
     transform: translate(-50%, 100%);
-  }
-
-  &::after {
-    content: "";
-    width: 100%;
-    height: calc(100% + 6rem);
-    border: 2px solid $color-secondary;
-
-    display: none;
-
-    position: absolute;
-    top: 0;
-    left: 0;
-
-    @media screen and (max-width: $bp-eshop-mobile) {
-      display: block;
-    }
   }
 }
 

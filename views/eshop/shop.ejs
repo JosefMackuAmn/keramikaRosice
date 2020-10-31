@@ -8,7 +8,13 @@
         <section class="eshop">
             <div class="eshop__head">
                 <figure class="picture eshop__category-picture">
-                    <img src="/img/index-photo.jpg" class="picture__img" alt="Category picture">
+                    <%
+                        let catImg = categoryImage;
+                        if (!categoryImage) {
+                            catImg = "img/index-photo.jpg";
+                        }
+                    %>
+                    <img src="/<%= catImg %>" class="picture__img" alt="Category picture">
                     <div class="picture__bg"></div>
                 </figure>
                 <h2 class="heading-2"><% if (categoryName) { %><%= categoryName %><% } else { %>E-shop<% } %></h2>
@@ -27,7 +33,7 @@
                     <ul class="category-select__category-list category-select__category-list--hidden">
 
                         <% categories.forEach(category => { %>
-                            <li class="category-select__category">
+                            <li class="category-select__category <% if (category.name === categoryName) { %>category-select__category--selected<% } %>">
                                 <a href="/shop/<%= category.name %>"><h3 class="heading-3"><%= category.name %></h3></a>
                                 <button class="category-select__button <% if (category.name !== categoryName) { %>category-select__button--hide<% } else { %>category-select__button--show<% } %>"></button>
                                 <%
@@ -62,11 +68,15 @@
                     <% if (products.length > 0) {
                         products.forEach(product => { %>
                             <div class="product">
-                                <div class="product__modal">
+                                <div class="product__modal" tabindex="0">
                                     <button class="close-button product__modal__close-button"></button>
                                     <p class="product__modal__amount">Množství</p>
-                                    <input class="product__modal__input" type="number" min="1">
-                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>" disabled>
+                                    <select class="product__modal__input" type="number" min="1">
+                                        <% for (let i = 0; i < product.amountInStock; i++) { %>
+                                            <option value="<%= i+1 %>"><%= i+1 %>ks</option>
+                                        <% } %>
+                                    </select>
+                                    <button class="to-cart-button post-order-btn" data-csrf="<%= csrfToken %>" data-productid="<%= product._id %>">
                                         Do košíku
                                     </button>
                                 </div>
@@ -79,8 +89,8 @@
                                     </div>
                                 </div>
                                 <div class="product__info">
-                                    <button class="to-cart-button">
-                                        Do košíku
+                                    <button class="to-cart-button" <% if (product.amountInStock < 1) { %>disabled<% } %>>
+                                        <% if (product.amountInStock < 1) { %><span style="color: red">Není skladem</span><% } else { %>Do košíku<% } %>
                                     </button>
                                     <p class="product__price">
                                         <%= product.price %>Kč

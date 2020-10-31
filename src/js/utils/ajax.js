@@ -12,6 +12,8 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 amount: amount,
                 productId: productId
             };
+            
+            console.log(bodyObj);
 
             // Send request
             return fetch('/kosik', {
@@ -23,7 +25,7 @@ export const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 },
                 body: JSON.stringify(bodyObj)
             }).then(res => {
-                return Promise.all([res.clone(), res.json()]);
+                return Promise.all([res, res.json()]);
             }).then(promises => {
                 const [ response, body ] = promises;
                 if (!(response.ok && response.status >= 200 && response.status < 300)) {
@@ -82,6 +84,7 @@ export const orderSubmitHandler = e => {
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
+        formData.append('packetaId', formEls.packetaId.value);
         formData.append('firstName', firstNameValue);
         formData.append('lastName', lastNameValue);
         formData.append('email', emailValue);
@@ -99,10 +102,7 @@ export const orderSubmitHandler = e => {
         }).then(res => {
             return res.json();
         }).then(session => {
-            return {
-                error: 'error'
-            }
-            //return stripe.redirectToCheckout({ sessionId: session.id });
+            return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
                 fcns.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');

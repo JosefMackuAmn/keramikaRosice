@@ -2,8 +2,9 @@
 ///// COLORS
 
 // Colors
-$color-primary: #AE4900;
-$color-primary-light: lighten($color-primary, 60%);
+$color-primary: #3F2B1D;
+$color-primary-overlay: rgba($color-primary, .2);
+$color-primary-light: #9F6E4A;
 
 $color-secondary: #E9E2D4;
 $color-secondary-light: lighten($color-secondary, 7%);

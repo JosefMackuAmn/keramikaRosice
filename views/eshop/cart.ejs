@@ -103,8 +103,8 @@
                     <div class="order-form__radio-row" id="order-delivery">
                         <p class="order-form__subheading">Doručení</p>
                         <div class="order-form__radio-cell">
-                            <input type="radio" id="ZAS" name="delivery" value="ZAS">
-                            <label for="ZAS">Zásilkovna</label>
+                            <input class="packeta-selector-open" type="radio" id="ZAS" name="delivery" value="ZAS">
+                            <label class="packeta-selector-open" for="ZAS">Zásilkovna - <span class="packeta-selector-branch-name">Vybrat pobočku</p></label>
                             <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                         </div>
                         <div class="order-form__radio-cell">
@@ -117,7 +117,13 @@
                             <label for="OOD">Osobní odběr</label>
                             <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                         </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="ADR" name="delivery" value="ADR">
+                            <label for="ADR">Doručení na adresu (DPD)</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ADR"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
                     </div>
+                    <input type="hidden" class="packeta-selector-branch-id" name="packetaId" value="null">
                     <!-- PAYMENT -->
                     <div class="order-form__radio-row" id="order-payment">
                         <p class="order-form__subheading">Platební metoda</p>
@@ -128,7 +134,7 @@
                         </div>
                         <div class="order-form__radio-cell">
                             <input type="radio" id="CRD" name="payment" value="CRD">
-                            <label for="CRD">Platební brána</label>
+                            <label for="CRD">Platba kartou online</label>
                             <p class="order-form__feature-price"><%= constants.paymentCosts["CRD"] %>Kč</p>
                         </div>
                         <div class="order-form__radio-cell">
@@ -141,11 +147,11 @@
                     <div class="order-form__agree-row">
                         <div class="order-form__agree-cell">
                             <input type="checkbox" name="agree-gdpr" id="agree-gdpr">
-                            <label for="agree-gdpr">Souhlasím se zpracováním osobních údajů</label>
+                            <label for="agree-gdpr">Souhlasím se zpracováním <a target="_blank" href="/ochrana-udaju">osobních údajů</a></label>
                         </div>
                         <div class="order-form__agree-cell">
                             <input type="checkbox" name="agree-conditions" id="agree-conditions">
-                            <label for="agree-conditions">Souhlasím s obchodními podmínkami</label>
+                            <label for="agree-conditions">Souhlasím s <a target="_blank" href="/podminky">obchodními podmínkami</a></label>
                         </div>
                     </div>
                     <!-- SUBMIT -->
@@ -156,6 +162,18 @@
         <% } %>
 
     </main>
+    <script>
+        var packetaSelectorOpen = '.packeta-selector-open';
+        var packetaSelectorBranchName = '.packeta-selector-branch-name';
+        var packetaSelectorBranchId = '.packeta-selector-branch-id';
+        var packetaCountry = 'cz';
+        var packetaWidgetLanguage = 'cs';
 
+        var packetaPrimaryButtonColor = '#39b54a';
+        var packetaBackgroundColor = '#ffffff';
+        var packetaFontColor = '#555555';
+        var packetaFontFamily = 'Arial';
+    </script>
+    <script src="https://widget.packeta.com/www/js/packetaWidget.js" data-api-key="d35f0faf6fd10594"></script>
     <%- include('../includes/footer.ejs') %>
 <%- include('../includes/end.ejs') %>

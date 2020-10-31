@@ -1,7 +1,10 @@
+import 'url-search-params-polyfill';
+import 'fetch-polyfill';
+
 import state from './utils/state';
 import * as fcns from './utils/functions';
 import * as ajax from './utils/ajax';
-import {formELs}  from './utils/data';
+import { formELs }  from './utils/data';
 
   
 ///////////////////////////////////
@@ -19,7 +22,7 @@ fcns.ready(() => {
         const payment = params.get('payment');
 
         if (payment === 'success') {
-            fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+            fcns.createModal('Úspěch', 'Platba proběhla úspěšně. Faktura k objednávce Vám přišla na e-mail.', 'OK')
         } else if (payment === 'canceled') {
             fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a vyřeší to s Vámi osobní domluvou.', 'OK')
         }
@@ -36,15 +39,15 @@ fcns.ready(() => {
                 }
 
                 if(success === 'true' && mailSent === 'false') {
-                    fcns.createModal('Chyba', '<em> Nepodařil se odeslat mail s informacemi k platbě, prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
+                    fcns.createModal('Nepovedlo se odeslat e-mail', '<em> Objednávku jsme zaregistrovali, ale nepodařil se odeslat mail s informacemi k platbě. Prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána. ', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
             }
@@ -59,7 +62,7 @@ fcns.ready(() => {
                 const mailSent = params.get('mailSent');
 
                 if(success === 'true' && mailSent === 'true') {
-                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně. Faktura vám přišla na mail.', 'OK')
                 }
 
                 if(success === 'true' && mailSent === 'false') {
@@ -67,11 +70,11 @@ fcns.ready(() => {
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat..', 'OK')
                 }
             }
             
@@ -109,7 +112,7 @@ fcns.ready(() => {
     const cartAmountEl = document.querySelector('.header__cart-amount');
     const cartAmount = +cartAmountEl.textContent;
     if(cartAmount > 0) {
-        cartAmountEl.style.display = 'block';
+        cartAmountEl.style.display = 'flex';
     }
 
     /////
@@ -189,6 +192,9 @@ fcns.ready(() => {
 
     if(orderForm) {
 
+        const frogAudio = new Audio('/img/frogAudio.mp3');
+        orderForm.querySelector('#firstName').addEventListener('input', fcns.easterTime.bind(this, frogAudio));
+
         for(const cartItem of cartItems) {
 
             const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
@@ -252,22 +258,19 @@ fcns.ready(() => {
         const submitBtns = eshopProducts.querySelectorAll('.post-order-btn');
 
         for (const btn of submitBtns) {
-            btn.addEventListener('click', async () => {
+            btn.addEventListener('click', () => {
 
                 // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
                 const postCartData = {
                     action: 'ADD',
                     productId: btn.dataset.productid,
                     csrf: btn.dataset.csrf,
-                    amount: btn.parentElement.querySelector('input').value
+                    amount: btn.parentElement.querySelector('select').value
                 }
 
-                const updatedCart = fcns.addToCart(postCartData).then(
-                    (updatedCart) => {
-                        fcns.updateCartIcon(updatedCart);
-                    }
-
-                );
+                fcns.addToCart(postCartData).then((updatedCart) => {
+                    fcns.updateCartIcon(updatedCart);
+                }).catch(err => console.log(err));
                 
             })
         }
@@ -300,11 +303,16 @@ fcns.ready(() => {
             const btnCloseProdModal = prod.querySelector('.product__modal__close-button');
             const modal = prod.querySelector('.product__modal');
             const btnAddToCart = modal.querySelector('.to-cart-button');
-            const input = modal.querySelector('input');
             
             btnShowProdModal.addEventListener('click', () => {
                 // Shows product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
+
+                // Removing focus from the showProdModal button
+                btnShowProdModal.blur();
+
+                 // Focusing the modal, so the keydown event can be registered on it
+                modal.focus();
             });
             btnCloseProdModal.addEventListener('click', () => {
                 // Hides product modal
@@ -313,18 +321,18 @@ fcns.ready(() => {
             btnAddToCart.addEventListener('click', () => {
                 // Hides product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
+            })   
+            modal.addEventListener('click', () => {
+                // Focusing the, so the keydown event can be registered on it
+                modal.focus();
             })
-            input.addEventListener('input', () => {
-
-               if(!(/^[0-9]{1,}$/.test(input.value))) {
-                input.classList.add('invalid');
-                btnAddToCart.setAttribute('disabled', '');
-               } else {
-                   input.classList.remove('invalid');
-                   btnAddToCart.removeAttribute('disabled', '');
-               }
-
-            })         
+            modal.addEventListener('keydown', (e) => {
+                // If the user pressed enter, simulating click on the add-to-cart button
+                if(e.key === 'Enter') {
+                    btnAddToCart.click();
+                }
+             })
+            
         }
 
         ///// MOBILE CATEGORY SELECT

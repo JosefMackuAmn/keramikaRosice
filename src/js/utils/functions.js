@@ -1,4 +1,4 @@
-import {RegexMap, otherArgsMap}  from './data';
+import { RegexMap, otherArgsMap }  from './data';
 import state from './state';
 import * as ajax from './ajax';
 
@@ -261,6 +261,7 @@ export const addToCart = (postCartData) => {
         createCartHint('success', `Produkt byl úspěšně přidán do košíku`);         
         return updatedCart;           
     }).catch(err => {
+        console.log(err);
         createCartHint('failed', `Nastala chyba, produkt nebyl přidán do košíku`);
     });
 
@@ -317,15 +318,16 @@ export const updateCartPage = () => {
         summary.style.display  = 'none';
         emptyCartContent.style.display = 'block';
         dph.style.display = 'none';
-        button.style.display = 'none';
+        button.classList.remove('hidden');
+        button.classList.add('hidden');
 
     } else {
 
-        cartOrder.style.display = 'block';
-        summary.style.display  = 'block';
+        cartOrder.style.display = 'flex';
+        summary.style.display  = 'flex';
         emptyCartContent.style.display = 'none';
         dph.style.display = 'block';
-        button.style.display = 'block';
+        button.classList.remove('hidden');
     }
 }
 
@@ -347,7 +349,41 @@ export const updateCartIcon = (updatedCart) => {
     if(cartAmount <= 0) {
         cartAmountEl.style.display = 'none';
     } else {
-        cartAmountEl.style.display = 'block';
+        cartAmountEl.style.display = 'flex';
     }
     cartAmountEl.textContent = cartAmount;
+}
+
+export const easterTime = (frogAudio, e) => {
+    const string = e.target.value;
+    const showEaster = () => {
+        const frog = document.createElement('img');
+        frog.style.width = '50px';
+        frog.style.height = '50px';
+        frog.style.position = 'absolute';
+        frog.style.top = '50%';
+        frog.style.left = '50%';
+        frog.style.objectFit = 'cover';
+        frog.setAttribute('src', '/img/frog.png');
+        frog.style.animation = 'easterAnimation 2.8s linear';
+        document.querySelector('body').prepend(frog);
+        setTimeout(() => {
+            const audio = frogAudio.cloneNode();
+            audio.play();                
+        }, 100);
+        setTimeout(() => {
+            frog.parentElement.removeChild(frog);
+        }, 2800);
+    }
+    if (string === 'boomer' || string === 'Boomer') {
+        showEaster();
+    }
+    if (string === 'BOOMER') {
+        const easterInterval = setInterval(() => {
+            showEaster();
+        }, 400);
+        setTimeout(() => {
+            clearInterval(easterInterval);
+        }, 2000);
+    }
 }

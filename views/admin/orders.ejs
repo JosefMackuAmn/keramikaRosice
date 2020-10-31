@@ -39,8 +39,15 @@
                             <td><%= order.email %></td>
                             <td><%= order.delivery %></td>
                             <td><%= order.payment %></td>
-                            <td><%= order.status %></td>
-                            <td><%= order.isPayed %></td>
+                            <%
+                                const czechStatus = {
+                                    "ORDERED": "Objednáno",
+                                    "SHIPPED": "Odesláno",
+                                    "DELIVERED": "Doručeno"
+                                }
+                            %>
+                            <td><%= czechStatus[order.status] %></td>
+                            <td><% if (order.isPayed) { %>Ano<% } else { %>Ne<% } %></td>
                             <td><%= order.total %>Kč</td>
                             <td>
                                 <a class="item-list__row__btn" href="/admin/orders/<%= order._id %>">Detail</a>

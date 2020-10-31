@@ -52,6 +52,10 @@
                 @media only screen and (max-width: 440px) {
                     margin: -2rem -4rem;
                 }
+
+                &--link {
+                    color: $color-primary-light;
+                }
             }
         }
     }

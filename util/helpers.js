@@ -9,6 +9,8 @@ exports.getDelPayLabel = (deliveryMethod, paymentMethod) => {
         break;
         case 'OOD': deliveryLabel = 'Osobní odběr';
         break;
+        case 'ADR': deliveryLabel = 'Doručení na adresu (DPD)';
+        break;
         default: deliveryLabel = '';
     }
 
@@ -17,7 +19,7 @@ exports.getDelPayLabel = (deliveryMethod, paymentMethod) => {
         break;
         case 'BTR': paymentLabel = 'Bankovní převod';
         break;
-        case 'CRD': paymentLabel = 'Kartou';
+        case 'CRD': paymentLabel = 'Kartou online';
         break;
         default: paymentLabel = '';
     }

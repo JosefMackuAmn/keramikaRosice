@@ -14,6 +14,7 @@ const Order = require('../models/order');
 const transporter = require('../util/mailing');
 const generateInvoice = require('../util/generateInvoice');
 const asyncHelpers = require('../util/asyncHelpers');
+const EmailTemplates = require('../templates/emails');
 
 exports.getShop = async (req, res, next) => {
     const allCategories = await Category.find({});
@@ -23,6 +24,7 @@ exports.getShop = async (req, res, next) => {
     res.render('eshop/shop', {
         title: 'E-shop',
         categoryName: undefined,
+        categoryImage: undefined,
         subcategoryName: undefined,
         products: products,
         categories: allCategories,
@@ -40,6 +42,7 @@ exports.getCategory = async (req, res, next) => {
         })
     }
     const categoryId = category._id;
+    const categoryImage = category.images[0];
 
     const categoryProducts = await Product.find({ categoryId: categoryId });
     
@@ -49,6 +52,7 @@ exports.getCategory = async (req, res, next) => {
     res.render('eshop/shop', {
         title: categoryName,
         categoryName: categoryName,
+        categoryImage: categoryImage,
         subcategoryName: undefined,
         products: categoryProducts,
         categories: allCategories,
@@ -68,6 +72,7 @@ exports.getSubcategory = async (req, res, next) => {
         })
     }
     const categoryId = category._id;
+    const categoryImage = category.images[0];
 
 
     const subcategory = await Subcategory.findOne({ name: subcategoryName, categoryId: categoryId });
@@ -87,6 +92,7 @@ exports.getSubcategory = async (req, res, next) => {
     res.render('eshop/shop', {
         title: subcategoryName,
         categoryName: categoryName,
+        categoryImage: categoryImage,
         subcategoryName: subcategoryName,
         products: subcategoryProducts,
         categories: allCategories,
@@ -100,7 +106,7 @@ exports.getCart = async (req, res, next) => {
     const constants = JSON.parse(constantsRaw);
 
     res.set({
-        'Content-Security-Policy': "script-src 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/"
+        'Content-Security-Policy': "script-src 'unsafe-inline' 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/ https://widget.packeta.com/"
     });
 
     res.render('eshop/cart', {
@@ -178,21 +184,29 @@ exports.postOrder = async (req, res, next) => {
     const delivery = req.body.delivery;
     const payment = req.body.payment;
     const zipCode = req.body.zipCode;
+    const packetaId = req.body.packetaId;
 
-    
+
+    // If selected packeta as delivery service, but no branch-id was passed, redirect
+    if (delivery === 'ZAS' && !packetaId) {
+        return res.redirect('/kosik?success=false&mailSent=false');
+    }
     
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
 
     const date = new Date();
-    console.log('nodemon 1')
     const variableSymbol = await asyncHelpers.getVariableSymbol(date);
-    console.log('nodemon 2')
 
     const cart = req.session.cart;
 
     if (!cart || cart.items.length < 1) {
         return res.redirect('/kosik?success=false&mailSent=false');
+    }
+
+    let paymentCost = consts.paymentCosts[payment];
+    if (delivery === "OOD") {
+        paymentCost = 0;
     }
 
     const order = new Order({
@@ -219,13 +233,14 @@ exports.postOrder = async (req, res, next) => {
         delivery,
         deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
         payment,
-        paymentCost: consts.paymentCosts[payment],
+        paymentCost,
         date: date.toISOString(),
         status: consts.orderStatuses[0],
         isPayed: false,
         invoiceUrl: 'url',
         isCanceled: false,
-        cancelInvoiceUrl: null
+        cancelInvoiceUrl: null,
+        packetaId: packetaId
     });
     
     const invoiceName = 'invoice-' + order._id + '.pdf';
@@ -233,48 +248,24 @@ exports.postOrder = async (req, res, next) => {
     order.invoiceUrl = invoicePath;
 
     generateInvoice(order, invoicePath);
-    console.log('after invoice generated');
 
     await order.save();
-    console.log('order saved');
 
     req.session.cart = null;
-    console.log('cart cleared');
 
-    return transporter.sendMail({
+    const emailTemplate = EmailTemplates.newOrder(order);
+    transporter.sendMail({
         from: process.env.MAIL_USER,
         to: email,
         cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Objednávka přijata',
-        html: '<h1>This is working!</h1>',
-    }).catch(err => {
-        console.log(err);
-        if (order.payment !== 'CRD') {
-            console.log('here 1');
-            return res.redirect(`/?success=true&mailSent=false&payment=${order.payment}`);
-        }
-        console.log('here 2');
-    }).then(() => {
-        if (order.payment !== 'CRD') {
-            console.log('here 3');
-            return res.redirect(`/?success=true&mailSent=true&payment=${order.payment}`);
-        }
-        console.log('here 4');
-    })
-
-    /* transporter.sendMail({
-        from: process.env.MAIL_USER,
-        to: email,
-        cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Objednávka přijata',
-        html: '<h1>This is working!</h1>',
+        subject: emailTemplate[0],
+        html: emailTemplate[1],
         attachments: [{
             filename: invoiceName,
             path: invoicePath,
             contentType: 'application/pdf'
         }],
     }, (err, info) => {
-        console.log('after mail sent');
         if (order.payment !== 'CRD') {
             if (err) {
                 console.log(err);
@@ -342,7 +333,7 @@ exports.postOrder = async (req, res, next) => {
 
         return returnStripeSessionId();
 
-    }); */
+    });
 }
 
 exports.postCheckoutWebhook = async (req, res, next) => {
@@ -410,12 +401,13 @@ exports.postCheckoutWebhook = async (req, res, next) => {
             }
 
             // Send email with notification about unprocessed payment
+            const emailTemplate = EmailTemplates.paymentError(order);
             transporter.sendMail({
                 from: process.env.MAIL_USER,
                 to: order.email,
                 cc: process.env.MAIL_USER,
-                subject: 'Keramika Rosice: Nepovedená platba',
-                html: '<h1>Platba se nepovedla!</h1>'
+                subject: emailTemplate[0],
+                html: emailTemplate[1]
             }, (err, info) => {
                 if (err) {
                     console.log(err);
