@@ -6,16 +6,20 @@
     },
     "POS": {
       "0": 90,
-      "1": 175
+      "1": 145
     },
     "OOD": {
       "0": 0,
       "1": 0
+    },
+    "ADR": {
+      "0": 90,
+      "1": 90
     }
   },
   "paymentCosts": {
     "CRD": 10,
-    "DOB": 30,
+    "DOB": 40,
     "BTR": 0
   },
   "orderStatuses": [
@@ -24,7 +28,7 @@
     "DELIVERED"
   ],
   "lastInvoiceNumber": [
-    152,
+    155,
     2020
   ]
 }

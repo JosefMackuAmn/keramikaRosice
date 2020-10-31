@@ -117,6 +117,11 @@
                             <label for="OOD">Osobní odběr</label>
                             <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
                         </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="ADR" name="delivery" value="ADR">
+                            <label for="ADR">Doručení na adresu (DPD)</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ADR"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
                     </div>
                     <input type="hidden" class="packeta-selector-branch-id" name="packetaId" value="null">
                     <!-- PAYMENT -->

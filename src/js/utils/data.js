@@ -13,7 +13,7 @@ export const RegexMap = orderForm ? new Map([
     [formELs.street, /(.+){2,}/],
     [formELs.city, /(.+){2,}/],
     [formELs.zipCode, /[0-9]{5}/],
-    [formELs.delivery, /(ZAS|POS|OOD)/],
+    [formELs.delivery, /(ZAS|POS|OOD|ADR)/],
     [formELs.payment, /(DOB|CRD|BTR)/]
 ]
 ) : undefined;

@@ -5,6 +5,7 @@ const generateInvoice = require('./generateInvoice');
 const transporter = require('./mailing');
 
 const Order = require('../models/order');
+const EmailTemplates = require('../templates/emails');
 
 exports.cancelOrder = async (orderId) => {
 
@@ -27,12 +28,13 @@ exports.cancelOrder = async (orderId) => {
     await order.save();
 
     // Send notification about cancelled order
+    const emailTemplate = EmailTemplates.canceledOrder(order);
     transporter.sendMail({
         from: process.env.MAIL_USER,
         to: order.email,
         cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Objednávka zrušena',
-        html: '<h1>This is working!</h1>',
+        subject: emailTemplate[0],
+        html: emailTemplate[1],
         attachments: [{
             filename: invoiceName,
             path: invoicePath,
@@ -55,12 +57,13 @@ exports.paidOrderHandler = async (order) => {
     await order.save();
 
     // Send notification about successfull payment
+    const emailTemplate = EmailTemplates.paymentSuccess(order);
     transporter.sendMail({
         from: process.env.MAIL_USER,
         to: order.email,
         cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Úspěšná platba',
-        html: '<h1>Úspěšná platba!</h1>'
+        subject: emailTemplate[0],
+        html: emailTemplate[1]
     }, (err, info) => {
         if (err) {
             console.log(err);

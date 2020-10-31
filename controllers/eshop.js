@@ -14,6 +14,7 @@ const Order = require('../models/order');
 const transporter = require('../util/mailing');
 const generateInvoice = require('../util/generateInvoice');
 const asyncHelpers = require('../util/asyncHelpers');
+const EmailTemplates = require('../templates/emails');
 
 exports.getShop = async (req, res, next) => {
     const allCategories = await Category.find({});
@@ -252,12 +253,13 @@ exports.postOrder = async (req, res, next) => {
 
     req.session.cart = null;
 
+    const emailTemplate = EmailTemplates.newOrder(order);
     transporter.sendMail({
         from: process.env.MAIL_USER,
         to: email,
         cc: process.env.MAIL_USER,
-        subject: 'Keramika Rosice: Objednávka přijata',
-        html: '<h1>This is working!</h1>',
+        subject: emailTemplate[0],
+        html: emailTemplate[1],
         attachments: [{
             filename: invoiceName,
             path: invoicePath,
@@ -399,12 +401,13 @@ exports.postCheckoutWebhook = async (req, res, next) => {
             }
 
             // Send email with notification about unprocessed payment
+            const emailTemplate = EmailTemplates.paymentError(order);
             transporter.sendMail({
                 from: process.env.MAIL_USER,
                 to: order.email,
                 cc: process.env.MAIL_USER,
-                subject: 'Keramika Rosice: Nepovedená platba',
-                html: '<h1>Platba se nepovedla!</h1>'
+                subject: emailTemplate[0],
+                html: emailTemplate[1]
             }, (err, info) => {
                 if (err) {
                     console.log(err);

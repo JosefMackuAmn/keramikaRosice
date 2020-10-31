@@ -22,7 +22,7 @@ fcns.ready(() => {
         const payment = params.get('payment');
 
         if (payment === 'success') {
-            fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+            fcns.createModal('Úspěch', 'Platba proběhla úspěšně. Faktura k objednávce Vám přišla na e-mail.', 'OK')
         } else if (payment === 'canceled') {
             fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a vyřeší to s Vámi osobní domluvou.', 'OK')
         }
@@ -39,15 +39,15 @@ fcns.ready(() => {
                 }
 
                 if(success === 'true' && mailSent === 'false') {
-                    fcns.createModal('Chyba', '<em> Nepodařil se odeslat mail s informacemi k platbě, prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
+                    fcns.createModal('Nepovedlo se odeslat e-mail', '<em> Objednávku jsme zaregistrovali, ale nepodařil se odeslat mail s informacemi k platbě. Prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána. ', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
             }
@@ -62,7 +62,7 @@ fcns.ready(() => {
                 const mailSent = params.get('mailSent');
 
                 if(success === 'true' && mailSent === 'true') {
-                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně. Faktura vám přišla na mail.', 'OK')
                 }
 
                 if(success === 'true' && mailSent === 'false') {
@@ -70,11 +70,11 @@ fcns.ready(() => {
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávka nebyla odeslána.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat..', 'OK')
                 }
             }
             
