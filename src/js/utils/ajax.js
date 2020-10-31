@@ -56,14 +56,15 @@ export const orderSubmitHandler = e => {
     const zipCodeValue = fcns.validateInput(formELs.zipCode);
     const deliveryValue = fcns.validateInput(formELs.delivery);
     const paymentValue = fcns.validateInput(formELs.payment);
-
+    const packetaIdValue = fcns.validateInput(formELs.packetaId);
+console.log();
     // If validation has failed (at least one element has class 'invalid'), returning
     
     if (document.querySelector('.invalid')) {
         e.preventDefault();
         return;
     }
-       
+     return;  
     // Show spinner on submit button
     const submitBtn = e.target.elements.order_submit;
     const submitBtnText = submitBtn.textContent;
@@ -84,7 +85,7 @@ export const orderSubmitHandler = e => {
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
-        formData.append('packetaId', formEls.packetaId.value);
+        formData.append('packetaId', packetaIdValue);
         formData.append('firstName', firstNameValue);
         formData.append('lastName', lastNameValue);
         formData.append('email', emailValue);

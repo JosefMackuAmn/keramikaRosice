@@ -1211,14 +1211,15 @@ const orderSubmitHandler = e => {
     const zipCodeValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.zipCode);
     const deliveryValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.delivery);
     const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
-
+    const packetaIdValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.packetaId);
+console.log();
     // If validation has failed (at least one element has class 'invalid'), returning
     
     if (document.querySelector('.invalid')) {
         e.preventDefault();
         return;
     }
-       
+     return;  
     // Show spinner on submit button
     const submitBtn = e.target.elements.order_submit;
     const submitBtnText = submitBtn.textContent;
@@ -1239,7 +1240,7 @@ const orderSubmitHandler = e => {
         // Create new form data
         const formData = new FormData();
         formData.append('_csrf', formEls._csrf.value);
-        formData.append('packetaId', formEls.packetaId.value);
+        formData.append('packetaId', packetaIdValue);
         formData.append('firstName', firstNameValue);
         formData.append('lastName', lastNameValue);
         formData.append('email', emailValue);
@@ -1311,7 +1312,8 @@ const RegexMap = orderForm ? new Map([
     [formELs.city, /(.+){2,}/],
     [formELs.zipCode, /[0-9]{5}/],
     [formELs.delivery, /(ZAS|POS|OOD|ADR)/],
-    [formELs.payment, /(DOB|CRD|BTR)/]
+    [formELs.payment, /(DOB|CRD|BTR)/],
+    [formELs.packetaId, /[0-9]{1,}/]
 ]
 ) : undefined;
 
@@ -1321,7 +1323,8 @@ const otherArgsMap = orderForm ? new Map([
     [formELs.phone, [undefined, true]],
     [formELs.zipCode, [undefined, true]],
     [formELs.payment, ['order-payment']],
-    [formELs.delivery, ['order-delivery']]
+    [formELs.delivery, ['order-delivery']],
+    [formELs.packetaId, ['order-delivery']]
 ]) : undefined;
 
 /***/ }),

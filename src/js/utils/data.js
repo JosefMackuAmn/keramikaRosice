@@ -14,7 +14,8 @@ export const RegexMap = orderForm ? new Map([
     [formELs.city, /(.+){2,}/],
     [formELs.zipCode, /[0-9]{5}/],
     [formELs.delivery, /(ZAS|POS|OOD|ADR)/],
-    [formELs.payment, /(DOB|CRD|BTR)/]
+    [formELs.payment, /(DOB|CRD|BTR)/],
+    [formELs.packetaId, /[0-9]{1,}/]
 ]
 ) : undefined;
 
@@ -24,5 +25,6 @@ export  const otherArgsMap = orderForm ? new Map([
     [formELs.phone, [undefined, true]],
     [formELs.zipCode, [undefined, true]],
     [formELs.payment, ['order-payment']],
-    [formELs.delivery, ['order-delivery']]
+    [formELs.delivery, ['order-delivery']],
+    [formELs.packetaId, ['order-delivery']]
 ]) : undefined;
