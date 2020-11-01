@@ -26,7 +26,7 @@
                 <container class="categories__content__inner">
                     <% categories.forEach((category, index) => { %>
                         <a href="/shop/<%= category.name %>" class="categories__category categories-category">
-                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="categories__photo">
+                            <img src="/<%= category.images[0] %>" alt="<%= category.name %>" class="categories__photo">
                             <p class="categories__name"><%= category.name %></p>
                         </a>
                     <% }) %>
