@@ -9,6 +9,7 @@
     }  
     @media screen and (max-width: $bp-eshop-mobile) {
         width: 100%;
+        background-color: transparent;
 
         display: flex;
         flex-direction: column;

@@ -939,6 +939,34 @@ _utils_functions__WEBPACK_IMPORTED_MODULE_3__.ready(() => {
         }
     }
 
+    /////DOB Price is 0 when OOD is selected
+    if(orderForm) {
+
+        const orderDelivery = document.getElementById('order-delivery');
+        const OODInput = document.getElementById('OOD');
+        const DOBpriceEl = document.getElementById('DOBprice');
+        const DOBpriceValue = DOBpriceEl.textContent;
+
+        if (OODInput.checked) {
+            DOBpriceEl.textContent = '0Kč'
+        } else {
+            DOBpriceEl.textContent = DOBpriceValue;
+        }
+
+        orderDelivery.addEventListener('input', () => {
+
+        if (OODInput.checked) {
+            DOBpriceEl.textContent = '0Kč'
+        } else {
+            DOBpriceEl.textContent = DOBpriceValue;
+        }
+
+        }
+        )
+
+    }
+    
+
     //// Managing cart items
     const cartItems = document.querySelectorAll('.cart-item');
 
@@ -1167,8 +1195,6 @@ const postCartHandler = async ({ action, csrf, amount, productId }) => {
                 amount: amount,
                 productId: productId
             };
-            
-            console.log(bodyObj);
 
             // Send request
             return fetch('/kosik', {
@@ -1212,14 +1238,13 @@ const orderSubmitHandler = e => {
     const deliveryValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.delivery);
     const paymentValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.payment);
     const packetaIdValue = _functions__WEBPACK_IMPORTED_MODULE_0__.validateInput(_data__WEBPACK_IMPORTED_MODULE_1__.formELs.packetaId);
-console.log();
+
     // If validation has failed (at least one element has class 'invalid'), returning
     
     if (document.querySelector('.invalid')) {
         e.preventDefault();
         return;
     }
-     return;  
     // Show spinner on submit button
     const submitBtn = e.target.elements.order_submit;
     const submitBtnText = submitBtn.textContent;
