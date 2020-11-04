@@ -1,7 +1,7 @@
 /**
  *
  *
- * @author of url-serach-params-polyfill is Jerry Bendy <jerry@icewingcc.com>
+ * @author Jerry Bendy <jerry@icewingcc.com>
  * @licence MIT
  *
  */

@@ -446,6 +446,13 @@ a:link {
       background-color: #CF7838; }
     .product-form__btn:not(:last-child) {
       margin-right: 2rem; }
+  .product-form__image {
+    width: 100%;
+    height: auto;
+    margin-bottom: 2rem;
+    object-fit: cover; }
+    .product-form__image ~ input {
+      height: auto !important; }
   .product-form input, .product-form textarea, .product-form select {
     min-height: 4rem;
     height: 100%;

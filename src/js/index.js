@@ -24,7 +24,7 @@ fcns.ready(() => {
         if (payment === 'success') {
             fcns.createModal('Úspěch', 'Platba proběhla úspěšně. Faktura k objednávce Vám přišla na e-mail.', 'OK')
         } else if (payment === 'canceled') {
-            fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a vyřeší to s Vámi osobní domluvou.', 'OK')
+            fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a kontaktuje Vás.', 'OK')
         }
 
         if(payment === 'BTR') {
@@ -172,10 +172,15 @@ fcns.ready(() => {
     const agreeConditions = document.getElementById('agree-conditions');
     const submitToCartBtn = document.getElementById('submit-order');
     if(orderForm) {
-        agreeGDPR.addEventListener('input', () => {
+        [agreeGDPR, agreeConditions].forEach(el => el.addEventListener('click', () => {
+            el.blur();
+        }))
+        console.log('here 0');
+        agreeGDPR.addEventListener('change', () => {
+            console.log('here 4');
             fcns.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
         })
-        agreeConditions.addEventListener('input', () => {
+        agreeConditions.addEventListener('change', () => {
             fcns.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
         });
     }
@@ -303,11 +308,16 @@ fcns.ready(() => {
             const btnCloseProdModal = prod.querySelector('.product__modal__close-button');
             const modal = prod.querySelector('.product__modal');
             const btnAddToCart = modal.querySelector('.to-cart-button');
-            const input = modal.querySelector('input');
             
             btnShowProdModal.addEventListener('click', () => {
                 // Shows product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
+
+                // Removing focus from the showProdModal button
+                btnShowProdModal.blur();
+
+                 // Focusing the modal, so the keydown event can be registered on it
+                modal.focus();
             });
             btnCloseProdModal.addEventListener('click', () => {
                 // Hides product modal
@@ -316,7 +326,18 @@ fcns.ready(() => {
             btnAddToCart.addEventListener('click', () => {
                 // Hides product modal
                 fcns.switchClass(modal, 'product__modal--toggled', 'product__modal--hidden');
-            })      
+            })   
+            modal.addEventListener('click', () => {
+                // Focusing the, so the keydown event can be registered on it
+                modal.focus();
+            })
+            modal.addEventListener('keydown', (e) => {
+                // If the user pressed enter, simulating click on the add-to-cart button
+                if(e.key === 'Enter') {
+                    btnAddToCart.click();
+                }
+             })
+            
         }
 
         ///// MOBILE CATEGORY SELECT

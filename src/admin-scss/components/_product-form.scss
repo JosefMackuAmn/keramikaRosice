@@ -60,6 +60,16 @@
             margin-right: 2rem;
         }
     }
+    &__image {
+        width: 100%;
+        height: auto;
+        margin-bottom: 2rem;
+        object-fit: cover;
+
+        & ~ input {
+            height: auto !important;
+        }
+    }
 
     & input, & textarea, & select {
         min-height: 4rem;

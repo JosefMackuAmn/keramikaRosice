@@ -342,6 +342,9 @@ exports.postCheckoutWebhook = async (req, res, next) => {
     
     let event;
     try {
+        console.log('PAYLOAD: ' + payload);
+        console.log('stripeSignature: ' + stripeSignature);
+        console.log('PAYLOAD: ' + process.env.STRIPE_ENDPOINT_SECRET);
         event = stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_ENDPOINT_SECRET);
     } catch (err) {
         console.log(err);

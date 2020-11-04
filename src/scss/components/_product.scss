@@ -10,6 +10,11 @@
 
   position: relative;
 
+  @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+    margin-right: 5rem;
+    max-height: 30rem;
+  }
+
   &__modal {
     height: calc(100% - 4rem);
     width: 100%;
@@ -197,6 +202,7 @@
 
     text-align: center;
     font-size: $font-bigger;
+    text-transform: capitalize;
 
     position: absolute;
     left: 50%;

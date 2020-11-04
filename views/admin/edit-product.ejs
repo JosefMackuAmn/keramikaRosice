@@ -82,6 +82,12 @@
                 <div class="product-form__row">
                     <div class="product-form__data-cell">
                         <label for="image">Obrázek</label>
+                        <% if (editMode) { %>
+                            <img class="product-form__image" src="/<%= product.images[0] %>" alt="<%= product.name %>">    
+                        <% } %>
+                        <% if (editMode) { %>
+                            <p class="product-form__image-text">Vybrat nový obrázek</p>
+                        <% } %>
                         <input type="file" name="image" id="image">
                     </div>
                 </div>

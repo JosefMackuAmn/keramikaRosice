@@ -120,15 +120,16 @@ export const refreshSubmitBtn = (agreeGDPR, agreeConditions, submitToCartBtn)  =
     
     // If both inputs are checked, disabled class on the submit button is removed
    if (agreeGDPR.checked && agreeConditions.checked) {
-
+       console.log('here 1');
+       
        submitToCartBtn.classList.remove('disabled');
        submitToCartBtn.removeAttribute('disabled');
-
-   } else {
-
-    submitToCartBtn.classList.add('disabled');
-    submitToCartBtn.setAttribute('disabled', '');
-
+       
+    } else {
+        console.log('here 2');
+        
+        submitToCartBtn.classList.add('disabled');
+        submitToCartBtn.setAttribute('disabled', '');
    }
 }
 export function validateInput(input) {
