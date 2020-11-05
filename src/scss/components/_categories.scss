@@ -39,9 +39,10 @@
 
         flex-grow: 1;
         display: flex;
-        justify-content: center;
 
         &__inner {
+            margin: auto;
+            
             display: flex;
             flex-direction: row;
 

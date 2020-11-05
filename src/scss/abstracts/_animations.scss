@@ -162,6 +162,23 @@
     opacity: 1;
   } 
 }
+@keyframes pointUpCategorySelect {
+  0% {
+    transform: translateX(0);
+  }
+  5% {
+    transform: translateX(-50%);
+  }
+  10% {
+    transform: translateX(0);
+  } 
+  15% {
+    transform: translateX(-50%);
+  }
+  20% {
+    transform: translateX(0);
+  } 
+}
 
 @keyframes easterAnimation {
   0% {

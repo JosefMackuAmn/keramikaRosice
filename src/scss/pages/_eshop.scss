@@ -56,7 +56,9 @@
 
         & .heading-2 {
             margin-top: 4rem;
+            margin: 4rem;
 
+            text-align: center;
             text-transform: capitalize;
 
             @media screen and (max-width: $bp-eshop-mobile) {

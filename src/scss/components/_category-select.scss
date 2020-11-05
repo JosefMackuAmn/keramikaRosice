@@ -10,7 +10,7 @@
         margin-right: 2rem;
     }  
     @media screen and (max-width: $bp-eshop-mobile) {
-        width: 100%;
+        width: 0;
 
         display: flex;
         flex-direction: column;
@@ -150,7 +150,9 @@
 
         &--hide {
             &::before {
-                transform: rotate(180deg);
+                transform: translateX(0) rotate(180deg);
+
+                animation: none !important;
             }
         }
 
@@ -164,6 +166,8 @@
             transition: all .2s;
 
             display: inline-block;
+
+            //animation: pointUpCategorySelect 3s infinite linear;
         }
     }
     &__button {
