@@ -1,0 +1,2871 @@
+const fs = require('fs');
+const path = require('path');
+
+const mongoose = require('mongoose');
+
+const { validationResult } = require('express-validator');
+
+const Category = require('../../models/category');
+const Subcategory = require('../../models/subcategory');
+const Product = require('../../models/product');
+
+//////////////////////
+///// Categories
+exports.getCategories = async (req, res, next) => {
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
+
+    res.render('admin/categories', {
+        title: 'Categories',
+        categories: allCategories,
+        subcategories: allSubcategories
+    })
+}
+
+// Posting new categories and subcategories
+exports.postCategories = async (req, res, next) => {
+    let categoryId = req.body.categoryId || false;
+    if (categoryId === 'false' || categoryId === 'null') {
+        categoryId = false;
+    };
+    const name = req.body.categoryName.toLowerCase();
+    const image = req.file;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    // If categoryId has been passed, subcategory will be created
+    if (categoryId) {
+        // Check validity of categoryId string
+        const isValidId = mongoose.Types.ObjectId.isValid(categoryId);
+        if (!isValidId) {
+            return res.status(422).json({
+                msg: "categoryId is not a valid ID string"
+            });
+        }
+        // Try to find category by its ID      
+        const category = await Category.findById(categoryId);
+        if (category) {
+            // Check if new subcategory name is unique
+            const subcategoryWithSameName = await Subcategory.findOne({ name: name });
+            if (subcategoryWithSameName) {
+                return res.status(409).json({
+                    msg: 'This subcategory name already exists'
+                });
+            }
+
+            // Create and save new subcategory
+            const newSubcategory = new Subcategory({
+                name: name,
+                categoryId: category._id
+            })
+            await newSubcategory.save();
+            return res.status(201).json({
+                msg: "Subcategory created",
+                subcategory: newSubcategory
+            })
+        }
+        return res.status(422).json({
+            msg: "Category does not exist"
+        })
+    }
+
+    if (!image) {
+        return res.status(422).json({
+            msg: 'You have to pass an image when creating a category'
+        })
+    }
+    
+    // Check if new category name is unique
+    const categoryWithSameName = await Category.findOne({ name: name });
+    if (categoryWithSameName) {
+        return res.status(409).json({
+            msg: 'This category name already exists'
+        });
+    }
+
+    // If categoryId hasn't been passed, category will be created
+    const newCategory = new Category({
+        name: name,
+        images: ['img/' + image.filename]
+    });
+    await newCategory.save();
+    return res.status(201).json({
+        msg: "Category created",
+        category: newCategory
+    })
+}
+
+// Delete category
+exports.deleteCategory = async (req, res, next) => {
+    const categoryId = req.params.categoryId;
+
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(422).json({
+            msg: "categoryId is not a valid ID string"
+        })
+    }
+
+    const deletedCategory = await Category.findByIdAndDelete(categoryId);
+    if (deletedCategory) {
+        await Subcategory.deleteMany({ categoryId: categoryId });
+        await Product.update({ categoryId: categoryId }, { $set: { categoryId: null }}, { multi: true });
+
+        await Promise.all(deletedCategory.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
+        return res.status(200).json({
+            msg: "Category deleted successfully with all of its subcategories, related products are now uncategorized",
+            category: deletedCategory
+        })
+    }
+    return res.status(202).json({
+        msg: "Category not found"
+    })
+}
+
+// Update category
+exports.putCategory = async (req, res, next) => {
+    const categoryId = req.body.categoryId;
+    const newName = req.body.newCategoryName.toLowerCase();
+    const image = req.file;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(422).json({
+            msg: "categoryId is not a valid ID string"
+        })
+    }
+
+    let oldCategory;
+    if (image) {
+        oldCategory = await Category.findByIdAndUpdate(categoryId, { name: newName, images: ['img/' + image.filename] });
+
+        await Promise.all(oldCategory.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
+    } else {
+        oldCategory = await Category.findByIdAndUpdate(categoryId, { name: newName });
+    }
+    
+    return res.status(200).json({
+        msg: "Category successfully updated",
+        category: oldCategory
+    })
+}
+
+// Delete subcategory
+exports.deleteSubcategory = async (req, res, next) => {
+    const subcategoryId = req.params.subcategoryId;
+
+    if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+        return res.status(422).json({
+            msg: "subcategoryId is not a valid ID string"
+        })
+    }
+
+    const deletedSubcategory = await Subcategory.findByIdAndDelete(subcategoryId);
+    if (deletedSubcategory) {
+        await Product.update({ subcategoryId: subcategoryId }, { $set: { subcategoryId: null }}, { multi: true });
+
+        return res.status(200).json({
+            msg: "Subcategory deleted successfully, related products are now unsubcategorized",
+            category: deletedSubcategory
+        })
+    }
+    return res.status(202).json({
+        msg: "Subcategory not found"
+    })
+}
+
+// Update subcategory
+exports.putSubcategory = async (req, res, next) => {
+    const subcategoryId = req.body.subcategoryId;
+    const newName = req.body.newCategoryName.toLowerCase();
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+        return res.status(422).json({
+            msg: "subcategoryId is not a valid ID string"
+        })
+    }
+
+    await Subcategory.updateOne({ _id: subcategoryId }, { name: newName });
+    
+    return res.status(200).json({
+        msg: "Category successfully updated"
+    })
+}
+const fs = require('fs');
+const path = require('path');
+
+const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+
+const categoriesAdminController = require('./categories');
+const productsAdminController = require('./products');
+const asyncHelpers = require('../../util/asyncHelpers');
+
+const Order = require('../../models/order');
+
+const getIndex = (req, res, next) => {
+    res.render('admin/index', {
+        title: 'Administration'
+    })
+}
+
+const getLogin = (req, res, next) => {
+    if (req.session && req.session.isAdmin) {
+        return res.redirect('/admin');
+    }
+    res.render('admin/login', {
+        title: 'Login'
+    })
+}
+
+const postLogin = (req, res, next) => {
+    const password = req.body.password;
+    if (password !== process.env.ADMIN_PASSWORD) {
+        return res.status(401).redirect('/');
+    } else if (password === process.env.ADMIN_PASSWORD) {
+        req.session.isAdmin = true;
+        return req.session.save(err => {
+            console.log(err);
+            return res.redirect('/admin');
+        })
+    }
+    res.status(401).redirect('/');
+}
+
+const getLogout = (req, res, next) => {
+    req.session.destroy(err => {
+        console.log(err);
+        res.redirect('/');
+    })
+}
+
+const getOrders = async (req, res, next) => {
+    const allOrders = await Order.find({}).sort('-date');
+
+    res.render('admin/orders', {
+        title: 'Orders',
+        orders: allOrders
+    })
+}
+
+const getOrderDetail = async (req, res, next) => {
+    const orderId = req.params.orderId;
+
+    const order = await Order.findById(orderId);
+
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
+
+    res.render('admin/order-detail', {
+        title: 'Orders',
+        order: order,
+        statuses: constants.orderStatuses
+    })
+}
+
+const putOrder = async (req, res, next) => {
+    const orderId = req.body.orderId;
+    const status = req.body.status;
+    const isPayed = req.body.isPayed;
+
+    const errors = validationResult(req);
+
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(422).json({
+            msg: "orderId is not a valid ID string"
+        })
+    }
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+        res.status(404).json({
+            msg: "Order does not exist"
+        });
+    }
+
+    if (!order.isPayed && isPayed) {
+        // Mark as payed and send notification
+        await asyncHelpers.paidOrderHandler(order);
+    }
+
+    // Its possible to only change status if order is already paid
+    order.status = status;
+
+    await order.save();
+
+    res.json({
+        msg: "Order successfully updated"
+    })
+}
+
+const postCancelOrder = async (req, res, next) => {
+    const { orderId } = req.body;
+
+    if (!mongoose.Types.ObjectId.isValid(orderId)) {
+        return res.status(422).json({
+            msg: "orderId is not a valid ID string"
+        })
+    }
+
+    try {
+        await asyncHelpers.cancelOrder(orderId);
+    } catch (err) {
+        const errorStatus = err.status || 500;
+        return res.status(errorStatus).json({
+            msg: err.message
+        });
+    }
+
+    return res.redirect(`/admin/orders/${orderId}`);
+}
+
+const getInvoice = async (req, res, next) => {
+    const orderId = req.params.orderId;
+
+    const invoiceName = 'invoice-' + orderId + '.pdf';
+
+    const invoicePath = path.join('pdf', 'invoices', invoiceName);
+
+    const fileStream = fs.createReadStream(invoicePath);
+
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', 'inline; filename="' + invoiceName + '"');
+
+    fileStream.pipe(res);
+}
+
+module.exports = {
+    ...categoriesAdminController,
+    ...productsAdminController,
+    getIndex,
+    getLogin,
+    postLogin,
+    getLogout,
+    getOrders,
+    getOrderDetail,
+    putOrder,
+    getInvoice,
+    postCancelOrder
+}
+const fs = require('fs');
+const path = require('path');
+
+const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+
+const Product = require("../../models/product");
+const Category = require('../../models/category');
+const Subcategory = require('../../models/subcategory');
+
+///////////////////////
+///// Products
+exports.getProducts = async (req, res, next) => {
+    const allProducts = await Product.find({}).sort('-date').populate({ path: 'categoryId' }).populate({ path: 'subcategoryId' });
+
+    res.render('admin/products', {
+        title: 'Products',
+        products: allProducts
+    });
+}
+
+exports.deleteProduct = async (req, res, next) => {
+    const productId = req.params.productId;
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+        return res.status(422).json({
+            msg: "productId is not a valid ID string"
+        })
+    }
+
+    const deletedProduct = await Product.findByIdAndDelete(productId);
+    if (deletedProduct) {
+        await Promise.all(deletedProduct.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+
+        return res.status(200).json({
+            msg: "Product deleted successfully",
+            product: deletedProduct
+        })
+    }
+    return res.status(202).json({
+        msg: "Product not found"
+    })
+}
+
+// Add product
+exports.getAddProduct = async (req, res, next) => {
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
+    
+    res.render('admin/edit-product', {
+        title: 'Add product',
+        categories: allCategories,
+        subcategories: allSubcategories,
+        product: null,
+        editMode: false,
+    })
+}
+exports.postAddProduct = async (req, res, next) => {
+    const name = req.body.name;
+    const description = req.body.description;
+    const price = req.body.price;
+    const categoryId = req.body.categoryId;
+    const subcategoryId = req.body.subcategoryId;
+    const amountInStock = req.body.amountInStock;
+    const shippingCostId = req.body.shippingCostId;
+    const image = req.file;
+
+    if (!image) {
+        return res.status(422).json({
+            msg: "image hasn't been received (expecting png, jpg, jpeg)"
+        })
+    }
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(422).json({
+            msg: "categoryId is not a valid ID string"
+        })
+    }
+    if (subcategoryId) {
+        if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+            return res.status(422).json({
+                msg: "subcategoryId is not a valid ID string"
+            })
+        }
+    }
+
+    const category = await Category.findById(categoryId);
+    let subcategory = null;
+    if (subcategoryId) {
+        subcategory = await Subcategory.findById(subcategoryId);
+    }
+
+    if ((subcategoryId && !subcategory) || !category) {
+        return res.status(422).json({
+            msg: "Chosen category or subcategory does not exist"
+        })
+    }
+
+    if (subcategoryId && (subcategory.categoryId.toString() !== category._id.toString())) {
+        return res.status(422).json({
+            msg: "Category and subcategory ID does not match"
+        })
+    }
+
+
+    const product = new Product({
+        name,
+        description,
+        price,
+        categoryId,
+        subcategoryId: subcategory ? subcategoryId : null,
+        amountInStock,
+        shippingCostId,
+        images: ['img/' + image.filename]
+    })
+    await product.save();
+
+    res.redirect('/admin/products');
+}
+
+// Edit product
+exports.getEditProduct = async (req, res, next) => {
+    const productId = req.params.productId;
+    const allCategories = await Category.find({}).sort('-date');
+    const allSubcategories = await Subcategory.find({}).sort('-date');
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+        const error = new Error('ProductId is not a valid ID string');
+        error.status = 422;
+        return next(error);
+    }
+
+    const product = await Product.findById(productId);
+
+    if (product) {
+        return res.render('admin/edit-product', {
+            title: 'Edit product',
+            editMode: true,
+            product: product,
+            categories: allCategories,
+            subcategories: allSubcategories
+        });
+    }
+
+    const error = new Error('Product not found');
+    error.status = 422;
+    return next(error);
+}
+
+exports.postEditProduct = async (req, res, next) => {
+    const productId = req.body.productId;
+
+    const name = req.body.name;
+    const description = req.body.description;
+    const price = req.body.price;
+    const categoryId = req.body.categoryId;
+    const subcategoryId = req.body.subcategoryId;
+    const amountInStock = req.body.amountInStock;
+    const shippingCostId = req.body.shippingCostId;
+    const image = req.file;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+
+    if (!mongoose.Types.ObjectId.isValid(productId)) {
+        return res.status(422).json({
+            msg: "productId is not a valid ID string"
+        })
+    }
+    if (!mongoose.Types.ObjectId.isValid(categoryId)) {
+        return res.status(422).json({
+            msg: "categoryId is not a valid ID string"
+        })
+    }
+    if (subcategoryId) {
+        if (!mongoose.Types.ObjectId.isValid(subcategoryId)) {
+            return res.status(422).json({
+                msg: "subcategoryId is not a valid ID string"
+            })
+        }
+    }
+
+    const category = await Category.findById(categoryId);
+    let subcategory = null;
+    if (subcategoryId) {
+        subcategory = await Subcategory.findById(subcategoryId);
+    }
+
+    if ((subcategoryId && !subcategory) || !category) {
+        return res.status(422).json({
+            msg: "Chosen category or subcategory does not exist"
+        })
+    }
+
+    if (image) {
+        const oldProduct = await Product.findByIdAndUpdate(productId, {
+            name,
+            description,
+            price,
+            categoryId,
+            subcategoryId: subcategory ? subcategoryId : null,
+            amountInStock,
+            shippingCostId,
+            images: ['img/' + image.filename]
+        })
+    
+        await Promise.all(oldProduct.images.map(image => {
+            const imagePath = path.join('public', image);
+            return fs.promises.unlink(imagePath);
+        }));
+    } else {
+        await Product.updateOne({ _id: productId }, {
+            name,
+            description,
+            price,
+            categoryId,
+            subcategoryId: subcategory ? subcategoryId : null,
+            amountInStock,
+            shippingCostId
+        })
+    }
+
+    res.redirect('/admin/products');
+}
+const fs = require('fs');
+const path = require('path');
+
+const mongoose = require('mongoose');
+const { validationResult } = require('express-validator');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+const Product = require("../models/product");
+const Category = require('../models/category');
+const Subcategory = require('../models/subcategory');
+const Cart = require('../models/cart');
+const Order = require('../models/order');
+
+const transporter = require('../util/mailing');
+const generateInvoice = require('../util/generateInvoice');
+const asyncHelpers = require('../util/asyncHelpers');
+
+exports.getShop = async (req, res, next) => {
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
+    const products = await Product.find({});
+
+    res.render('eshop/shop', {
+        title: 'E-shop',
+        categoryName: undefined,
+        categoryImage: undefined,
+        subcategoryName: undefined,
+        products: products,
+        categories: allCategories,
+        subcategories: allSubcategories
+    })
+}
+
+exports.getCategory = async (req, res, next) => {
+    const categoryName = req.params.category.toLowerCase();
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
+        return res.status(400).render('eshop/shop', {
+            title: 'Kategorie nenalezena',
+            products: []
+        })
+    }
+    const categoryId = category._id;
+    const categoryImage = category.images[0];
+
+    const categoryProducts = await Product.find({ categoryId: categoryId });
+    
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
+
+    res.render('eshop/shop', {
+        title: categoryName,
+        categoryName: categoryName,
+        categoryImage: categoryImage,
+        subcategoryName: undefined,
+        products: categoryProducts,
+        categories: allCategories,
+        subcategories: allSubcategories
+    });
+}
+
+exports.getSubcategory = async (req, res, next) => {
+    const categoryName = req.params.category.toLowerCase();
+    const subcategoryName = req.params.subcategory.toLowerCase();
+    
+    const category = await Category.findOne({ name: categoryName });
+    if (!category) {
+        return res.status(400).render('eshop/shop', {
+            title: 'Kategorie nenalezena',
+            products: []
+        })
+    }
+    const categoryId = category._id;
+    const categoryImage = category.images[0];
+
+
+    const subcategory = await Subcategory.findOne({ name: subcategoryName, categoryId: categoryId });
+    if (!subcategory) {
+        return res.status(400).render('eshop/shop', {
+            title: 'Podkategorie nenalezena',
+            products: []
+        })
+    }
+    const subcategoryId = subcategory._id;
+
+    const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
+    
+    const allCategories = await Category.find({});
+    const allSubcategories = await Subcategory.find({});
+
+    res.render('eshop/shop', {
+        title: subcategoryName,
+        categoryName: categoryName,
+        categoryImage: categoryImage,
+        subcategoryName: subcategoryName,
+        products: subcategoryProducts,
+        categories: allCategories,
+        subcategories: allSubcategories
+    });
+}
+
+exports.getCart = async (req, res, next) => {
+    const cart = req.session.cart;
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
+
+    res.set({
+        'Content-Security-Policy': "script-src 'self' https://js.stripe.com/v3/ https://polyfill.io/v3/"
+    });
+
+    res.render('eshop/cart', {
+        title: 'Košík',
+        cart: cart,
+        constants: constants,
+        stripePublicKey: process.env.STRIPE_PUBLIC_KEY
+    })
+}
+
+exports.postCart = async (req, res, next) => {
+    const cart = req.session.cart;
+    const productId = req.body.productId;
+    const amount = req.body.amount;
+    const action = req.body.action;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        throw new Error(errors.errors[0].msg);
+    }
+    
+    const isValidId = mongoose.Types.ObjectId.isValid(productId);
+    if (!isValidId) {
+        return res.status(422).json({
+            msg: "productId is not a valid ID string"
+        });
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+        return res.status(422).json({
+            msg: "productId does not reffer to any existing product"
+        })
+    }
+
+    let updatedCart;
+    if (!cart) {
+        updatedCart = new Cart();
+    } else {
+        updatedCart = new Cart(cart.items, cart.total, cart.shippingCostId);
+    }
+
+    if (action === 'ADD') {
+        if (!amount || typeof +amount !== 'number') { // TRY TO DEBUG --------------------------------------------------
+            return res.status(422).json({
+                msg: "amount property has to be passed along with 'ADD' action"
+            })
+        }
+        updatedCart.add(product, amount);
+    } else if (action === 'REMOVE') {
+        updatedCart.remove(product, amount);
+    } else {
+        return res.status(422).json({
+            msg: "action should be a string of value 'ADD' or 'REMOVE'"
+        })
+    }   
+
+    req.session.cart = updatedCart;
+    return req.session.save(err => {
+        if (err) return next(err);
+        return res.status(200).json({
+            msg: "Product added",
+            cart: updatedCart
+        })
+    })
+}
+
+exports.postOrder = async (req, res, next) => {
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+    const email = req.body.email;
+    const phone = req.body.phone;
+    const street = req.body.street;
+    const city = req.body.city;
+    const delivery = req.body.delivery;
+    const payment = req.body.payment;
+    const zipCode = req.body.zipCode;
+
+    
+    
+    const constants = await fs.promises.readFile('constants.json');
+    const consts = JSON.parse(constants);
+
+    const date = new Date();
+    const variableSymbol = await asyncHelpers.getVariableSymbol(date);
+
+    const cart = req.session.cart;
+
+    if (!cart || cart.items.length < 1) {
+        return res.redirect('/kosik?success=false&mailSent=false');
+    }
+
+    const order = new Order({
+        total: cart.total,
+        items: cart.items.map(item => {
+            return {
+                product: {
+                    _id: item.product._id,
+                    name: item.product.name,
+                    price: item.product.price,
+                    images: item.product.images
+                },
+                amount: item.amount
+            }
+        }),
+        variableSymbol,
+        firstName,
+        lastName,
+        email,
+        phone,
+        street,
+        city,
+        zipCode,
+        delivery,
+        deliveryCost: consts.deliveryCosts[delivery][cart.shippingCostId],
+        payment,
+        paymentCost: consts.paymentCosts[payment],
+        date: date.toISOString(),
+        status: consts.orderStatuses[0],
+        isPayed: false,
+        invoiceUrl: 'url',
+        isCanceled: false,
+        cancelInvoiceUrl: null
+    });
+    
+    const invoiceName = 'invoice-' + order._id + '.pdf';
+    const invoicePath = path.join('pdf', 'invoices', invoiceName);
+    order.invoiceUrl = invoicePath;
+
+    generateInvoice(order, invoicePath);
+
+    await order.save();
+
+    req.session.cart = null;
+
+    transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: email,
+        cc: process.env.MAIL_USER,
+        subject: 'Keramika Rosice: Objednávka přijata',
+        html: '<h1>This is working!</h1>',
+        attachments: [{
+            filename: invoiceName,
+            path: invoicePath,
+            contentType: 'application/pdf'
+        }],
+    }, (err, info) => {
+        if (order.payment !== 'CRD') {
+            if (err) {
+                console.log(err);
+                return res.redirect(`/?success=true&mailSent=false&payment=${order.payment}`);
+            }
+            return res.redirect(`/?success=true&mailSent=true&payment=${order.payment}`);
+        }
+
+        // Whether the e-mail is sent or not,
+        // if payment is of type 'CRD'
+        // stripe session id should be sent as JSON data
+        const returnStripeSessionId = async () => {
+
+            // Create stripe-compatible item list with delivery and payment costs
+            const stripeItems = order.items.map(item => {
+                return {
+                    price_data: {
+                        currency: 'czk',
+                        product_data: {
+                            name: item.product.name,
+                            images: item.product.images.map(image => `https://testapp-4400.rostiapp.cz/${image}`)
+                        },
+                        unit_amount: (item.product.price * 100)
+                    },
+                    quantity: item.amount
+                }
+            });
+            stripeItems.push({
+                price_data: {
+                    currency: 'czk',
+                    product_data: {
+                        name: `Platba kartou`,
+                        images: ['https://www.keramika-rosice.cz/img/white.png']
+                    },
+                    unit_amount: (order.paymentCost * 100)
+                },
+                quantity: 1
+            });
+            stripeItems.push({
+                price_data: {
+                    currency: 'czk',
+                    product_data: {
+                        name: `Poštovné`,
+                        images: ['https://www.keramika-rosice.cz/img/white.png']
+                    },
+                    unit_amount: (order.deliveryCost * 100)
+                },
+                quantity: 1
+            });
+    
+            // Create stripe checkout session
+            const session = await stripe.checkout.sessions.create({
+                payment_method_types: ['card'],
+                line_items: stripeItems,
+                mode: 'payment',
+                success_url: `https://www.keramika-rosice.cz/?payment=success`,
+                cancel_url: `https://www.keramika-rosice.cz/?payment=canceled`
+            });
+            
+            order.stripePaymentIntent = session.payment_intent;
+            await order.save();
+        
+            return res.json({ id: session.id });
+        }
+
+        return returnStripeSessionId();
+
+    });
+}
+
+exports.postCheckoutWebhook = async (req, res, next) => {
+    const payload = req.body;
+    const stripeSignature = req.headers['stripe-signature'];
+    
+    let event;
+    try {
+        event = stripe.webhooks.constructEvent(payload, stripeSignature, process.env.STRIPE_ENDPOINT_SECRET);
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send(`Webhook Error: ${err.message}`);
+    }
+
+    // Retrieve stripe session
+    const session = event.data.object;
+
+    switch (event.type) {
+        case 'checkout.session.completed': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
+
+            if (session.payment_status === 'paid') {
+
+                // Mark order as payed and send email
+                try {
+                    const result = await asyncHelpers.paidOrderHandler(order);
+                } catch (err) {
+                    console.log(err);
+                    res.status(500);
+                }
+
+            }
+
+            break;
+        }
+        case 'checkout.session.async_payment_succeeded': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
+
+            // Mark order as payed and send email
+            try {
+                const result = await asyncHelpers.paidOrderHandler(order);
+            } catch (err) {
+                console.log(err);
+                res.status(500);
+            }
+
+            break;
+        }
+        case 'checkout.session.async_payment_failed': {
+
+            // Find corresponding order
+            const order = await Order.findOne({ stripePaymentIntent: session.payment_intent });
+            if (!order) {
+                res.status(500);
+            }
+
+            // Send email with notification about unprocessed payment
+            transporter.sendMail({
+                from: process.env.MAIL_USER,
+                to: order.email,
+                cc: process.env.MAIL_USER,
+                subject: 'Keramika Rosice: Nepovedená platba',
+                html: '<h1>Platba se nepovedla!</h1>'
+            }, (err, info) => {
+                if (err) {
+                    console.log(err);
+                }
+            });
+
+            break;
+        }
+        default: null;
+    }
+
+    return res.status(200);
+}
+const fs = require('fs');
+const path = require('path');
+
+const Category = require('../models/category');
+
+exports.getIndex = async (req, res, next) => {
+    const allCatgories = await Category.find({});
+    
+    res.render('pages/index', {
+        title: 'Domů',
+        categories: allCatgories
+    })
+}
+
+exports.getAbout = (req, res, next) => {
+    res.render('pages/about', {
+        title: 'O mně'
+    })
+}
+
+exports.getContact = async (req, res, next) => {
+    const allCatgories = await Category.find({});
+
+    res.render('pages/contact', {
+        title: 'Kontakt',
+        categories: allCatgories
+    })
+}
+
+exports.getConditions = (req, res, next) => {
+    const pdfPath = path.join('pdf', 'conditions.pdf');
+    
+    fs.readFile(pdfPath, (err, data) => {
+        if (err) return next(err);
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="conditions.pdf"');
+        res.send(data);
+    });
+}
+
+exports.getGDPR = (req, res, next) => {
+    const pdfPath = path.join('pdf', 'gdpr.pdf');
+
+    fs.readFile(pdfPath, (err, data) => {
+        if (err) return next(err);
+
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'inline; filename="ochrana-osobnich-udaju.pdf"');
+        res.send(data);
+    });
+}
+module.exports = (req, res, next) => {
+    if (!req.session) {
+        return res.redirect('/admin/login');
+    }
+    if (!req.session.isAdmin) {
+        return res.redirect('/admin/login');
+    }
+    next();
+}
+class Cart {
+    constructor(items = [], total = 0, shippingCostId = 0) {
+        this.items = items;
+        this.total = total;
+        this.shippingCostId = shippingCostId; // 0 === cheper shipping && 1 === more expensive shipping
+    }
+
+    add(product, amount) {
+        const itemIndex = this.items.findIndex(item => item.product._id.toString() === product._id.toString());
+        if (itemIndex > -1) {
+            this.items[itemIndex] = {
+                product: product,
+                amount: +this.items[itemIndex].amount + +amount
+            }
+        } else {
+            this.items.push({
+                product: product,
+                amount: +amount
+            });
+        }
+        this.total = +this.total + +product.price * +amount;
+        if (this.shippingCostId === 0 && product.shippingCostId === 1) {
+            this.shippingCostId = 1;
+        }
+    }
+    
+    remove(product, amount) {
+        const itemIndex = this.items.findIndex(item => item.product._id.toString() === product._id.toString());
+        if (itemIndex === -1) return;
+
+        if (!amount || +amount >= +this.items[itemIndex].amount) {
+            const removedProduct = this.items.splice(itemIndex, 1)[0];
+            this.total = +this.total - (+removedProduct.product.price * +removedProduct.amount);
+
+            // Loop through items to determine shippingCostId
+            let newShippingCostId = 0;
+            for (let i = 0; i < this.items.length; i++) {
+                if (this.items[i].product.shippingCostId === 1) {
+                    newShippingCostId = 1;
+                    break;
+                }
+            }
+            this.shippingCostId = newShippingCostId;
+            return removedProduct;
+        }
+
+        this.items[itemIndex] = {
+            ...this.items[itemIndex],
+            amount: +this.items[itemIndex].amount - +amount
+        }
+        this.total = +this.total - (+this.items[itemIndex].product.price * +amount);
+
+        return this.items[itemIndex];
+    }
+};
+
+module.exports = Cart;
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const categorySchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    images: [ String ]
+});
+
+module.exports = mongoose.model('Category', categorySchema);
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const orderSchema = new Schema({
+    total: {
+        type: Number,
+        required: true
+    },
+    items: [],
+    variableSymbol: {
+        type: String,
+        required: true
+    },
+    firstName: {
+        type: String,
+        required: true
+    },
+    lastName: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true
+    },
+    phone: {
+        type: String,
+        required: true
+    },
+    street: {
+        type: String,
+        required: true
+    },
+    city: {
+        type: String,
+        required: true
+    },
+    zipCode: {
+        type: String,
+        required: true
+    },
+    delivery: {
+        type: String,
+        required: true
+    },
+    deliveryCost: {
+        type: String,
+        required: true
+    },
+    payment: {
+        type: String,
+        required: true
+    },
+    paymentCost: {
+        type: String,
+        required: true
+    },
+    stripePaymentIntent: {
+        type: String,
+        required: false
+    },
+    date: {
+        type: Date,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true
+    },
+    isPayed: {
+        type: Boolean,
+        required: true
+    },
+    invoiceUrl: {
+        type: String,
+        required: true
+    },
+    isCanceled: {
+        type: Boolean,
+        required: true
+    },
+    cancelInvoiceUrl: {
+        type: String,
+        required: false
+    }
+});
+
+module.exports = mongoose.model('Order', orderSchema);
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const productSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: false
+    },
+    subcategoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Subcategory',
+        required: false
+    },
+    price: {
+        type: String,
+        required: true
+    },
+    amountInStock: {
+        type: Number,
+        required: true
+    },
+    // Two different shipping prices '0' === cheap && '1' === expensive
+    // A matter of whether it fits in the envelope or box
+    shippingCostId: {
+        type: Number,
+        required: true
+    },
+    images: [ String ]
+});
+
+module.exports = mongoose.model('Product', productSchema);
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
+
+const subcategorySchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    categoryId: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true
+    }
+})
+
+module.exports = mongoose.model('Subcategory', subcategorySchema);
+const fs = require('fs');
+
+const router = require('express').Router();
+const ash = require('express-async-handler');
+const { body } = require('express-validator');
+
+const adminController = require('../controllers/admin/index');
+const isAuth = require('../middleware/is-auth');
+
+router.get('/login', adminController.getLogin);
+router.post('/login', adminController.postLogin); // Expecting { password: String }
+router.get('/logout', adminController.getLogout);
+
+router.get('/', isAuth, adminController.getIndex);
+
+router.get('/categories', isAuth, ash(adminController.getCategories));
+router.post('/categories', isAuth,
+    body('categoryId')
+        .escape()
+        .custom((categoryId) => {
+            if (typeof categoryId !== 'string' && categoryId) {
+                throw new Error('categoryId should be a string or falsy value');
+            }
+            return true;
+        }),
+    body('categoryName')
+        .trim()
+        .escape()
+        .isString().withMessage('categoryName must be a string')
+        .isLength({min: 3}).withMessage('categoryName must be at least 3 characters long'),
+    ash(adminController.postCategories)
+);  // Expecting { categoryId: String || null, categoryName: String, image: File }
+
+router.delete('/categories/:categoryId', isAuth, ash(adminController.deleteCategory));
+router.put('/categories/', isAuth,
+    body('newCategoryName')
+        .escape()
+        .trim()
+        .isString().withMessage('newCategoryName must be a string')
+        .isLength({min: 3}).withMessage('newCategoryName must be at least 3 characters long'),
+    ash(adminController.putCategory)
+); // Expecting { categoryId: String, newCategoryName: String, image: File || null }
+
+router.delete('/categories/sub/:subcategoryId', isAuth, ash(adminController.deleteSubcategory));
+router.put('/categories/sub/', isAuth,
+    body('newCategoryName')
+        .escape()
+        .trim()
+        .isString().withMessage('newCategoryName must be a string')
+        .isLength({min: 3}).withMessage('newCategoryName must be at least 3 characters long'),
+    ash(adminController.putSubcategory)
+); // Expecting { subcategoryId: String, newCategoryName: String }
+
+router.get('/products', isAuth, ash(adminController.getProducts));
+router.delete('/products/:productId', isAuth, ash(adminController.deleteProduct));
+
+router.get('/products/add', isAuth, ash(adminController.getAddProduct));
+router.post('/products/add', isAuth,
+    body('name')
+        .trim()
+        .isString()
+        .escape()
+        .isLength({ min: 2 }).withMessage('name should be at least 2 characters long'),
+    body('description')
+        .trim()
+        .isString()
+        .escape()
+        .isLength({ min: 5 }).withMessage('description should be at least 5 characters long'),
+    body('price')
+        .escape()
+        .isNumeric().withMessage('price should be a number'),
+    body('amountInStock')
+        .escape()
+        .isNumeric().withMessage('amountInStock should be a number'),
+    body('shippingCostId')
+        .escape()
+        .custom(shippingCostId => {
+            if (shippingCostId != 0 && shippingCostId != 1) {
+                throw new Error('shippingCostId should be a number, either 0 or 1')
+            }
+
+            return true;
+        }),
+    ash(adminController.postAddProduct)
+); /* Expecting {
+    name: String,
+    description: String,
+    price: Number,
+    categoryId: String,
+    subcategoryId: String || null,
+    amountInStock: Number,
+    shippingCostId: Number,
+    image: File
+} */
+
+router.get('/products/edit/:productId', isAuth, ash(adminController.getEditProduct));
+router.post('/products/edit', isAuth,
+    body('name')
+        .trim()
+        .isString()
+        .escape()
+        .isLength({ min: 2 }).withMessage('name should be at least 2 characters long'),
+    body('description')
+        .trim()
+        .isString()
+        .escape()
+        .isLength({ min: 5 }).withMessage('description should be at least 5 characters long'),
+    body('price')
+        .escape()
+        .isNumeric().withMessage('price should be a number'),
+    body('amountInStock')
+        .escape()
+        .isNumeric().withMessage('amountInStock should be a number'),
+    body('shippingCostId')
+        .escape()
+        .custom(shippingCostId => {
+            if (shippingCostId != 0 && shippingCostId != 1) {
+                throw new Error('shippingCostId should be a number, either 0 or 1')
+            }
+            
+            return true;
+        }),
+    ash(adminController.postEditProduct)
+); /* Expecting {
+    productId: String,
+    name: String,
+    description: String,
+    price: Number,
+    categoryId: String,
+    subcategoryId: String || null,
+    amountInStock: Number,
+    shippingCostId: Number,
+    image: File || null
+} */
+
+router.get('/orders', isAuth, ash(adminController.getOrders));
+router.get('/orders/:orderId', isAuth, ash(adminController.getOrderDetail));
+
+// Edit order status and isPayed
+router.put('/orders', isAuth,
+    body('status')
+        .trim()
+        .custom(async (status) => {
+            const constantsRaw = await fs.promises.readFile('constants.json');
+            const constants = JSON.parse(constantsRaw);
+
+            if (!constants.orderStatuses.includes(status)) {
+                throw new Error('status is not a valid status string');
+            }
+
+            return true;
+        }),
+    body('isPayed')
+        .isBoolean().withMessage('isPayed should be a boolean'),
+    ash(adminController.putOrder)
+); // Expecting { orderId: String, status: String, isPayed: Boolean }
+
+// Cancel order
+router.post('/orders/cancel', isAuth, ash(adminController.postCancelOrder)); // Expecting { orderId: String }
+
+router.get('/invoice/:orderId', isAuth, ash(adminController.getInvoice));
+
+// Handling error cases in admin section
+router.use(isAuth, (error, req, res, next) => {
+    console.log(error);
+    const errorMessage = error.message || error.msg;
+    const errorStatus = error.status || 500;
+    if (req.headers.accept === 'application/json') {
+        return res.status(errorStatus).json({
+            msg: errorMessage
+        })
+    }
+    res.status(errorStatus).render('admin/error', {
+        title: 'Error ' + errorStatus,
+        message: errorMessage
+    })
+})
+
+// Handling 404 case in admin section
+router.use(isAuth, (req, res, next) => {
+    res.status(404).render('admin/error', {
+        title: 'Error 404',
+        message: 'This site does not exist.'
+    })
+})
+
+module.exports = router;
+const fs = require('fs');
+
+// Library imports
+const router = require('express').Router();
+const bodyParser = require('body-parser');
+const ash = require('express-async-handler');
+const { body } = require('express-validator');
+
+// Custom imports
+const eshopController = require('../controllers/eshop');
+
+router.get('/shop', ash(eshopController.getShop));
+router.get('/shop/:category/:subcategory', ash(eshopController.getSubcategory));
+router.get('/shop/:category', ash(eshopController.getCategory));
+
+router.get('/kosik', ash(eshopController.getCart));
+
+// Update cart route, application/json
+router.post('/kosik',
+    body('amount')
+        .custom(amount => {
+            if (isNaN(Number(amount)) && amount) {
+                throw new Error('Množství (amount) musí být číslo nebo nepravdivá hodnota');
+            }
+            if (amount && amount < 1) {
+                throw new Error('Množství (amount) musí být kladné číslo nebo nepravdivá hodnota');
+            }
+
+            return true;
+        }),
+    body('action')
+        .custom(action => {
+            if (action !== 'ADD' && action !== 'REMOVE') {
+                throw new Error('Akce (action) musí být string určené hodnoty');
+            }
+
+            return true;
+        }),
+    ash(eshopController.postCart)
+); // Expecting { productId: String, amount: Number || false, action: 'ADD' || 'REMOVE' }
+
+// Place an order, text/html
+router.post('/objednavka',
+    body('firstName')
+        .not().isEmpty()
+        .isString()
+        .isLength({ min: 2 })
+        .escape()
+        .withMessage('Jméno musí mít alespoň 2 znaky'),
+    body('lastName')
+        .not().isEmpty()
+        .isString()
+        .isLength({ min: 2 })
+        .escape()
+        .withMessage('Příjmení musí mít alespoň 2 znaky'),
+    body('email')
+        .not().isEmpty()
+        .trim()
+        .isEmail()
+        .normalizeEmail()
+        .escape()
+        .withMessage('E-mail nebyl správně zadán'),
+    body('phone')
+        .not().isEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 9, max: 9 })
+        .escape()
+        .withMessage('Telefon musí mít 9 číslic'),
+    body('street')
+        .notEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 4 })
+        .escape()
+        .withMessage('Ulice a č.p. musí mít dohromady alespoň 4 znaky'),
+    body('city')
+        .notEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 2 })
+        .escape()
+        .withMessage('Město musí mít alespoň 2 znaky'),
+    body('zipCode')
+        .notEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 5, max: 5 })
+        .custom(zipCode => {
+            if (isNaN(Number(zipCode))) {
+                throw new Error('PSČ musí mít právě 5 číslic');
+            }
+
+            return true;
+        })
+        .escape()
+        .withMessage('PSČ musí mít právě 5 číslic'),
+    body('delivery')
+        .notEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 3, max: 3 })
+        .custom(async (delivery) => {
+            const constantsRaw = await fs.promises.readFile('constants.json');
+            const constants = JSON.parse(constantsRaw);
+
+            const deliveryMethods = Object.keys(constants.deliveryCosts);
+            if (!deliveryMethods.includes(delivery)) {
+                throw new Error('Doručení musí být jedna z nabízených možností');
+            }
+
+            return true;
+        })
+        .escape()
+        .withMessage('Doručení musí být jedna z nabízených možností'),
+    body('payment')
+        .notEmpty()
+        .trim()
+        .isString()
+        .isLength({ min: 3, max: 3 })
+        .custom(async (payment) => {
+            const constantsRaw = await fs.promises.readFile('constants.json');
+            const constants = JSON.parse(constantsRaw);
+
+            const paymentMethods = Object.keys(constants.paymentCosts);
+            if (!paymentMethods.includes(payment)) {
+                throw new Error('Platba musí být jedna z nabízených možností');
+            }
+
+            return true;
+        })
+        .escape()
+        .withMessage('Platba musí být jedna z nabízených možností'),
+    ash(eshopController.postOrder)
+); /* Expecting {
+    firstName: String,
+    lastName: String,
+    email: String,
+    phone: String,
+    street: String, // ulice, čp
+    city: String, // city
+    zipCode: String,
+    delivery: String, // 'ZAS' = zásikovna, 'POS' = pošta, 'OOD' = osobní odběr,
+    payment: String, // 'DOB' = dobírka, 'BTR' = bankovní převod, 'CRD' = kartou
+} */
+
+router.post('/checkout-webhook', bodyParser.raw({type: 'application/json'}), ash(eshopController.postCheckoutWebhook));
+
+module.exports = router;
+// Library imports
+const router = require('express').Router();
+const ash = require('express-async-handler');
+
+// Custom imports
+const pagesController = require('../controllers/pages');
+
+router.get('/', ash(pagesController.getIndex));
+router.get('/kontakt', ash(pagesController.getContact));
+router.get('/o-mne', pagesController.getAbout);
+
+router.get('/podminky', pagesController.getConditions);
+router.get('/ochrana-udaju', pagesController.getGDPR);
+
+module.exports = router;
+const path = require('path');
+const fs = require('fs');
+
+const generateInvoice = require('./generateInvoice');
+const transporter = require('./mailing');
+
+const Order = require('../models/order');
+
+exports.cancelOrder = async (orderId) => {
+
+    const order = await Order.findById(orderId);
+    if (!order) {
+        const err = new Error('Order does not exist');
+        err.status = 404;
+        throw err;
+    }
+
+    order.isCanceled = true;
+
+    const invoiceName = 'invoice-cancel-' + order._id + '.pdf';
+    const invoicePath = path.join('pdf', 'invoices', invoiceName);
+    order.cancelInvoiceUrl = invoicePath;
+
+    // Generate a cancel invoice
+    await generateInvoice(order, invoicePath);
+
+    await order.save();
+
+    // Send notification about cancelled order
+    transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: order.email,
+        cc: process.env.MAIL_USER,
+        subject: 'Keramika Rosice: Objednávka zrušena',
+        html: '<h1>This is working!</h1>',
+        attachments: [{
+            filename: invoiceName,
+            path: invoicePath,
+            contentType: 'application/pdf'
+        }]
+    }, (err, info) => {
+        if (err) {
+            console.log(err);
+            return { success: false };
+        }
+        return { success: true };
+    })
+
+}
+
+exports.paidOrderHandler = async (order) => {
+
+    // Mark order as paid
+    order.isPayed = true;
+    await order.save();
+
+    // Send notification about successfull payment
+    transporter.sendMail({
+        from: process.env.MAIL_USER,
+        to: order.email,
+        cc: process.env.MAIL_USER,
+        subject: 'Keramika Rosice: Úspěšná platba',
+        html: '<h1>Úspěšná platba!</h1>'
+    }, (err, info) => {
+        if (err) {
+            console.log(err);
+            return { success: false };
+        }
+        return { success: true };
+    })
+
+}
+
+exports.getVariableSymbol = async (date) => {
+    const constantsRaw = await fs.promises.readFile('constants.json');
+    const constants = JSON.parse(constantsRaw);
+
+    const lastNumber = constants.lastInvoiceNumber[0];
+    const lastYear = constants.lastInvoiceNumber[1];
+
+    let newYear = lastYear;
+    let newNumber = lastNumber + 1;
+
+    // Check for year change
+    if (date.getFullYear() > lastYear) {
+        newYear = date.getFullYear();
+        newNumber = 1;
+    }
+
+    // Convert 1 => 0001, convert 25 => 0025, convert 52687 => 52687
+    const addZeros = 4 - newNumber.toString().length;
+    let newNumberString = '';
+    for (let i = 0; i < addZeros; i++) {
+        newNumberString += '0';
+    }
+    newNumberString += `${newNumber}`;
+
+    // Update constants
+    constants.lastInvoiceNumber = [newNumber, newYear];
+    await fs.promises.writeFile('constants.json', JSON.stringify(constants, null, 2));
+
+    return `${newNumberString}${newYear}`;
+}
+const fs = require('fs');
+const path = require('path');
+
+const PDFDocument = require('pdfkit');
+
+const helpers = require('./helpers');
+
+const generateHeader = (invoice, order) => {
+    let headingText = 'Faktura';
+    if (order.isCanceled) headingText = 'Stornofaktura';
+
+    const invoiceNumber = 'KR-' + order.variableSymbol.slice(0, -4) + '/' + order.variableSymbol.slice(-4);
+
+    invoice
+      .fillColor("#101010")
+      .fontSize(24)
+      .font('PTSans-Regular')
+      .text(headingText, 50, 50)
+      .fontSize(18)
+      .text(`Číslo faktury: ${invoiceNumber}`, 0, 56, { align: "right" })
+      .moveDown();
+}
+
+const generatePersonInformation = (invoice, order) => {
+    invoice
+        .rect(50, 100, 512, 135)
+        .fill('#EEEEEE')
+        .fillColor("#101010")
+        .fontSize(10)
+        .font('PTSans-Bold')
+        .text('Dodavatel', 100, 125)
+        .text('Odběratel', 306, 125)
+        .moveDown();
+    
+    invoice
+        .font('PTSans-Regular')
+        .fontSize(10)
+        .fillColor('#101010')
+        .text('Vlastimila Nepevná', 100, 140)
+        .text(`${order.firstName} ${order.lastName}`, 306, 140)
+        .text('Havířská 956', 100, 155)
+        .text(`${order.street}`, 306, 155)
+        .text('Rosice 66501', 100, 170)
+        .text(`${order.city} ${order.zipCode}`, 306, 170)
+        .text('Česká Republika', 100, 185)
+        .text(`Česká Republika`, 306, 185)
+        .text('IČ: 12192520', 100, 200)
+        .text(`Tel.: ${order.phone}`, 306, 200)
+        .moveDown();
+}
+
+const generateInvoiceData = (invoice, order) => {
+    const [ deliveryLabel, paymentLabel ] = helpers.getDelPayLabel(order.delivery, order.payment);
+
+    const date = new Date(order.date);
+    const readableDate = helpers.formatDate(date);
+
+    const dueDate = new Date(date.getTime() + (1000 * 60 * 60 * 24 * 14));
+    const readableDueDate = helpers.formatDate(dueDate);
+
+    invoice
+        // 1st column
+        .font('PTSans-Bold')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text('Datum vystavení: ', 100, 260, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`${readableDate}`)
+        .font('PTSans-Bold')
+        .text('Datum splatnosti: ', 100, 275, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`${readableDueDate}`)
+        .font('PTSans-Bold')
+        .text('Způsob úhardy: ', 100, 290, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`${paymentLabel}`)
+        .font('PTSans-Bold')
+        .text('Způsob dopravy: ', 100, 305, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`${deliveryLabel}`)
+        // 2nd column
+        .font('PTSans-Bold')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text('Číslo účtu: ', 306, 260, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`43-5895350257/0100`)
+        .font('PTSans-Bold')
+        .text('Variabilní symbol: ', 306, 275, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`${order.variableSymbol}`)
+        .font('PTSans-Bold')
+        .text('Banka: ', 306, 290, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`Komerční banka`)
+        .font('PTSans-Bold')
+        .text('Název účtu: ', 306, 305, {
+            continued: true
+        })
+        .font('PTSans-Regular')
+        .text(`EFEKT`)
+}
+
+const generateProductsTable = (invoice, order) => {
+    invoice
+        // Heading
+        .font('PTSans-Regular')
+        .fontSize(10)
+        .fillColor('#101010')
+        .text('Objednávka z www.keramika-rosice.cz:', 65, 350)
+        // Table head
+        .font('PTSans-Bold')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text('Zboží', 65, 370)
+        .text('Množství', 300, 370)
+        .text('Jednotková cena', 400, 370)
+        .text('Cena', 0, 370, { align: 'right' })
+        .moveTo(50, 385)
+        .lineTo(562, 385)
+        .stroke();
+    
+    let deltaY = 0;
+    
+    order.items.forEach(item => {
+        invoice
+            // Item row
+            .font('PTSans-Regular')
+            .fillColor('#101010')
+            .fontSize(10)
+            .text(`${item.product.name}`, 65, 390 + deltaY)
+            .text(`${item.amount}ks`, 300, 390 + deltaY)
+            .text(`${item.product.price}Kč`, 400, 390 + deltaY)
+            .text(`${item.product.price * item.amount}Kč`, 0, 390 + deltaY, { align: 'right' })
+            .moveTo(50, 405 + deltaY)
+            .lineTo(562, 405 + deltaY)
+            .stroke();
+        
+        deltaY += 20;
+    });
+
+    const [ deliveryLabel, paymentLabel ] = helpers.getDelPayLabel(order.delivery, order.payment);
+    let total = +order.total + +order.paymentCost + +order.deliveryCost;
+    if (order.isCanceled) total = -total;
+
+    invoice
+        // Delivery row
+        .font('PTSans-Regular')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text(`Doručení: ${deliveryLabel}`, 65, 390 + deltaY)
+        .text(`${order.deliveryCost}Kč`, 0, 390 + deltaY, { align: 'right' })
+        // Payment row
+        .text(`Platba: ${paymentLabel}`, 65, 410 + deltaY)
+        .text(`${order.paymentCost}Kč`, 0, 410 + deltaY, { align: 'right' })
+        .moveTo(50, 425 + deltaY)
+        .lineTo(562, 425 + deltaY)
+        .stroke()
+        // Summary row
+        .font('PTSans-Bold')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text(`Celkem k úhradě:`, 65, 430 + deltaY)
+        .text(`${total}Kč`, 0, 430 + deltaY, { align: 'right' });
+
+    invoice
+        .font('PTSans-Bold')
+        .fillColor('#101010')
+        .fontSize(10)
+        .text('Dodavatel není plátce DPH.', 65, 470 + deltaY)
+}
+
+module.exports = (order, invoicePath) => {
+
+    let invoice = new PDFDocument({ margin: 50 });
+
+    invoice.registerFont('PTSans-Regular', path.join(__dirname, '/../public/fonts/PTSans-Regular.ttf'));
+    invoice.registerFont('PTSans-Bold', path.join(__dirname, '/../public/fonts/PTSans-Bold.ttf'));
+
+    generateHeader(invoice, order);
+    generatePersonInformation(invoice, order);
+    generateInvoiceData(invoice, order);
+    generateProductsTable(invoice, order);
+    
+    invoice.end();
+    invoice.pipe(fs.createWriteStream(invoicePath));
+}
+exports.getDelPayLabel = (deliveryMethod, paymentMethod) => {
+
+    let deliveryLabel, paymentLabel;
+
+    switch(deliveryMethod) {
+        case 'ZAS': deliveryLabel = 'Zásilkovna';
+        break;
+        case 'POS': deliveryLabel = 'Česká pošta';
+        break;
+        case 'OOD': deliveryLabel = 'Osobní odběr';
+        break;
+        default: deliveryLabel = '';
+    }
+
+    switch(paymentMethod) {
+        case 'DOB': paymentLabel = 'Dobírka';
+        break;
+        case 'BTR': paymentLabel = 'Bankovní převod';
+        break;
+        case 'CRD': paymentLabel = 'Kartou';
+        break;
+        default: paymentLabel = '';
+    }
+
+    return [deliveryLabel, paymentLabel];
+}
+
+exports.formatDate = (date) => {
+    return date.getDate() + '.' + (date.getMonth() + 1) + '.' + date.getFullYear();
+}
+const nodemailer = require('nodemailer');
+
+const transporter = nodemailer.createTransport({
+    host: 'smtp.seznam.cz',
+    port: 465,
+    secure: true,
+    auth: {
+        user: process.env.MAIL_USER,
+        pass: process.env.MAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false
+    }
+});
+// Core modules imports
+const path = require('path');
+const fs = require('fs');
+
+// Library imports
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const helmet = require('helmet');
+const session = require('express-session');
+const MongoDBStore = require('connect-mongodb-session')(session);
+const csrf = require('csurf');
+const multer = require('multer');
+const morgan = require('morgan');
+
+// Custom imports
+const eshopRoutes = require('./routes/eshop');
+const pagesRoutes = require('./routes/pages');
+const adminRoutes = require('./routes/admin');
+
+/////////////////
+
+// Creating app
+const app = express();
+
+// Initializing store for sessions
+const store = new MongoDBStore({
+    uri: process.env.MONGO_CONN_STRING,
+    collection: 'sessions'
+});
+// Adding CSRF protection
+const csrfProtection = csrf();
+
+// Define file storage for multer
+const fileStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'public/img');
+    },
+    filename: (req, file, cb) => {
+        let prefix = 'pimg_';
+        if (req.url.includes('categories')) {
+            prefix = 'cimg_'
+        }
+
+        let dateString = new Date().toISOString();
+        dateString = dateString.replace(/:/g, '');
+        dateString = dateString.replace('\.', '');
+    
+        const fileName = prefix + dateString + '-' + file.originalname;
+
+        cb(null, fileName);
+    }
+})
+// Define file filter for multer
+const fileFilter = (req, file, cb) => {
+    if (['image/png', 'image/jpg', 'image/jpeg'].includes(file.mimetype)) {
+        cb(null, true);
+    } else {
+        cb(null, false);
+    }
+}
+
+// Creating write stream for morgan
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname, 'access.log'), {
+    flags: 'a'
+});
+
+// Setting view engine
+app.set('view engine', 'ejs');
+
+// Using helmet
+app.use(helmet());
+// Using morgan
+app.use(morgan('combined', { stream: accessLogStream }));
+
+
+// Parsing url encoded body
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return bodyParser.urlencoded({ extended: false })(req, res, next);
+});
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return bodyParser.json()(req, res, next);
+});
+
+// Parsing binary data
+app.use(multer({ storage: fileStorage, fileFilter: fileFilter }).single('image'));
+// Serving static public folder
+app.use(express.static(path.join(__dirname, 'public')));
+// Using session middleware
+app.use(session({
+    secret: process.env.SESSION_SECRET_STRING,
+    resave: false,
+    saveUninitialized: false,
+    store: store
+}));
+
+// Using CSRF protection after using session middleware (excluding stripe webhook route)
+app.use((req, res, next) => {
+    if (req.url === '/checkout-webhook') {
+        return next();
+    }
+    return csrfProtection(req, res, next);
+});
+
+// Passing common props to views
+app.use((req, res, next) => {
+    if (req.csrfToken) {
+        res.locals.csrfToken = req.csrfToken();
+    }
+    res.locals.cart = req.session.cart;
+    next();
+});
+
+// Using routes
+app.use(eshopRoutes);
+app.use(pagesRoutes);
+app.use('/admin', adminRoutes);
+
+// Handling 500 case
+app.get('/500', (req, res, next) => {
+    res.status(500).render('500', {
+        title: '500',
+        msg: 'Server error'
+    })
+}) // ------------------------ DOES THIS HAVE TO BE HERE? -----------
+
+// Handling 404 case
+app.use((req, res, next) => {
+    res.status(404).render('404', {
+        title: '404'
+    });
+})
+
+// Handling next(error) call
+app.use((error, req, res, next) => {
+    console.log(error);
+    const errorMessage = error.message || error.msg;
+    const errorStatus = error.status || 500;
+    if (req.headers.accept === 'application/json') {
+        return res.status(errorStatus).json({
+            msg: errorMessage
+        })
+    }
+    res.status(errorStatus).render('500', {
+        title: 'Error ' + errorStatus,
+        msg: errorMessage
+    })
+})
+
+// Connect to MongoDB
+mongoose
+    .connect(
+        `${process.env.MONGO_CONN_STRING}`,
+        { useNewUrlParser: true, useUnifiedTopology: true }
+    )
+    .then(result => {
+        app.listen(process.env.PORT || 8080);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+///////////////////////////////////
+///// DEFINING FUNCTIONS
+
+/////
+// ready function to execute when DOM is loaded
+/////
+const ready = callbackFunc => {
+    if (document.readyState !== 'loading') {
+        // Document is already ready, call the callback directly
+        callbackFunc();
+    } else if (document.addEventListener) {
+        // All modern browsers to register DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', callbackFunc);
+    } else {
+        // Old IE browsers
+        document.attachEvent('onreadystatechange', function() {
+        if (document.readyState === 'complete') {
+            callbackFunc();
+        }
+        });
+    }
+}
+
+/////
+// Menu functions
+/////
+const toggleMenu = (menu) => {
+    if (menu.classList.contains('opened')) {
+        menu.classList.remove('opened');
+        menu.querySelector('.navigation__heading').style.display = 'block';
+        menu.querySelector('.navigation__list').style.display = 'none';
+    } else {
+        menu.classList.add('opened');
+        setTimeout(() => {
+            menu.querySelector('.navigation__heading').style.display = 'none';
+            menu.querySelector('.navigation__list').style.display = 'block';
+        }, 200);
+    }    
+}
+const emphasizeHoveredMenuItem = (menuItems, itemIndex) => {
+    menuItems.forEach(menuItem => menuItem.classList.remove('active'));
+    if (itemIndex !== -1) menuItems[itemIndex].classList.add('active');
+}
+
+/////
+// General functions
+/////
+const showErrorModal = (error) => {
+    // Expects string with an error message or error object with msg or message property
+    let message;
+    if (typeof error === 'string') {
+        message = error;
+    }
+    if (!message) {
+        message = error.message || error.msg;
+    }
+
+    const errorModalHTML = `
+    <section class="err-modal">
+        <h4 class="heading-4">Vyskytla se chyba</h4>
+        <p>Celá zpráva: ${message}</p>
+    </section>
+    `;
+
+    document.querySelector('html').insertAdjacentHTML('afterbegin', errorModalHTML);
+
+    setTimeout(() => {
+        document.querySelector('.err-modal').remove();
+    }, 10000);
+}
+
+/////
+// Submit functions
+/////
+const onDeleteProduct = (e) => {
+    const isConfirmed = confirm('Opravdu chcete smazat produkt?');
+    if (!isConfirmed) return;
+
+    const productId = e.target.dataset.id;
+    const csrf = e.target.dataset.csrf;
+
+    fetch('/admin/products/' + productId + '?_csrf=' + csrf, {
+        method: 'DELETE'
+    })
+        .then(res => {
+            if (res.ok === true) {
+                document.getElementById(productId).remove();
+            } else {
+                throw new Error('Deleting was not successfull');
+            }
+        })
+        .catch(err => {
+            showErrorModal(err);
+        });
+}
+const onDeleteModal = () => {
+    // Hide modal
+    state.modalEls.modal.style.display = 'none';
+
+    // Get data model for which is modal shown
+    const dataModel = state.modalEls.modal.dataset.model;
+
+    switch (dataModel) {
+        case 'categories':
+            const csrf = modal.querySelector('#csrf').value;
+
+            // Get dataset values of selected element
+            const categoryId = state.selectedElement.dataset.categoryid;
+            const subcategoryId = state.selectedElement.dataset.subcategoryid;
+            
+            // Ask to confirm destructive action
+            const isConfirmed = confirm('Opravdu chcete smazat kategorii? Všechny produkty, které do ní spadaly, budou nezařazeny.');
+            if (!isConfirmed) {
+                // Close modal
+                onCloseModal();
+
+                return;
+            }
+
+            // Set endpoint
+            let endpointStr = '/admin/categories/' + categoryId;
+            if (subcategoryId) endpointStr = '/admin/categories/sub/' + subcategoryId;
+
+            // Delete (sub)category
+            fetch(endpointStr, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'CSRF-Token': csrf
+                }
+            })
+                .then(response => {
+                    return Promise.all([response.clone(), response.json()]);
+                })
+                .then(resolved => {
+                    const [res, json] = resolved;
+                    if (res.ok === true) {
+                        // Refresh after success
+                        window.location.href = '/admin/categories?success=true';
+                    } else {
+                        throw new Error(json.msg);
+                    }
+                })
+                .catch(err => {
+                    showErrorModal(err);
+                });
+        break;
+        default:
+            const err = new Error('Data model extracted from modal dataset does not exist');
+            showErrorModal(err);
+            throw err;
+    }
+
+    // Close modal
+    onCloseModal();
+}
+const putOrderHandler = () => {
+    const orderId = state.selectedElement.dataset.orderid;
+    const status = document.getElementById('status').value;
+    const isPayed = document.getElementById('isPayed').value;
+    const csrf = state.selectedElement.dataset.csrf;
+
+    const bodyObj = { orderId, status, isPayed };
+
+    console.log(bodyObj);
+
+    fetch('/admin/orders', {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'CSRF-Token': csrf
+        },
+        body: JSON.stringify(bodyObj)
+    })
+        .then(response => {
+            return Promise.all([response.clone(), response.json()]);
+        })
+        .then(resolved => {
+            const [res, json] = resolved;
+            if (res.ok === true) {
+                // Refresh after success
+                window.location.href = '/admin/orders/' + orderId + '?success=true';
+            } else {
+                throw new Error(json.msg);
+            }
+        })
+        .catch(err => {
+            showErrorModal(err);
+        });
+}
+
+/////
+// Modal fcns
+/////
+const onShowModal = () => {
+    if (!state.editMode) {
+        // If in "add" mode
+        state.modalEls.modalHeading.innerText = "Přidat kategorii";
+    } else {
+        // If in "edit" mode
+        state.modalEls.modalHeading.innerText = "Upravit kategorii";
+
+        // Disable selecting higher order category
+        state.modalEls.modalCategorySelect.setAttribute('disabled', true);
+
+        // Add delete button
+        state.modalEls.modalDelete = document.createElement("button");
+        state.modalEls.modalDelete.classList = "modal__btn modal__btn--danger";
+        state.modalEls.modalDelete.setAttribute('id', 'modal-delete');
+        state.modalEls.modalDelete.innerText = "Smazat";
+        state.modalEls.modalDelete.addEventListener('click', onDeleteModal);
+
+        // Get dataset values
+        const nameAttr = state.selectedElement.dataset.name;
+        const categoryId = state.selectedElement.dataset.categoryid;
+        const subcategoryId = state.selectedElement.dataset.subcategoryid;
+
+        // Adjust modal for selected element
+        state.modalEls.modal.querySelector('#categoryName').value = nameAttr;
+        if (subcategoryId) {
+            state.modalEls.modalCategorySelect.querySelector(`[value="${categoryId}"]`).setAttribute('selected', 'selected');
+            state.modalEls.modal.querySelector(`#image`).setAttribute('disabled', 'true');
+        }
+        
+        state.modalEls.modalAction.insertAdjacentElement('afterend', state.modalEls.modalDelete); 
+    }
+
+    state.modalEls.modal.style.display = 'block';
+}
+
+const onCloseModal = () => {
+    // Hide modal
+    state.modalEls.modal.style.display = 'none';
+
+    // Enable selecting higher order category
+    state.modalEls.modalCategorySelect.removeAttribute('disabled');
+
+    // Reset modal
+    state.modalEls.modalCategorySelect.querySelectorAll('option').forEach(option => option.removeAttribute('selected'));
+    state.modalEls.modalCategorySelect.querySelector('[value=""]').setAttribute('selected', 'selected');
+    state.modalEls.modal.querySelector(`#image`).removeAttribute('disabled');
+    state.modalEls.modal.querySelector(`#categoryName`).value = "";
+
+    // Clean up state
+    if (state.modalEls.modalDelete) {
+        state.modalEls.modalDelete.remove();
+        state.modalEls.modalDelete = undefined;
+    }
+
+    // Clean up state
+    state.selectedElement = undefined;
+    
+}
+
+const onSaveModal = () => {
+    // Hide modal
+    state.modalEls.modal.style.display = 'none';
+
+    // Get data model for which is modal shown
+    const dataModel = state.modalEls.modal.dataset.model;
+
+    switch (dataModel) {
+        case 'categories':
+            // Get input values
+            let categoryId = state.modalEls.modalCategorySelect.value;
+            !categoryId ? categoryId = false : null;
+            const categoryName = state.modalEls.modal.querySelector('#categoryName').value;
+            const csrf = state.modalEls.modal.querySelector('#csrf').value;
+            const image = state.modalEls.modal.querySelector('#image').files[0] || null;
+
+            const formData = new FormData();
+            formData.append('_csrf', csrf);
+
+            if (!state.editMode) {
+                // Add new (sub)category
+                formData.append('categoryId', categoryId);
+                formData.append('categoryName', categoryName);
+
+                if (!categoryId) {
+                    formData.append('image', image);
+                }
+
+                fetch('/admin/categories', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => {
+                        return Promise.all([response.clone(), response.json()]);
+                    })
+                    .then(resolved => {
+                        const [res, json] = resolved;
+                        if (res.ok === true) {
+                            // Refresh after success
+                            window.location.href = '/admin/categories?success=true';
+                        } else {
+                            throw new Error(json.msg);
+                        }
+                    })
+                    .catch(err => {
+                        showErrorModal(err);
+                    });
+            } else {
+                // Update (sub)category
+
+                // Get dataset values of selected element
+                const categoryId = state.selectedElement.dataset.categoryid;
+                const subcategoryId = state.selectedElement.dataset.subcategoryid;
+
+                // Create body for request
+                formData.append('newCategoryName', categoryName)
+
+                let endpointStr = '/admin/categories';
+                if (subcategoryId) {
+                    endpointStr = '/admin/categories/sub';
+                    formData.append('subcategoryId', subcategoryId);
+                } else {
+                    formData.append('categoryId', categoryId);
+                    formData.append('image', image);
+                }
+
+                // Update
+                fetch(endpointStr, {
+                    method: 'PUT',
+                    body: formData
+                })
+                    .then(response => {
+                        return Promise.all([response.clone(), response.json()]);
+                    })
+                    .then(resolved => {
+                        const [res, json] = resolved;
+                        if (res.ok) {
+                            // Refresh after success
+                            window.location.href = '/admin/categories?success=true';
+                        } else {
+                            throw new Error(json.msg);
+                        }
+                    })
+                    .catch(err => {
+                        showErrorModal(err);
+                    });
+            }
+        break;
+        default:
+            const err = new Error('Data model extracted from modal dataset does not exist');
+            showErrorModal(err);
+            throw err;
+    }
+
+    // Close modal
+    onCloseModal();
+}
+
+const onModalSelectCategory = () => {
+    const categoryId = state.modalEls.modalCategorySelect.value;
+
+    const fileInput = state.modalEls.modal.querySelector('#image');
+
+    if (!categoryId) {
+        fileInput.removeAttribute('disabled');
+    } else {
+        fileInput.setAttribute('disabled', 'true');
+    }
+}
+
+/////
+// Product form functions
+/////
+const onSelectCategory = () => {
+    // Retrieve all subcategories from dataset and currently selected categoryId
+    const allSubcategories = JSON.parse(state.prodFormEls.inpSubcategory.dataset.subcategories);
+    const categoryId = state.prodFormEls.inpCategory.value;
+
+    // Clean up last options
+    state.prodFormEls.inpSubcategory.innerHTML = "";
+    state.prodFormEls.inpSubcategory.setAttribute('disabled', true);
+    // Readd default option element
+    const defaultOptionElement = document.createElement('option');
+    defaultOptionElement.setAttribute('value', "");
+    defaultOptionElement.innerText = "Vyberte podkategorii";
+    state.prodFormEls.inpSubcategory.insertAdjacentElement('beforeend', defaultOptionElement);
+
+    // Show matching subcategories and enable their selection
+    const curSubcategories = allSubcategories[categoryId];
+    if (!curSubcategories) return;
+    if (curSubcategories.length > 0) {
+        curSubcategories.forEach(subcategory => {
+            const optionElement = document.createElement('option');
+            optionElement.setAttribute('value', subcategory._id);
+            optionElement.innerText = subcategory.name;
+            
+            state.prodFormEls.inpSubcategory.insertAdjacentElement('beforeend', optionElement);
+            state.prodFormEls.inpSubcategory.removeAttribute('disabled');
+        })
+    }
+}
+
+///////////////////////////////////
+///// DEFINE STATE
+const state = {
+    // Modal elements
+    modalEls: null,
+    // Is modal editing or creating
+    editMode: undefined,
+    // Which element is currently selected (important for its dataset)
+    selectedElement: undefined,
+    // Product form elements
+    prodFormEls: null
+}
+
+///////////////////////////////////
+///// CALLING READY FUNCTION
+ready(() => {
+    const menu = document.getElementById('menu');
+    if (menu) {
+        const menuItems = Array.from(menu.querySelectorAll('.navigation__item'));
+        const activeMenuItemIndex = menuItems.findIndex(item => item.classList.contains('active'));
+        
+        // Toggle menu on click
+        menu.addEventListener('click', toggleMenu.bind(this, menu));
+
+        menuItems.forEach((item, index) => {
+            // Emphasize hovered item
+            item.addEventListener('mouseenter', emphasizeHoveredMenuItem.bind(this, menuItems, index));
+            // Emphasize active page on unhover 
+            item.addEventListener('mouseleave', emphasizeHoveredMenuItem.bind(this, menuItems, activeMenuItemIndex));
+        });
+    }
+
+    // Try to find delete product button
+    const deleteProductBtns = document.querySelectorAll('.deleteProductBtn');
+    if (deleteProductBtns.length > 0) {
+        deleteProductBtns.forEach(button => button.addEventListener('click', onDeleteProduct));
+    }
+
+    // Try to find add category button
+    const addCategoryBtn = document.getElementById('add-category-btn');
+    if (addCategoryBtn) {
+        // Find modal elements
+        const modal = document.getElementById('modal');
+        const modalHeading = modal.querySelector('#modal-heading');
+        const modalAction = modal.querySelector('#modal-action');
+        const modalClose = modal.querySelector('#modal-close');
+        const modalCancel = modal.querySelector('#modal-cancel');
+        const modalCategorySelect = modal.querySelector('#categoryId')
+
+        const modalEls = {
+            modal,
+            modalHeading,
+            modalAction,
+            modalClose,
+            modalCancel,
+            modalCategorySelect
+        }
+
+        // Put modal elements into global state
+        state.modalEls = modalEls;
+
+        // Add listener to change in supercategory to disable file input
+        modalCategorySelect.addEventListener('change', onModalSelectCategory);
+    
+        // On cancelling modal
+        modalEls.modalClose.addEventListener('click', onCloseModal);
+        modalEls.modalCancel.addEventListener('click', onCloseModal);
+    
+        // On saving modal
+        modalEls.modalAction.addEventListener('click', onSaveModal);
+
+        // Add listener to add category button
+        addCategoryBtn.addEventListener('click', () => {
+            state.editMode = false;
+            return onShowModal();
+        });
+
+        // Add event listeners to edit buttons
+        Array.from(document.querySelectorAll('.category-box__edit-btn')).forEach(btn => {
+            btn.addEventListener('click', () => {
+                state.editMode = true;
+                state.selectedElement = btn;
+                return onShowModal();
+            });
+        })
+    }
+
+    // Try to find #product-form
+    const productForm = document.getElementById('product-form');
+    if (productForm) {
+        // Get inputs
+        const inpCategory = productForm.querySelector('#categoryId');
+        const inpSubcategory = productForm.querySelector('#subcategoryId');
+
+        const prodFormEls = {
+            inpCategory,
+            inpSubcategory
+        }
+
+        // Put form elements into global state
+        state.prodFormEls = prodFormEls;
+
+        // Listen for change in category select to display matching subcategories
+        inpCategory.addEventListener('change', onSelectCategory);
+    }
+
+    // Try to find #put-order
+    const putOrderBtn = document.getElementById('put-order');
+    if (putOrderBtn) {
+        putOrderBtn.addEventListener('click', () => {
+            state.selectedElement = putOrderBtn;
+            return putOrderHandler();
+        });
+    }
+});
+export const postCartHandler = async ({ action, csrf, amount, productId }) => {
+    switch (action) {
+        case 'ADD':
+        case 'REMOVE':
+
+            // Create body object
+            const bodyObj = {
+                action: action,
+                amount: amount,
+                productId: productId
+            };
+
+            // Send request
+            return fetch('/kosik', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-Token': csrf,
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(bodyObj)
+            }).then(res => {
+                return Promise.all([res.clone(), res.json()]);
+            }).then(promises => {
+                const [ response, body ] = promises;
+                if (!(response.ok && response.status >= 200 && response.status < 300)) {
+
+                    throw new Error(body.msg);
+                }
+                const updatedCart = body.cart;                
+                return updatedCart;
+            }).catch(err => {
+                throw new Error(err);
+            });
+
+            break;
+        default: throw new Error('Non-existing cart action');
+    }
+}
+export const orderSubmitHandler = e => {
+       
+    // Show spinner on submit button
+    const submitBtn = e.target.elements.order_submit;
+    const submitBtnText = submitBtn.textContent;
+    submitBtn.textContent = "";
+    submitBtn.classList.add('loading');
+
+    ///// Handle getting stripe session id and stripe redirection
+    if (paymentValue === 'CRD') {
+        e.preventDefault();
+
+        // Get form elements and stripe public key
+        const stripePublicKey = e.target.dataset.stripepublickey;
+        const formEls = e.target.elements;
+
+        // Initialize stripe
+        const stripe = Stripe(stripePublicKey);
+        
+        // Create new form data
+        const formData = new FormData();
+        formData.append('_csrf', formEls._csrf.value);
+        formData.append('firstName', firstNameValue);
+        formData.append('lastName', lastNameValue);
+        formData.append('email', emailValue);
+        formData.append('phone', phoneValue);
+        formData.append('street', streetValue);
+        formData.append('city', cityValue);
+        formData.append('delivery', deliveryValue);
+        formData.append('payment', paymentValue);
+        formData.append('zipCode', zipCodeValue);
+
+        // Fetch POST /objednavka, expecting json
+        fetch('/objednavka', {
+            method: 'POST',
+            body: formData
+        }).then(res => {
+            return res.json();
+        }).then(session => {
+            return stripe.redirectToCheckout({ sessionId: session.id });
+        }).then(result => {
+            if (result.error) {
+                fcns.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
+            }
+        }).catch(err => {
+            fcns.createModal('Nastala chyba', 'Objednávka se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
+        }).finally(() => {
+            submitBtn.textContent = submitBtnText;
+            submitBtn.classList.remove('loading');
+        })
+    }
+}
+/////
+// Categories slider
+/////
+export const moveCategoriesSlider = () => {
+    // Find #categoires-scrollable-container
+    const scrollableContainer = document.getElementById("categories-scrollable-container");
+
+    // Find .categories-category
+    const categoryEl = document.querySelector('.categories-category');
+    // Find categoryEl width with margin
+    const moveInPixels = outerWidth(categoryEl);
+
+    // Conditionally scroll to left or to right
+    if (state.categoriesSlider.selectedArr === 'left') {
+        scrollableContainer.scrollBy({
+        top: 0,
+        left: -moveInPixels,
+        behavior: "smooth"
+        });
+    } else if (state.categoriesSlider.selectedArr === 'right') {
+        scrollableContainer.scrollBy({
+        top: 0,
+        left: moveInPixels,
+        behavior: "smooth"
+        });
+    }
+}
+/////
+// Utilities functions
+/////
+export const outerWidth = (el) => {
+    let width = el.offsetWidth;
+    const style = getComputedStyle(el);
+
+    width += parseInt(style.marginLeft) + parseInt(style.marginRight);
+    return width;
+}
+export const ready = callbackFunc => {
+    if (document.readyState !== 'loading') {
+        // Document is already ready, call the callback directly
+        callbackFunc();
+    } else if (document.addEventListener) {
+        // All modern browsers to register DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', callbackFunc);
+    } else {
+        // Old IE browsers
+        document.attachEvent('onreadystatechange', function() {
+            if (document.readyState === 'complete') {
+                callbackFunc();
+            }
+        });
+    }
+}
+export default {
+    categoriesSlider: {
+        selectedArr: null // 'left' || 'right'
+    },
+    hamburgerBtn: null
+}
+import state from './utils/state';
+import * as fcns from './utils/functions';
+import * as ajax from './utils/ajax';
+import { formELs }  from './utils/data';  
+///////////////////////////////////
+///// CALLING READY FUNCTION
+fcns.ready(() => {   /////
+// CATEGORIES SLIDER
+/////
+
+// Try to find #categories-slider
+const categoriesSlider = document.getElementById("categories-slider");
+// If #categories-slider found
+if (categoriesSlider) {
+    // Find arrows
+    const arrowLeft = document.getElementById("arrow-left");
+    const arrowRight = document.getElementById("arrow-right");
+    
+    // Attach click listener to arrows
+    arrowLeft.addEventListener("click", () => {
+        state.categoriesSlider.selectedArr = 'left';
+        fcns.moveCategoriesSlider();
+    });
+    arrowRight.addEventListener("click", () => {
+        state.categoriesSlider.selectedArr = 'right';
+        fcns.moveCategoriesSlider();
+    });        
+}
+
+/////
+// CART & ORDER
+/////
+
+///// Submit button event listener
+const orderForm = document.getElementById('order-form');
+if (orderForm) {
+    orderForm.addEventListener('submit', ajax.orderSubmitHandler);
+}
+            // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
+            const postCartData = {
+                action: 'ADD',
+                productId: btn.dataset.productid,
+                csrf: btn.dataset.csrf,
+                amount: btn.parentElement.querySelector('input').value
+            }

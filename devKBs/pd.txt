@@ -1,0 +1,190 @@
+.contact {
+    &__icons {
+        width: 100vw;
+        padding: 17.5rem 15rem;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        
+        @media only screen and (max-width: 1400px) {
+            padding: 8rem 15rem;
+        }
+        @media only screen and (max-width: 1100px) {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        @media only screen and (max-width: 1051px) {
+            padding: 8rem 5rem;
+        }
+        @media only screen and (max-width: 851px) {
+            padding: 8rem 0rem;
+        }
+
+        &__icon {
+            width: 20%;
+            margin: 5rem;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            @media only screen and (max-width: 750px) {
+                margin: 5rem 3rem;
+            }
+            @media only screen and (max-width: 660px) {
+                margin: 5rem;
+            }
+            @media only screen and (max-width: 440px) {
+                margin: 5rem 8rem;
+            }
+
+            &__image {
+                margin-bottom: 3rem;
+            }
+            &__text {
+                text-align: center;
+
+                @media only screen and (max-width: 630px) {
+                    margin: -2rem;
+                }
+                @media only screen and (max-width: 440px) {
+                    margin: -2rem -4rem;
+                }
+
+                &--link {
+                    color: $color-primary-light;
+                }
+            }
+        }
+    }
+}
+.error {
+    min-height: 50rem;
+    height: calc(100vh - 299px);
+    padding: 0 2rem;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    transform: translateY(-5rem);
+
+    & .heading-1 {
+        margin-bottom: 1rem;
+        @media only screen and (max-width: 400px) {
+            font-size: $font-large;
+        }
+    }
+    & .heading-4 {
+        margin-bottom: 5rem;
+        @media only screen and (max-width: 700px) {
+            text-align: center;
+        }
+    }
+    &__cta {
+        border: 2px solid $color-black;
+
+        color: $color-black;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & a {
+            width: 100%;
+            height: 100%;
+            padding: 1rem 4rem;
+
+            font-weight: 600;
+            color: $color-black;
+
+            display: inline-block;
+
+            transition: all .2s;
+
+            &:hover {
+                background-color: $color-black;
+                color: $color-white;
+            }
+        }
+    }
+}
+<%- include('../includes/head.ejs') %>
+</head>
+<body>
+    <%- include('../includes/header.ejs') %>
+    <main class="main contact">
+        
+        <!--HEADER-->
+        <section class="contact">
+            <div class="contact__icons">
+                <div class="contact__icons__icon">
+                    <img src="/img/at.png" alt="e-mail" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">keramikarosice@seznam.cz</p>
+                </div>
+                <div class="contact__icons__icon">
+                    <img src="/img/phone.png" alt="telefon" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">+420 603 707 766</p>
+                </div>
+                <div class="contact__icons__icon">   
+                    <img src="/img/address.png" alt="adresa" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text">Havířská 956,<br/> Rosice 665 01</p>
+                </div>
+                <a href="https://www.facebook.com/vlastimila.nepevna" target="_blank" class="contact__icons__icon">    
+                    <img rel="noopener" src="/img/facebook.png" alt="facebook" class="contact__icons__icon__image">
+                    <p class="contact__icons__icon__text contact__icons__icon__text--link">Facebook</p>
+                </a>    
+            </div>
+        </section>
+        <section class="categories" id="categories-slider">
+            <p class="categories__bill categories__bill--left" id="arrow-left"><</p>
+            <container class="categories__content" id="categories-scrollable-container">
+                <container class="categories__content__inner">
+                    <% categories.forEach((category, index) => { %>
+                        <a href="/shop/<%= category.name %>" class="categories__category categories-category">
+                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="categories__photo">
+                            <p class="categories__name"><%= category.name %></p>
+                        </a>
+                    <% }) %>
+                </container>
+            </container>
+            <p class="categories__bill categories__bill--right" id="arrow-right">></p>
+        </section>  
+    </main>
+
+    <%- include('../includes/footer.ejs') %>
+<%- include('../includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/header.ejs') %>
+    <main class="main error">
+        <!--MAIN-->
+        <section class="error">
+            <h1 class="heading-1">ERROR 404</h1>
+            <h2 class="heading-4">STRÁNKA NENALEZENA</h2>
+            <div class="error__cta"><a href="/">DOMŮ</a></div>
+        </section>
+    </main>
+
+    <%- include('./includes/footer.ejs') %>
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+    <%- include('./includes/header.ejs') %>
+    <main>
+        <!--MAIN-->
+        <section class="error">
+            <h1 class="heading-1">ERROR 500</h1>
+            <p class="heading-4">Chyba serveru. Opakujte akci nebo kontaktujte webmastera: team@amnionweb.cz.</p>
+            <div class="error__cta"><a href="/">DOMŮ</a></div>
+        </section>
+    </main>
+
+    <%- include('./includes/footer.ejs') %>
+<%- include('./includes/end.ejs') %>

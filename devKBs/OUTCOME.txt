@@ -1,0 +1,118 @@
+---------------------
+----- Napsaný kód
+---------------------
+(pozn.: Do "CSS" zde poèítám i EJS markup)
+JM:
+- JS: 88.9kb (77% z JS)
+- CSS: 70.3kb + 5kb = 75.3kb (56.4% z CSS)
+
+OV:
+- JS: 25.9kb (23% z JS)
+- CSS: 44kb (33% z CSS)
+
+PD:
+- CSS: 6.21kb + 7.9kb = 14.1kb (10.6% z CSS)
+
+PD + JM:
+- CSS: 12.9kb
+	+ PD: 7.9kb
+	+ JM: 5kb
+
+Dohromady JS: 114.8kb
+Dohromady CSS: 133.4kb
+
+JS : CSS (pøevedeno JS*1.5): 1722:1334 = 574:445
+
+---------------------
+----- Pomìr dílèích èástí vývoje
+---------------------
+  JS :  CSS : DSGN
+
+ 574 :  445
+          6 :    4
+3444 : 2670 : 1780 = VÝSLEDNÝ POMÌR
+3444 + 2670 + 1780 = 7894 = 100%
+
+JS:   43,6%
+CSS:  33,9%
+DSGN: 22,5%
+
+---------------------
+----- Rozdìlení práce ve Figmì
+---------------------
+Body:
+- Admin: 3
+- Desktop: 5
+- Mobil: 1
+
+ADMIN:
+JM:			24b
+- Index			3
+- Menu			3
+- Produkty + objednávky	3
+- Kategorie		3
+- Modal			3
+- Detail produktu	3
+- Detail objednávky	3
+- Login + error page	3
+
+DESKTOP:
+OV:			19.2b
+- Zápatí		5
+- Košík			5
+- Modals		5
+- 1/2 * E-shop		2.5
+- 1/3 * O mnì		1.6
+
+JF:			14.2b
+- Domù			5
+- Menu			5
+- 1/2 * Kontakt		2.5
+- 1/3 * O mnì		1.6
+
+JM:			11.6b
+- 1/2 * E-shop		2.5
+- 1/2 * Kontakt		2.5
+- 1/3 * O mnì		1.6
+- Faktura		5
+
+MOBIL:
+OV:			5b
+- Domù			1
+- E-shop		1
+- O mnì			1
+- 1/2 * Košík		.5
+- Zápatí		1
+- 1/2 * Menu		.5
+
+JM:			2b
+- 1/2 * Košík		.5
+- 1/2 * Menu		.5
+- Kontakt		1
+
+Celkem:			76.0b
+JM: 24 + 11.6 + 2 =	37.6b (49%)
+OV: 19.2 + 5 =		24.2b (32%)
+JF: 14.2 =		14.2b (19%)
+
+---------------------
+----- Rozdìlení penìz
+---------------------
+
+ROZPOÈET: 15000Kè
+Do fondu: -1000Kè
+-----------------
+Rozdìlit: 14000Kè
+
+
+JS:   		43,6%
+CSS:  		33,9%
+DESIGN:		22,5%
+
+
+	  JS	 CSS	DESIGN
+JM:	4700	2677	  1543
+OV:	1404	1566	  1008
+PD:	  --	 503	    --
+JF:	  --	  --	   599
+KZ:	  --	  --	    --

@@ -1,0 +1,436 @@
+@keyframes spinner {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+@keyframes headerImgTurn {
+    from {
+        transform: rotate(-20deg);
+    }
+    to {
+        transform: rotate(0deg);        
+    }
+}
+
+@keyframes headerBackImgTurn {
+    from {
+        opacity: 0;
+        transform: rotate(20deg);
+    }
+    to {
+        opacity: 1;
+        transform: rotate(-3deg);        
+    }
+}
+/////
+// INDEX
+/////
+@keyframes headerH1SlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20rem);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+@keyframes headerH2SlideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20%);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(30%);
+    }
+}
+.categories {
+    padding: 8rem;
+    margin-bottom: 16rem;
+    background-color: $color-secondary;
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    @media only screen and (max-width: 1250px) {
+        padding: 4rem;   
+    }
+    @media only screen and (max-width: 500px) {
+        padding: 5rem;
+    }
+    @media only screen and (max-width: 400px) {
+       padding: 5rem 1.5rem;
+    }
+    @media only screen and (max-width: 310px) {
+        padding: 5rem 1rem;
+    }
+    @media only screen and (max-width: 300px) {
+        padding: 5rem 0;
+    }
+
+    &__bill {
+        cursor: pointer;
+        font-size: 8rem;
+        @media only screen and (max-width: 1000px) {
+            display: none;
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            display: none;
+        }
+    }
+    &__content {
+        margin: 0 5rem;
+        overflow:  hidden;
+
+        flex-grow: 1;
+        display: flex;
+        justify-content: center;
+
+        &__inner {
+            display: flex;
+            flex-direction: row;
+
+            @media only screen and (max-width: 1000px) {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    }
+    &__category {
+        width: 27rem;
+        height: 27rem;
+        margin: 0 4rem;
+
+        flex-shrink: 0;
+
+        position: relative;
+
+        @media only screen and (max-width: 1250px) {
+            width: 20rem;
+            height: 20rem;
+        }
+        @media only screen and (min-width: 1001px) {
+            &:hover {
+                .categories__name {
+                    transform: translate(-50%, -50%) scale(1);
+                    opacity: 1;
+                }
+                .categories__photo {
+                    filter: brightness(30%);
+                    transform: scale(.93);
+                }               
+            }
+        }
+        @media only screen and (max-width: 1000px) {
+            width: 40rem;
+            height: 40rem;
+            margin-bottom: 5rem;
+
+            display: block;
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            width: 40rem;
+            height: 40rem;
+            margin-bottom: 5rem;
+
+            display: block;
+        }
+        @media only screen and (max-width: 800px) {
+            width: 27rem;
+            height: 27rem;
+        }
+        @media only screen and (max-width: 500px) {
+            width: 20rem;
+            height: 20rem;
+        }
+        @media only screen and (max-width: 400px) {
+            width: 18rem;
+            height: 18rem;
+        }
+    }
+    &__photo {
+        width: 100%;
+        height: 100%;
+        object-position: center;
+
+        transition: all .5s;
+    }
+    &__name {
+        max-width: 100%;
+        padding: 2rem;
+        transform: translate(-50%, -50%) scale(.9);
+        opacity: 0;
+
+        letter-spacing: 3px;
+        line-height: 145%;
+        text-transform: uppercase;
+        text-align: center;
+        font-weight: 500;
+        color: $color-white;
+        font-size: $font-big;
+        
+        position: absolute;
+        top: 50%;
+        left: 50%;
+
+        transition: all .5s;
+
+        @media only screen and (max-width: 1000px) {
+            max-width: unset;
+            width: 100%;
+            opacity: 1;
+            background-color: $color-black-overlay-dark;
+        }
+        @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+            max-width: unset;
+            width: 100%;
+            opacity: 1;
+            background-color: $color-black-overlay-dark;
+        }
+    }
+}
+.index {
+    
+    &__header {
+        padding: 12rem 15rem 15rem 15rem;
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+
+        @media only screen and (min-width: 1950px) {
+            justify-content: center;
+        }
+        @media only screen and (max-width: 1600px) {
+            padding: 12rem 10rem 15rem 10rem;
+        }
+        @media only screen and (max-width: 1350px) {
+            padding: 12rem 5rem 15rem 5rem;
+        }
+        @media only screen and (max-width: 1000px) {
+            flex-direction: column;
+            padding: 12rem 0 15rem 0;
+        }
+        @media only screen and (max-width: 550px) {
+            padding-top: 8rem;
+        }
+
+        &__text {
+            margin-left: 8%;
+
+            display: flex;
+            flex-direction: column;
+
+            @media only screen and (min-width: 1950px) {
+                margin-left: 0;
+                margin-right: 30rem;
+            }
+            @media only screen and (max-width: 1550px) {
+               margin-left: 4%;
+            }
+            @media only screen and (max-width: 1450px) {
+                margin-left: 8%;
+            }
+            @media only screen and (max-width: 1050px) {
+                margin-left: 4%;
+            }
+            @media only screen and (max-width: 1000px) {
+                margin-left: 0;
+                align-items: center;
+            }
+            
+            & .heading-1 {
+                margin-bottom: 2rem;
+                animation: headerH1SlideIn 1.5s forwards ease-out;
+
+                @media only screen and (max-width: 1450px) {
+                    font-size: $font-large;
+                }
+                @media only screen and (max-width: 400px) {
+                    font-size: $font-biggest;
+                }
+            }
+            & .heading-2 {
+                margin-bottom: 12rem;              
+                opacity: 0;
+                transform: translateX(-20%);
+                
+                animation: headerH2SlideIn 1s .5s forwards ease-out;
+
+                @media only screen and (max-width: 1450px) {
+                    font-size: $font-biggest;
+                }
+                @media only screen and (max-width: 1000px) {
+                    margin-bottom: 5rem;
+                    transform: translateX(0);
+                    opacity: 1;
+
+                    animation: none;
+                }
+                @media only screen and (max-width: 1200px) {
+                   margin-bottom: 6rem;
+                }
+                @media only screen and (max-width: 400px) {
+                    font-size: $font-bigger;
+                    margin-bottom: 0;
+                }
+            }
+            &__cta {
+                padding: 2rem 10rem;
+                border: 2px solid $color-primary;
+                border-radius: 3rem;
+                border-top-right-radius: 10rem;
+                box-shadow: -2px 2px 5px 3px $color-primary-overlay;
+                
+                color: $color-primary;
+                font-size: $font-big;
+
+                align-self: center;
+
+                transition: all .2s;
+
+                &--desktop {
+                    &:hover {
+                        box-shadow: -2px 2px 5px 1px $color-secondary;
+                        transform: translate(3px, 1px);
+                    }
+                    @media only screen and (max-width: 1000px) {
+                        display: none;
+                    }
+                }
+                &--mobile {
+                    margin-bottom: 5rem;
+                    transform: translateY(15rem);
+
+                    @media only screen and (min-width: 1001px) {
+                        display: none;
+                    }
+                    @media only screen and (max-width: 1000px) {
+                        margin-bottom: 8rem;
+                    }
+                    @media only screen and (max-width: 400px) {
+                        padding: 2rem 6rem;
+                        border-radius: 1.5rem;
+                        border-top-right-radius: 6rem;
+
+                        font-size: $font-regular;
+                    }
+                }
+            }
+        }
+        &__photo {
+            width: 60rem;
+            height: 50rem;
+            margin-right: 5%;
+
+            position: relative;
+
+            @media only screen and (max-width: 1450px) {
+                width: 50rem;
+                height: 40rem;
+            }
+            @media only screen and (max-width: 1200px) {
+                width: 40rem;
+                height: 30rem;
+            }
+            @media only screen and (max-width: 1000px) {
+                width: 100vw;
+                height: 55rem;
+                margin-right: 0;
+
+                transform: translateY(8rem);
+            }
+            @media only screen and (max-width: 600px) {
+                height: 45rem;
+            }
+            @media only screen and (max-width: 500px) {
+                height: 35rem;
+            }
+            @media only screen and (max-width: 420px) {
+                height: 30rem;
+            }
+            @media only screen and (max-width: 320px) {
+                height: 25rem;
+            }
+
+            &__background {
+                height: 100%;
+                width: 100%;
+                background-color: $color-secondary;
+                transform: rotate(-3deg);
+
+                position: absolute;
+                z-index: 1;
+
+                animation: headerBackImgTurn 1.5s forwards;
+                @media only screen and (max-width: 1000px) {
+                    display: none;
+                }
+            }
+            &__image {
+                width: 100%;
+                height: 100%;
+                box-shadow: 1px 1px 10px 1px $color-black-overlay;
+                transform: rotate(0deg);
+                
+                position: absolute;
+                z-index: 2;
+
+                animation: headerImgTurn 1.5s forwards;
+
+                @media only screen and (max-width: 1000px) {
+                    animation: none;
+                    
+                    object-fit: cover;
+                }
+            }
+        }      
+    }
+}
+<%- include('../includes/head.ejs') %>
+</head>
+<body>
+    <%- include('../includes/header.ejs') %>
+    <%- include('../includes/gradient.ejs') %>
+    
+    <main class="main index">
+
+        <!-- HEADER -->
+        <section class="index__header">
+            <div class="index__header__text">
+                <h1 class="heading-1">Keramika z Rosic</h1>
+                <h2 class="heading-2">Vlastimily Nepevné</h2>
+                <a href="/shop" class="index__header__text__cta index__header__text__cta--desktop">E-shop</a>
+            </div> 
+            <div class="index__header__photo">
+                <img src="../img/index-photo.jpg" alt="Hlavní fotka" class="index__header__photo__image">
+                <div class="index__header__photo__background"></div>
+            </div>
+            <a href="/shop" class="index__header__text__cta index__header__text__cta--mobile">E-shop</a>
+        </section>
+        
+        <section class="categories" id="categories-slider">
+            <p class="categories__bill categories__bill--left" id="arrow-left"><</p>
+            <container class="categories__content" id="categories-scrollable-container">
+                <container class="categories__content__inner">
+                    <% categories.forEach((category, index) => { %>
+                        <a href="/shop/<%= category.name %>" class="categories__category categories-category">
+                            <img src="<% if ((category.images[0] !== 'url') && false) { %>https://keramika-rosice.herokuapp.com/<%= category.images[0] %><% } else { %>../img/index-photo.jpg<% } %>" alt="<%= category.name %>" class="categories__photo">
+                            <p class="categories__name"><%= category.name %></p>
+                        </a>
+                    <% }) %>
+                </container>
+            </container>
+            <p class="categories__bill categories__bill--right" id="arrow-right">></p>
+        </section>  
+          
+    </main>
+
+    <%- include('../includes/footer.ejs') %>
+<%- include('../includes/end.ejs') %>

@@ -1,0 +1,2232 @@
+@keyframes showMenuList {
+    from {
+        transform: translateX(-30rem);
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeErrModal {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+///////////////////////
+///// COLORS
+
+// Colors
+$color-orange: #CF7838;
+$color-red: #AE0000;
+$color-green: lightgreen;
+
+// Shades
+$color-black: black;
+$color-black-overlay: rgba($color-black, .5);
+$color-grey: #CECECE;
+$color-grey-light: #EAEAEA;
+$color-white: white;
+$color-white-overlay: rgba($color-white, .5);
+
+
+///////////////////////
+///// SIZES
+
+// Font sizes
+$font-small: 1.6rem;
+$font-regular: 1.8rem;
+$font-big: 2.2rem;
+$font-largest: 5rem;
+*, *::after, *::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: inherit;
+}
+
+html {
+    font-size: 62.5%;
+    box-sizing: border-box;
+}
+
+body {
+    font-size: 1.6rem;
+    font-family: 'Roboto', sans-serif;
+}
+
+a,
+a:visited,
+a:link {
+  text-decoration: none;
+  color: inherit;
+}
+.heading-1 {
+    font-family: 'Charm', cursive;
+    font-weight: 300;
+    font-size: $font-largest;
+    letter-spacing: .4rem;
+}
+
+.heading-2 {
+    font-size: $font-regular;
+    letter-spacing: .2rem;
+    font-weight: 400;
+}
+
+.heading-3 {
+    font-size: $font-big;
+    text-transform: uppercase;
+    letter-spacing: .3rem;
+}
+
+.heading-4 {
+    font-size: $font-regular;
+    font-weight: 500;
+    
+    &--light {
+        color: $color-white;
+    }
+}
+
+.paragraph {
+    &-small {
+        font-size: $font-regular;
+    }
+    &-normal {
+        font-size: $font-big;
+        font-weight: 400;
+        letter-spacing: .2rem;
+    }
+}
+.add-button {
+    background: none;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    
+    font-size: $font-regular;
+    font-weight: bold;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &::before {
+        content: "+";
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 1rem;
+        border: 3px solid $color-black;
+        border-radius: 50%;
+
+        color: $color-black;
+        font-size: $font-regular;
+        font-weight: 900;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+.category-box {
+    width: 35rem;
+    padding-left: 3rem;
+    margin: 5rem;
+    background-color: $color-black;
+
+    &__heading {
+        height: 5rem;
+        padding: 0 2rem;
+
+        text-transform: capitalize;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &__subcategories {
+        width: 100%;
+        max-height: 24rem;
+        background-color: $color-white;
+        overflow-y: auto;
+    }
+    &__subcategory {
+        height: 6rem;
+        padding: 0 2rem;
+        background-color: $color-white;
+
+        text-transform: capitalize;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        &:nth-child(even) {
+            background-color: $color-grey-light;
+        }
+    }
+    &__edit-btn {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &::before {
+            content: "?";
+            width: 2.5rem;
+            height: 2.5rem;
+            margin-right: 1rem;
+            border: 3px solid $color-white;
+            border-radius: 50%;
+
+            color: $color-white;
+            font-size: $font-regular;
+            font-weight: 900;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        &--dark {
+            &::before {
+                border: 3px solid $color-black;
+                
+                color: $color-black;
+            }
+        }
+    }
+}
+.err-modal {
+    width: 50%;
+    padding: 2rem;
+    transform: translateX(-50%);
+    background-color: salmon;
+    border: 1px solid $color-black;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    position: fixed;
+    top: 2rem;
+    left: 50%;
+    z-index: 100000;
+
+    animation: fadeErrModal 2s 8s;
+
+    & .heading-4 {
+        margin-bottom: 1rem;
+
+        font-family: sans-serif;
+    }
+    & p {
+        font-size: $font-small;
+    }
+}
+.item-list {
+    width: 100%;
+
+    border-collapse: collapse;
+
+    & tr {
+        height: 5rem;
+    }
+
+    &__options {
+        margin-bottom: 4rem;
+
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &__content {
+        width: 100%;
+    }
+    &__heading {
+        background-color: $color-black;
+
+        color: $color-white;
+        letter-spacing: .2rem;
+
+        & th {
+            font-weight: 400;
+        }
+    }
+    &__row {
+        background-color: $color-grey-light;
+
+        &:nth-child(even) {
+            background-color: $color-white;
+        }
+
+        &--red {
+            background-color: salmon !important;
+        }
+        &--green {
+            background-color: lightgreen !important;
+        }
+        &--yellow {
+            background-color: blanchedalmond !important;
+        }
+        &--white {
+            background-color: $color-white !important;
+        }
+
+        & td {
+            border-left: 1px solid $color-grey;
+            border-right: 1px solid $color-grey;
+
+            text-align: center;
+        }
+
+        &__btn {
+            padding: .5rem 1rem;
+            border: 1px solid $color-black;
+            background-color: $color-white;
+            outline: none;
+            cursor: pointer;
+    
+            font-weight: 600;
+            font-size: $font-small;
+    
+            &:not(:last-child) {
+                margin-right: 2rem;
+            }
+            &--danger {
+                background-color: $color-red;
+                
+                color: $color-white;
+            }
+    
+            &:focus, &:active {
+                outline: none;
+                border: 1px solid $color-black;
+            }
+            &:hover {
+                box-shadow: 0 1px 5px 1px $color-white-overlay;
+            }
+        }
+    }
+}
+.login-form {
+    width: 100%;
+    margin-top: 24vh;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__input {
+        width: 30%;
+        min-width: 30rem;
+        height: 5rem;
+        padding: 1rem;
+        margin-bottom: 3rem;
+        border: 2px solid $color-black;
+
+        font-size: $font-regular;
+        letter-spacing: .2rem;
+
+        &--hidden {
+            display: none;
+        }
+
+        &:focus {
+            border-radius: none;
+            outline: none;
+        }
+    }
+    &__submit {
+        border: none;
+        outline: none;
+        background-color: $color-white;
+        background-image: none;
+        cursor: pointer;
+
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: .2rem;
+        font-size: $font-regular;
+    }
+}
+.modal {
+    width: 100%;
+    height: 100%;
+
+    display: none;
+
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 10000;
+
+    &__background {
+        width: 100%;
+        height: 100%;
+        background-color: $color-black-overlay;
+        transform: translateZ(-1rem);
+        backdrop-filter: blur(10px);
+
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    &__content {
+        width: 100rem;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        position: absolute;
+        top: 50%;
+        left: 50%;
+    }
+    &__heading {
+        width: 100%;
+        height: 5rem;
+        padding: 0 2rem;
+        background-color: $color-black;
+
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    &__close-btn {
+        width: 3rem;
+        height: 3rem;
+        background-color: transparent;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        position: relative;
+
+        &::before,
+        &::after {
+            content: "";
+            height: .5rem;
+            width: 2rem;
+            background-color: $color-white;
+            transform: translateY(-50%) translateX(-50%);
+            
+            display: block;
+            
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+        &::before {
+            transform: translateY(-50%) translateX(-50%) rotate(45deg);
+        }
+        &::after {
+            transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+        }
+    }
+    &__main {
+        width: 100%;
+        padding: 5rem;
+        margin-bottom: 2rem;
+        background-color: $color-white;
+    }
+    &__row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        & > * {
+            margin-right: auto;
+        }
+    }
+    &__data-cell {
+        display: flex;
+        flex-direction: column;
+
+        & .modal__label {
+            margin-bottom: 1rem;
+
+            font-weight: 500;
+        }
+        & .modal__input {
+            width: 30rem;
+            height: 4rem;
+            padding: 1rem;
+            border: 1px solid $color-black;
+
+            &:focus, &:active {
+                outline: none;
+                border: 1px solid $color-black;
+            }
+        }
+    }
+    &__actions {        
+        padding-bottom: 5rem;
+    }
+    &__btn {
+        width: 10rem;
+        height: 3rem;
+        border: 1px solid $color-black;
+        outline: none;
+        cursor: pointer;
+
+        font-weight: 600;
+
+        &:not(:last-child) {
+            margin-right: 1rem;
+        }
+        &--cancel {
+            background-color: $color-orange;
+        }
+        &--danger {
+            background-color: $color-red;
+            
+            color: $color-white;
+        }
+
+        &:focus, &:active {
+            outline: none;
+            border: 1px solid $color-black;
+        }
+        &:hover {
+            box-shadow: 0 1px 5px 1px $color-white-overlay;
+        }
+    }
+}
+.order-detail {
+    width: 100%;
+
+    &__cancel-notification {
+        width: 100%;
+
+        color: red;
+        font-size: $font-big;
+        font-weight: bold;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    &__select {
+        padding: 1rem;
+        margin-top: 1rem;
+        outline: none;
+
+        font-size: $font-small;
+    }
+    &__row {
+        width: 100%;
+        padding: 5rem;
+
+        display: flex;
+        justify-content: space-evenly;
+
+        position: relative;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $color-black;
+        }
+    }
+    &__column {
+        width: 25%;
+
+        display: flex;
+        flex-direction: column;
+    }
+    &__data {
+        &:first-child {
+            margin-bottom: 2rem;
+        }
+
+        & .heading-4 {
+            margin-bottom: .5rem;
+
+            font-size: $font-big;
+        }
+    }
+    &__btn {
+        padding: 2rem 5rem;
+        transform: translateY(-50%);
+        cursor: pointer;
+
+        font-size: $font-regular;
+        font-weight: bold;
+
+        position: absolute;
+        top: 50%;
+        right: 0rem;
+    }
+    &__cancel-form {
+        width: 100%;
+        margin-top: 12rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        
+        &__btn {
+            padding: 2rem 5rem;
+            background-color: red;
+            border: none;
+            outline: none;
+            cursor: pointer;
+
+            color: white;
+            font-size: $font-big;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+    }
+}
+.product-form {
+    width: 100%;
+
+    &__row {
+        display: flex;
+        align-items: stretch;
+        justify-content: space-between;
+
+        & > .product-form__data-cell {
+            width: 25%;
+        }
+    }
+    &__column {
+        width: 25%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        & > .product-form__data-cell {
+            width: 100%;
+        }
+    }
+    &__data-cell {
+        display: flex;
+        flex-direction: column;
+
+        & > * {
+            width: 100%;
+        }
+    }
+    &__actions {
+        width: 100%;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    &__btn {
+        width: 10rem;
+        height: 4rem;
+        margin-top: 5rem;
+        margin-bottom: 3rem;
+        background-color: $color-white;
+        border: 1px solid $color-black;
+        cursor: pointer;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &--submit {
+            background-color: $color-green;
+        }
+        &--cancel {
+            background-color: $color-orange;
+        }
+
+        &:not(:last-child) {
+            margin-right: 2rem;
+        }
+    }
+
+    & input, & textarea, & select {
+        min-height: 4rem;
+        height: 100%;
+        padding: 1rem;
+        margin-bottom: 3rem;
+        border: 1px solid $color-black;
+
+        font-size: $font-small;
+        font-family: sans-serif;
+
+        &:focus, &:active {
+            outline: none;
+            border: 1px solid $color-black;
+        }
+    }
+    & label {
+        margin-bottom: 1rem;
+    }
+}
+.visiting-card {
+    padding: 6rem;
+    padding-bottom: 9rem;
+    margin-top: 15vh;
+    border: 1px solid $color-black;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    & .heading-3 {
+        margin-bottom: 5rem;
+    }
+    & p {
+        &:not(:last-child) {
+            margin-bottom: 2rem;
+        }
+    }
+}
+.wrapper {
+    width: 100%;
+    padding: 4rem;
+    padding-left: 12rem;
+
+    &--login {
+        height: 100vh;
+        padding-left: 4rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+    &--error {
+        height: 100vh;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+}
+
+.main {
+    width: 100%;
+    height: 100%;
+
+    &--index {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    &--error {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        & .heading-3 {
+            margin-top: 25vh;
+            margin-bottom: 2rem;
+        }
+    }
+    &--products, &--orders, &--order-detail {        
+        padding: 12rem;
+    }
+    &--categories {
+        padding: 12rem;
+        
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    &--edit-product {
+        padding: 12rem;
+    }
+}
+.footer {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.header {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    &__logout {
+        border: 3px solid $color-black;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        position: absolute;
+        right: 0;
+        top: 0;
+
+        & a {
+            width: 100%;
+            height: 100%;
+            padding: 1rem 2rem;
+
+            font-weight: 600;
+
+            display: inline-block;
+
+            transition: all .2s;
+
+            &:hover {
+                background-color: $color-black;
+                color: $color-white;
+            }
+        }
+    }
+}
+.navigation {
+    height: 100vh;
+    width: 8rem;
+    background-color: $color-black;
+    cursor: pointer;
+    transform-style: preserve-3d;
+
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 5000;
+
+    transition: width .2s;
+
+    &:hover {
+        width: 10rem;
+
+        .navigation__heading {
+            letter-spacing: 1rem;
+        }
+    }
+
+    &__heading {
+        color: $color-white;
+        letter-spacing: .3rem;
+
+        transition: all .2s;
+    }
+    &__list {
+        display: none;
+    }
+
+    &.opened {
+        width: 65rem;
+        cursor: default;
+
+        .navigation {
+            &__background {
+                width: 100vw;
+                height: 100vh;
+                background-color: $color-black-overlay;
+                transform: translateZ(-1rem);
+                backdrop-filter: blur(10px);
+    
+                position: absolute;
+                top: 0;
+                left: 0;
+            }
+            &__heading {
+                opacity: 0;
+            }
+            &__list {
+                list-style: none;
+
+                writing-mode: horizontal-tb;
+                text-orientation: upright;
+                text-transform: uppercase;
+
+                animation: showMenuList .1s ease-out;
+            }
+            &__item {
+                color: $color-white;
+                font-size: $font-big;
+                font-weight: 500;
+                line-height: 200%;
+
+                position: relative;
+
+                & a {
+                    height: 4rem;
+                    display: flex;
+                    align-items: center;
+
+                    transition: all .2s;
+                }
+
+                &.active {
+
+                    &::after {
+                        content: "";
+                        display: block;
+                        width: 100rem;
+                        height: 4rem;
+                        background-color: $color-white;
+
+                        position: absolute;
+                        left: -106rem;
+                        top: calc(50% - 2rem);
+                    }
+
+                    & a {
+                        height: 15rem;
+                    }
+                }
+            }
+        }
+    }
+}
+.categories {
+    margin: -5rem;
+    margin-top: 0;
+
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+@import "./abstracts/variables";
+@import "./abstracts/animations";
+@import "./abstracts/mixins";
+
+@import "./base/base";
+@import "./base/typography";
+@import "./base/utilities";
+
+@import "./components/add-button";
+@import "./components/category-box";
+@import "./components/err-modal";
+@import "./components/item-list";
+@import "./components/login-form";
+@import "./components/modal";
+@import "./components/order-detail";
+@import "./components/product-form";
+@import "./components/visiting-card";
+
+@import "./layout/basic";
+@import "./layout/footer";
+@import "./layout/header";
+@import "./layout/navigation";
+
+@import "./pages/categories";
+
+
+.cart-item {
+    width: 100%;
+    border: 1px solid $color-secondary;
+    box-shadow: 0 2px 4px 1px $color-black-overlay-lightest;
+
+    display: flex;
+
+    &:not(:last-child) {
+        margin-bottom: 3rem;
+    }
+
+    @media only screen and (max-width: 900px) {
+        width: 28rem;
+        padding: 2rem;
+        border: 1px solid $color-secondary;
+        border-radius: 1rem;
+
+        position: relative;
+
+        &:not(:last-child) {
+            margin-bottom: 8rem;
+        }
+        &:last-child {
+            margin-bottom: 4rem;
+        }
+    }
+
+    &__photo {
+        height: 15rem;
+        width: 15rem;
+        background-color: $color-secondary;
+
+        flex-shrink: 0;
+
+        @media only screen and (max-width: 1450px) {
+            height: 17.5rem;
+            width: 17.5rem;
+        }
+        @media only screen and (max-width: 900px) {
+            display: none;
+        }
+
+        &--mobile {
+            width: 100%;
+
+            @media only screen and (min-width: 901px) {
+                display: none;
+            }
+        }
+    }
+    &__content {
+        width: 100%;
+        padding: 2rem 3rem;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @media only screen and (max-width: 900px) {
+            padding: 0;
+        }
+    }
+    &__upper-row {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+
+        position: relative;
+
+        @media only screen and (max-width: 900px) {
+            margin-bottom: 1rem;
+            align-items: center;
+            justify-content: center;
+
+            position: static;
+        }
+
+        & .close-button {
+            transform: translate(50%, -50%);
+
+            top: -2rem;
+            right: -3rem;
+    
+            &:hover {
+                transform: translate(50%, -50%) rotate(-10deg);
+            }
+
+            @media only screen and (max-width: 900px) {
+                transform: translate(-50%, -50%);
+                
+                top: 0;
+                left: 0;
+                right: unset;
+
+                &:hover {
+                    transform: translate(-50%, -50%) rotate(-10deg);
+                }
+    
+            }
+
+            &::after, &::before {
+                background-color: $color-secondary;
+            }
+        }
+    }
+    &__delete {
+        width: 2.5rem;
+        height: 2.5rem;
+        background-color: transparent;
+        background-image: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        border-radius: 50%;
+
+        font-family: $font-secondary;
+        color: $color-primary;
+
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        transition: all .2s;
+
+        &:hover {
+            font-size: $font-big;
+        }
+    }
+    &__lower-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        @media only screen and (max-width: 900px) {
+            margin-top: 2rem;
+
+            justify-content: center;
+        }
+    }
+    &__amount-box {
+        font-size: $font-regular;
+
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+
+        @media only screen and (max-width: 900px) {
+            margin-bottom: 2rem;
+            font-size: $font-big;
+        }
+
+        &__amount {
+            margin: 0 2rem;
+        }
+        &__btn {
+            width: 3rem;
+            height: 3rem;
+            background-color: $color-secondary;
+            background-image: none;
+            border-radius: 1rem;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            transition: transform .1s;
+
+            font-size: $font-regular;
+            font-weight: 800;
+            color: $color-white;
+            text-shadow: 0 0 2px $color-black-overlay-light;
+
+            @media only screen and (max-width: 900px) {
+                width: 4rem;
+                height: 4rem;
+
+                font-size: $font-big;
+            }
+
+            &:hover {
+                transform: scale(1.05);
+            }
+            &:active {
+                color: $color-primary;
+            }
+        }
+    }
+    &__price {
+        font-size: $font-regular;
+
+        @media only screen and (max-width: 900px) {
+            width: 50%;
+            height: 5rem;
+            transform: translate(-50%, 50%);
+            border: 1px solid $color-secondary;
+            border-radius: 1rem;
+            background-color: $color-white;
+            
+            font-size: $font-big;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+        }
+    }
+}
+.order-form {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    &__row {
+        width: 100%;
+        margin-bottom: 3rem;
+
+        display: flex;
+        align-items: center;
+
+        @media only screen and (max-width: 720px) {
+            flex-direction: column;
+            align-items: stretch;
+            
+            &:not(:nth-child(4)) {
+                padding-bottom: 3rem;
+                border-bottom: 1px solid $color-secondary;
+            }
+        }
+    }
+    &__data-cell {
+        width: 100%;
+
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+
+        &:not(:last-child) {
+            margin-right: 3rem;
+
+            @media only screen and (max-width: 720px) {
+                margin-right: 0;
+                margin-bottom: 3rem;
+            }
+        }
+    }
+    &__label {
+        margin-bottom: 1rem;
+    }
+    &__input {
+        width: 100%;
+        height: 5rem;
+        border: 1px solid $color-primary;
+        box-shadow: 0 2px 4px 1px $color-black-overlay-lightest;    
+        padding: 1rem;
+
+        flex-grow: 1;
+
+        &.invalid:not(:focus) {
+            border: 2px solid red;
+        }
+
+        &:focus {
+            outline: none;
+
+            box-shadow: inset 1px 1px 5px rgba($color-black, .1);
+        }
+    }
+    &__radio-row {
+        width: 100%;
+        margin-bottom: 3rem;
+        padding: 2rem;
+
+        display: flex;
+        flex-direction: column;
+
+        &.invalid:not(:focus) {
+            border: 2px solid red;
+        }
+    }
+    &__radio-cell {
+        width: 100%;
+        padding: 1rem;
+
+        display: flex;
+        align-items: center;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $color-secondary;
+        }
+        
+        & input {
+            margin-right: 1rem;
+        }
+        & label {
+            margin-right: auto;
+        }
+    }
+    &__agree-row {
+        width: 100%;
+        margin-bottom: 6rem;
+
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        
+        @media only screen and (max-width: 500px) {
+            flex-direction: column;
+            align-items: stretch;
+        }
+    }
+    &__agree-cell {
+        width: 40%;
+        padding: 1rem;
+        margin: 0 auto;
+        
+        display: flex;
+        align-items: flex-start;
+        
+        @media only screen and (max-width: 500px) {
+            width: 100%;
+        }
+        
+        & input {
+            margin-top: 4px;
+            margin-right: 1rem;
+        }
+        & a {
+            color: $color-primary;
+        }
+    }
+    &__submit {
+        width: 20rem;
+        height: 8rem;
+        cursor: pointer;
+        border: 1px solid $color-primary;
+        background-color: $color-white;
+        transform-style: preserve-3d;
+
+        color: $color-primary;
+        font-family: $font-secondary;
+        font-size: $font-big;
+
+        position: relative;
+
+        transition: all .3s cubic-bezier(0, 0.55, 0.45, 1);
+        
+        &:hover {
+            transform: scale(.98);
+
+            &::before {
+                transform: translate3d(-50%, -50%, -1rem) scale(1.06);
+            }
+        }
+        &:focus {
+            outline: none;
+        }
+        &:disabled {
+            background-color: $color-grey-lightest;
+            border: 1px solid $color-grey;
+
+            color: $color-grey;
+
+            &:hover {
+                transform: none;
+
+                &::before {
+                    transform: translate3d(-50%, -50%, -1rem);
+                }
+            }
+            &::before {
+                background-color: $color-grey;
+            }
+        }
+
+        &::before {
+            content: "";
+            width: calc(100% + 1rem);
+            height: calc(100% + 1rem);
+            background-color: $color-primary;
+            transform: translate3d(-50%, -50%, -1rem);
+
+            clip-path: polygon(0 0, 0 100%, 3rem 100%, 0 calc(100% - 3rem), 0 3rem, 3rem 0, calc(100% - 3rem) 0, 100% 3rem, 100% calc(100% - 3rem), calc(100% - 3rem) 100%, 100% 100%, 100% 0);
+
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            
+            display: block;
+
+            transition: all .3s cubic-bezier(0, 0.55, 0.45, 1);
+        }
+
+        &.loading {
+            &::after {
+                content: "";
+                width: 5rem;
+                height: 5rem;
+                border-radius: 50%;
+                border-top: 5px solid $color-primary;
+                transform: translate(-50%, -50%) rotate(0deg);
+
+                position: absolute;
+                top: 50%;
+                left: 50%;
+
+                display: block;
+
+                animation: spinner .5s linear infinite;
+            }
+        }
+    }
+}
+.cart {
+    padding: 12rem;
+
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+
+    @media only screen and (max-width: 1550px) {
+        padding: 10rem 6rem;
+    }
+    @media only screen and (max-width: 1250px) {
+        flex-direction: column;
+        align-items: center;
+    }
+    @media only screen and (max-width: 720px) {
+        padding: 10rem 3rem;
+    }
+
+    &__cart-content {
+        width: 48%;
+        padding: 0 10rem;
+        margin-right: 5rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media only screen and (max-width: 1750px) {
+            margin-right: 0;
+            padding: 0 5rem;
+        }
+        @media only screen and (max-width: 1250px) {
+            width: 80%;
+            margin-bottom: 10rem;
+        }
+        @media only screen and (max-width: 1000px) {
+            width: 100%;
+        }
+        @media only screen and (max-width: 500px) {
+            padding: 0;
+        }
+
+        & .heading-1 {
+            margin-bottom: 5rem;
+
+            @media only screen and (max-width: 1250px) {
+                margin-bottom: 2rem;
+            }
+        }
+
+        &__empty {
+            font-size: $font-big;
+            text-align: center;
+
+            :not(:last-child) {
+                margin-bottom: 2rem;
+            }
+
+            & a {
+                color: $color-primary;
+            }
+        }
+        &__to-order-btn {
+            width: 30rem;
+            height: 8rem;
+            margin-bottom: 5rem;
+            background-color: $color-primary;
+            border-radius: 1rem;
+            outline: none;
+            border: none;
+            cursor: pointer;
+            transition: all .2s;
+
+            color: $color-white;
+            font-family: $font-secondary;
+            font-size: $font-bigger;
+            font-weight: 400;
+
+            &.hidden {
+                display: none;
+            }
+
+            @media only screen and (min-width: 1251px) {
+                display: none;
+            }
+
+            &:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 3px 1px rgba($color-black, .1);
+            }
+        }
+
+        &__list {
+            list-style: none;
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        &__summary {
+            width: 100%;
+            padding: 5rem;
+            padding-top: 10rem;
+            margin-bottom: 5rem;
+            border-bottom: 1px solid $color-secondary;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            @media only screen and (max-width: 1250px) {
+                padding-top: 5rem;
+            }
+            @media only screen and (max-width: 720px) {
+                padding: 5rem 0;
+            }
+            @media only screen and (max-width: 360px) {
+                flex-direction: column;
+            }
+
+            & .heading-3 {
+                @media only screen and (max-width: 360px) {
+                    margin-bottom: 1rem;
+                }
+            }
+
+            &__price {
+                font-size: $font-bigger;
+                font-family: $font-secondary;
+            }
+        }
+    }
+    &__order {
+        width: 52%;
+        padding: 0 10rem 0 5rem;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        @media only screen and (max-width: 1750px) {
+            margin-left: 0;
+            padding: 0 5rem;
+        }
+        @media only screen and (max-width: 1250px) {
+            width: 80%;
+            margin-bottom: 6rem;
+        }
+        @media only screen and (max-width: 1000px) {
+            width: 100%;
+        }
+        @media only screen and (max-width: 500px) {
+            padding: 0;
+        }
+
+        & .heading-1 {
+            margin-bottom: 5rem;
+        }
+
+        &__form {
+            width: 100%;
+
+            display: flex;
+            flex-direction: column;
+        }
+    }
+}
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'categories' }) %>
+    
+    <div class="wrapper">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Kategorie' }) %>
+
+        <main class="main main--categories">
+
+            <!-- CATEGORIES MODAL -->
+            <container class="modal" id="modal" data-model="categories">
+                <div class="modal__background"></div>
+                <div class="modal__content">
+                    <section class="modal__heading">
+                        <h4 class="heading-4 heading-4--light" id="modal-heading"></h4>
+                        <button class="modal__close-btn" id="modal-close">Close</button>
+                    </section>
+                    <section class="modal__main">
+                        <div class="modal__row">
+                            <input type="hidden" name="csrf" id="csrf" value="<%= csrfToken %>">
+                            <div class="modal__data-cell">
+                                <label for="categoryName" class="modal__label">Jméno</label>
+                                <input id="categoryName" name="categoryName" class="modal__input" placeholder="Jméno (pod)kategorie" />
+                            </div>
+                            <div class="modal__data-cell">
+                                <label for="categoryId" class="modal__label">Podřazeno kategorii</label>
+                                <select id="categoryId" name="categoryId" class="modal__input">
+                                    <option value="">Nepodřazeno (netvořím podkategorii)</option>
+                                    <% categories.forEach(category => { %>
+                                        <option value="<%= category._id %>"><%= category.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="modal__row">
+                            <div class="modal__data-cell">
+                                <label for="image" class="modal__label">Obrázek</label>
+                                <input type="file" name="image" id="image">
+                            </div>
+                        </div>
+                    </section>
+                    <section class="modal__actions">
+                        <button class="modal__btn modal__btn--ok" id="modal-action">Uložit</button>
+                        <button class="modal__btn modal__btn--cancel" id="modal-cancel">Zrušit</button>
+                    </section>
+                </div>
+            </container>
+
+            <!-- LIST OF CATEGORIES AND ADD CATEGORY BUTTON -->
+            <button class="add-button" id="add-category-btn">Nová kategorie</button>
+            <container class="categories">
+                <% categories.forEach(category => { %>
+                    <section class="category-box">
+                        <div class="category-box__heading">
+                            <h4 class="heading-4 heading-4--light"><%= category.name %></h4>
+                            <button class="category-box__edit-btn" data-name="<%= category.name %>" data-categoryId="<%= category._id %>"></button>
+                        </div>
+                        <div class="category-box__subcategories">
+                            <% subcategories.forEach(subcategory => { %>
+                                <% if (subcategory.categoryId.toString() === category._id.toString()) {  %>
+                                    <div class="category-box__subcategory">
+                                        <h4 class="heading-4"><%= subcategory.name %></h4>
+                                        <button class="category-box__edit-btn category-box__edit-btn--dark" data-name="<%= subcategory.name %>" data-categoryId="<%= category._id %>" data-subcategoryId="<%= subcategory._id %>"></button>
+                                    </div>
+                                <% } %>
+                            <% }) %>
+                        </div>
+                    </section>
+                <% }) %>
+                
+            </container>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+    <script src="/js/admin-script.js"></script>
+</body>
+</html>
+<footer class="footer">
+    <a target="_blank" rel="noopener" href="https://amnionweb.cz" class="footer__link"><p class="paragraph-small">Web spravuje AmnioN Web</p></a>
+    <p class="paragraph-small">team@amnionweb.cz</p>
+</footer>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin <%= title %> | Keramika Rosice</title>
+    <link rel="stylesheet" href="/css/admin-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Charm:wght@400;700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet">
+<header class="header">
+    <h1 class="heading-1">Keramika Rosice</h1>
+    <h2 class="heading-2"><%= adminTitle %></h2>
+    <% if (logout) { %>
+        <div class="header__logout"><a href="/admin/logout">Odhlásit se</a></div>
+    <% } %>
+</header>
+<nav class="navigation" id="menu">
+    <div class="navigation__background"></div>
+    <h3 class="navigation__heading">MENU</h3>
+    <ul class="navigation__list">
+        <li class="navigation__item <% if (activeLink === 'home') { %>active<% } %>"><a href="/admin/">Domů</a></li>
+        <li class="navigation__item <% if (activeLink === 'products') { %>active<% } %>"><a href="/admin/products">Produkty</a></li>
+        <li class="navigation__item <% if (activeLink === 'categories') { %>active<% } %>"><a href="/admin/categories">Kategorie</a></li>
+        <li class="navigation__item <% if (activeLink === 'orders') { %>active<% } %>"><a href="/admin/orders">Objednávky</a></li>
+    </ul>
+</nav>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'products' }) %>
+    
+    <div class="wrapper">
+        
+        <% let adminTitle = 'Vytvořit produkt'; %>
+        <% if (editMode) { adminTitle = 'Upravit produkt' } %>
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: adminTitle }) %>
+
+        <main class="main main--edit-product">
+
+            <form class="product-form" id="product-form" enctype="multipart/form-data" method="POST" action="/admin/products/<% if (editMode) { %>edit<% } else { %>add<% } %>">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <% if (editMode) { %>
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+                <% } %>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="name">Název produktu</label>
+                        <input type="text" name="name" id="name" placeholder="Název produktu" value="<% if (editMode) { %><%= product.name %><% } %>">
+                    </div>
+                    <div class="product-form__data-cell">
+                        <label for="categoryId">Kategorie</label>
+                        <select type="text" name="categoryId" id="categoryId">
+                            <option value="">Vyberte kategorii</option>
+                            <% categories.forEach(category => { %>
+                                <option value="<%= category._id %>" <% if (editMode && product.categoryId && product.categoryId.toString() === category._id.toString()) { %>selected="selected"<% } %>><%= category.name %></option>
+                            <% }) %>
+                        </select>
+                    </div>
+                    <div class="product-form__data-cell">
+                        <label for="amountInStock">Množství skladem</label>
+                        <input type="number" name="amountInStock" id="amountInStock" placeholder="Množství skladem" value="<% if (editMode) { %><%= product.amountInStock %><% } %>">
+                    </div>
+                </div>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="description">Popis</label>
+                        <textarea type="text" name="description" id="description" placeholder="Popis"><% if (editMode) { %><%= product.description %><% } %></textarea>
+                    </div>
+                    <div class="product-form__column">
+                        <div class="product-form__data-cell">
+                            <label for="subcategoryId">Podkategorie</label>
+                            <select type="text" name="subcategoryId" id="subcategoryId" <% if (!editMode) { %>disabled<% } else if (!product.categoryId) { %>disabled<% } %> data-subcategories="<%
+                                const subcategoriesObj = {};
+                                subcategories.forEach(subcategory => {
+                                    if (!subcategoriesObj[subcategory.categoryId]) {
+                                        subcategoriesObj[subcategory.categoryId] = []
+                                    }
+                                    subcategoriesObj[subcategory.categoryId].push({
+                                        name: subcategory.name,
+                                        _id: subcategory.id
+                                    });
+                                });
+                            %><%= JSON.stringify(subcategoriesObj) %>">
+                                <option value="">Vyberte podkategorii</option>
+                                <% if (editMode && product.categoryId && subcategoriesObj[product.categoryId]) {
+                                    subcategoriesObj[product.categoryId].forEach(subcategory => { %>
+                                        <option value="<%= subcategory._id %>" <% if (editMode && product.subcategoryId && product.subcategoryId.toString() === subcategory._id.toString()) { %>selected="selected"<% } %>><%= subcategory.name %></option>
+                                    <% }) %>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="product-form__data-cell">
+                            <label for="shippingCostId">Poštovné</label>
+                            <select type="number" name="shippingCostId" id="shippingCostId">
+                                <option value="0" <% if (product && product.shippingCostId == '0') { %>selected="selected"<% } %>>Levné poštovné</option>
+                                <option value="1" <% if (product && product.shippingCostId == '1') { %>selected="selected"<% } %>>Drahé poštovné</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="product-form__column">
+                        <div class="product-form__data-cell">
+                            <label for="price">Cena v Kč</label>
+                            <input type="number" name="price" id="price" placeholder="Cena v Kč" value="<% if (editMode) { %><%= product.price %><% } %>">
+                        </div>
+                    </div>
+                </div>
+                <div class="product-form__row">
+                    <div class="product-form__data-cell">
+                        <label for="image">Obrázek</label>
+                        <input type="file" name="image" id="image">
+                    </div>
+                </div>
+                <div class="product-form__actions">
+                    <input class="product-form__btn product-form__btn--submit" type="submit" value="Odeslat">
+                    <a href="/admin/products" class="product-form__btn product-form__btn--cancel">Zrušit</a>
+                </div>
+            </form>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'error' }) %>
+    
+    <div class="wrapper wrapper--error">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Administrace' }) %>
+
+        <main class="main main--error">
+
+            <h3 class="heading-3"><%= title %></h3>
+            <p>An error occured on the server side. Please try again or contact AmnioN Web.</p><br/>
+            <p>Complete messasge:</p>
+            <p><%= message %></p>
+            
+        </main>
+
+        <%- include('./includes/footer.ejs') %>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'home' }) %>
+    
+    <div class="wrapper">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Administrace' }) %>
+
+        <main class="main main--index">
+
+            <div class="visiting-card">
+                <h3 class="heading-3">AmnioN Web</h3>
+                <p class="paragraph-normal">team@amnionweb.cz</p>
+                <p class="paragraph-normal">+420 735 044 114</p>
+                <a target="_blank" rel="noopener" href="https://amnionweb.cz"><p class="paragraph-normal">www.amnionweb.cz</p></a>
+            </div>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+    
+    <div class="wrapper wrapper--login">
+        
+        <%- include('./includes/header.ejs', { logout: false, adminTitle: 'Administrace' }) %>
+
+        <main class="main main--login">
+
+            <form class="login-form" action="/admin/login" method="POST">
+                <input class="login-form__input" type="password" name="password" value="123" placeholder="Přístupový kód">
+                <input class="login-form__input login-form__input--hidden" type="text" name="_csrf" value="<%= csrfToken %>">
+                <input type="submit" class="login-form__submit" value="Login">
+            </form>
+            
+        </main>
+
+        <%- include('./includes/footer.ejs') %>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'orders' }) %>
+    
+    <div class="wrapper">
+        
+        <% const adminTitle = 'Objednávka #' + order._id; %>
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: adminTitle }) %>
+
+        <main class="main main--order-detail">
+
+            <container class="order-detail">
+                <% if (order.isCanceled) { %>
+                    <p class="order-detail__cancel-notification">ZRUŠENO -&nbsp;<a href="/admin/invoice/cancel-<%= order._id %>">STORNOFAKTURA</a></p>
+                <% } %>
+
+                <!-- EDITABLE DATA -->
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Status</h4>
+                            <select class="order-detail__select" name="status" id="status">
+                                <% statusesCzechLabels = ["Objednáno", "Odesláno", "Doručeno"] %>
+                                <% statuses.forEach((status, index) => { %>
+                                    <option value="<%= status %>" <% if (status === order.status) { %><%= selected="selected" %><% } %>><%= statusesCzechLabels[index] %></option>
+                                <% }) %>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="order-detail__column">
+
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Zaplaceno</h4>
+                            <select class="order-detail__select" name="isPayed" id="isPayed" <% if (order.isPayed) { %>disabled<% } %>>
+                                <option value="true" <% if (order.isPayed) { %><%= selected="selected" %><% } %>>Ano</option>
+                                <option value="false" <% if (!order.isPayed) { %><%= selected="selected" %><% } %>>Ne</option>
+                            </select>
+                        </div>
+                        
+                    </div>
+                    <button id="put-order" class="order-detail__btn" data-orderid="<%= order._id %>" data-csrf="<%= csrfToken %>">Upravit</button>
+                </section>
+
+                <!-- STATIC DATA -->
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Doručení</h4>
+                            <p class="paragraph-small"><%= order.delivery %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Datum</h4>
+                            <p class="paragraph-small"><%= order.date %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Platba</h4>
+                            <p class="paragraph-small"><%= order.payment %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Faktura</h4>
+                            <p class="paragraph-small"><a href="/admin/invoice/<%= order._id %>">Odkaz</a></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Jméno</h4>
+                            <p class="paragraph-small"><%= order.firstName %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">E-mail</h4>
+                            <p class="paragraph-small"><%= order.email %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Příjmení</h4>
+                            <p class="paragraph-small"><%= order.lastName %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Telefon</h4>
+                            <p class="paragraph-small"><%= order.phone %></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Ulice a č.p.</h4>
+                            <p class="paragraph-small"><%= order.street %></p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">Město</h4>
+                            <p class="paragraph-small"><%= order.city %></p>
+                        </div>
+                    </div>
+                    <div class="order-detail__column">
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">&nbsp;</h4>
+                            <p class="paragraph-small">&nbsp;</p>
+                        </div>
+                        <div class="order-detail__data">
+                            <h4 class="heading-4">PSČ</h4>
+                            <p class="paragraph-small"><%= order.zipCode %></p>
+                        </div>
+                    </div>
+                </section>
+                <section class="order-detail__row">
+                    <table class="item-list">
+                        <tbody class="item-list__content">
+                            <tr class="item-list__heading">
+                                <th>Název</th>
+                                <th>Počet</th>
+                                <th>Kč/ks</th>
+                                <th>Cena</th>
+                            </tr>
+                            <% order.items.forEach(item => { %>
+                                <tr class="item-list__row" id="<%= item.product._id %>">
+                                    <td><%= item.product.name %></td>
+                                    <td><%= item.amount %>ks</td>
+                                    <td><%= item.product.price %>Kč/ks</td>
+                                    <td><%= item.amount * item.product.price %>Kč</td>
+                                </tr>
+                            <% }) %>
+                            <tr class="item-list__row">
+                                <td>Platba - <%= order.payment %></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= order.paymentCost %>Kč</td>
+                            </tr>
+                            <tr class="item-list__row">
+                                <td>Doručení - <%= order.delivery %></td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= order.deliveryCost %>Kč</td>
+                            </tr>
+                            <tr class="item-list__row">
+                                <td>Cena celkem</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td><%= +order.total + +order.deliveryCost + +order.paymentCost %>Kč</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <% if (!order.isCanceled) { %>
+                    <!-- CANCEL ORDER -->
+                    <form class="order-detail__cancel-form" action="/admin/orders/cancel" method="post">
+                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                        <input type="hidden" name="orderId" value="<%= order._id %>">
+                        <button class="order-detail__cancel-form__btn" type="submit">Zrušit objednávku</button>
+                    </form>
+                <% } %>
+
+            </container>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'orders' }) %>
+    
+    <div class="wrapper">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Objednávky' }) %>
+
+        <main class="main main--orders">
+
+            <!-- <div class="item-list__options">
+                <input type="text" placeholder="Hledat">
+                <a class="add-button" href="/admin/products/add">Nová objednávka</a>
+            </div> -->
+
+            <table class="item-list">
+                <tbody class="item-list__content">
+                    <tr class="item-list__heading">
+                        <th>Jméno</th>
+                        <th>E-mail</th>
+                        <th>Doprava</th>
+                        <th>Platba</th>
+                        <th>Status</th>
+                        <th>Zaplaceno</th>
+                        <th>Částka</th>
+                        <th>Akce</th>
+                    </tr>
+                    <% orders.forEach(order => {
+                        let additionalClass = '';
+                        if (order.status === "ORDERED") { additionalClass = 'item-list__row--yellow'; }
+                        if (order.isPayed && order.status === "DELIVERED") { additionalClass = 'item-list__row--green'; }
+                        if (order.isCanceled) { additionalClass = 'item-list__row--red'; }
+                        if (!additionalClass) { additionalClass = 'item-list__row--white'; } %>
+                        
+                        <tr class="item-list__row <%= additionalClass %>" id="<%= order._id %>">
+                            <td><%= order.firstName %> <%= order.lastName %></td>
+                            <td><%= order.email %></td>
+                            <td><%= order.delivery %></td>
+                            <td><%= order.payment %></td>
+                            <td><%= order.status %></td>
+                            <td><%= order.isPayed %></td>
+                            <td><%= order.total %>Kč</td>
+                            <td>
+                                <a class="item-list__row__btn" href="/admin/orders/<%= order._id %>">Detail</a>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'products' }) %>
+    
+    <div class="wrapper">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Produkty' }) %>
+
+        <main class="main main--products">
+
+            <div class="item-list__options">
+                <!-- <input type="text" placeholder="Hledat"> -->
+                <a class="add-button" href="/admin/products/add">Nový produkt</a>
+            </div>
+
+            <table class="item-list">
+                <tbody class="item-list__content">
+                    <tr class="item-list__heading">
+                        <th>Název</th>
+                        <th>Zařazení</th>
+                        <th>Skladem</th>
+                        <th>Cena</th>
+                        <th>Akce</th>
+                    </tr>
+                    <% products.forEach(product => { %>
+                        <tr class="item-list__row" id="<%= product._id %>">
+                            <td><%= product.name %></td>
+                            <td><% if (product.categoryId) { %><%= product.categoryId.name %><% } else { %> - <% }; if (product.subcategoryId) { %>: <%= product.subcategoryId.name %> <% } else { %>: - <% } %></td>
+                            <td><%= product.amountInStock %>ks</td>
+                            <td><%= product.price %>Kč</td>
+                            <td>
+                                <a class="item-list__row__btn" href="/admin/products/edit/<%= product._id %>">Upravit</a>
+                                <button class="item-list__row__btn item-list__row__btn--danger deleteProductBtn" data-id="<%= product._id %>" data-csrf="<%= csrfToken %>">Smazat</button>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>
+<%- include('../includes/head.ejs') %>
+    <script type="text/javascript" src="https://polyfill.io/v3/polyfill.min.js?version=3.52.1&features=fetch" defer></script>
+    <script type="text/javascript" src="https://js.stripe.com/v3/" defer></script>
+</head>
+<body>
+    <%- include('../includes/header.ejs') %>
+    <%- include('../includes/gradient.ejs') %>
+    
+    <main class="main cart">
+        
+        <!-- CART LIST -->
+        <section class="cart__cart-content">
+
+            <h1 class="heading-1">Košík</h1>
+            <button id="to-order" class="cart__cart-content__to-order-btn">K objednávce</button>
+            <ul class="cart__cart-content__list">
+                <% if (cart) {
+                    cart.items.forEach(item => { %>
+
+                        <!-- CART ITEM -->
+                        <li class="cart-item" data-csrf="<%= csrfToken %>" data-productid="<%= item.product._id %>" >
+                            <img class="cart-item__photo" src="<%= item.product.images[0] %>" alt="Fotka - <%= item.product.name %>">
+                            <div class="cart-item__content">
+                                <div class="cart-item__upper-row">
+                                    <h4 class="heading-4"><%= item.product.name %></h4>
+                                    <button class="close-button">X</button>
+                                </div>
+                                <img class="cart-item__photo--mobile" src="<%= item.product.images[0] %>" alt="Fotka - <%= item.product.name %>">
+                                <div class="cart-item__lower-row">
+                                    <div class="cart-item__amount-box">
+                                        <button class="cart-item__amount-box__btn cart-item__amount-box__btn--remove">-</button>
+                                        <p class="cart-item__amount-box__amount"><%= item.amount %>ks</p>
+                                        <button class="cart-item__amount-box__btn cart-item__amount-box__btn--add">+</button>
+                                    </div>
+                                    <p class="cart-item__price"><%= (item.amount * item.product.price).toFixed(0) %>Kč</p>
+                                </div>
+                            </div>
+                            <% item.product.name %>
+                        </li> 
+
+                    <% });
+                } %>
+                    <div class="cart__cart-content__empty">
+                        <p>Zatím jste do košíku nic nevložili.</p>
+                        <p>Prohlédněte si e-shop <a href="/shop">zde</a>.</p>
+                    </div>
+                   
+            </ul>
+            <% if (cart) { %>
+                <div class="cart__cart-content__summary">
+                    <h3 class="heading-3">Celkem za keramiku:</h3>
+                    <p class="cart__cart-content__summary__price"><%= cart.total %>Kč</p>
+                </div>
+                <p class="cart__cart-content__dph">Nejsem plátce DPH</p>
+            <% } %>
+        </section>
+
+        <% if (cart) { %>
+            <!-- ORDER FORM -->
+            <section id="cart-order" class="cart__order">
+                
+                <h1 class="heading-1">Objednávka</h1>
+                <form class="order-form" action="/objednavka" method="POST" id="order-form" data-stripepublickey="<%= stripePublicKey %>">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <!-- CUSTOMER DATA -->
+                    <div class="order-form__row">                    
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="firstName">Jméno</label>
+                            <input class="order-form__input" type="text" spellcheck="false" id="firstName" name="firstName" placeholder="Jméno">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="lastName">Příjmení</label>
+                            <input class="order-form__input" type="text" spellcheck="false" id="lastName" name="lastName" placeholder="Příjmení">
+                        </div>
+                    </div>
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="email">E-mail</label>
+                            <input class="order-form__input" type="email" spellcheck="false" id="email" name="email" placeholder="E-mail">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="phone">Telefon</label>
+                            <input class="order-form__input" type="tel" id="phone" spellcheck="false" name="phone" placeholder="Telefon">
+                        </div>
+                    </div>
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="street">Ulice, č.p.</label>
+                            <input class="order-form__input" type="text" id="street" spellcheck="false" name="street" placeholder="Ulice, č.p.">
+                        </div>
+                    </div>
+                    <div class="order-form__row">
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="city">Město</label>
+                            <input class="order-form__input" type="text" id="city" spellcheck="false" name="city" placeholder="Město">
+                        </div>
+                        <div class="order-form__data-cell">
+                            <label class="order-form__label" for="zipCode">PSČ</label>
+                            <input class="order-form__input" type="text" id="zipCode" spellcheck="false" name="zipCode" placeholder="PSČ">
+                        </div>
+                    </div>
+                    <!-- DELIVERY -->
+                    <div class="order-form__radio-row" id="order-delivery">
+                        <p class="order-form__subheading">Doručení</p>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="ZAS" name="delivery" value="ZAS">
+                            <label for="ZAS">Zásilkovna</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["ZAS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="POS" name="delivery" value="POS">
+                            <label for="POS">Česká pošta</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["POS"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="OOD" name="delivery" value="OOD">
+                            <label for="OOD">Osobní odběr</label>
+                            <p class="order-form__feature-price"><% if (cart) { %><%= constants.deliveryCosts["OOD"][cart.shippingCostId] %>Kč<% } else { %>?<% } %></p>
+                        </div>
+                    </div>
+                    <!-- PAYMENT -->
+                    <div class="order-form__radio-row" id="order-payment">
+                        <p class="order-form__subheading">Platební metoda</p>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="DOB" name="payment" value="DOB">
+                            <label for="DOB">Dobírka</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["DOB"] %>Kč</p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="CRD" name="payment" value="CRD">
+                            <label for="CRD">Platební brána</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["CRD"] %>Kč</p>
+                        </div>
+                        <div class="order-form__radio-cell">
+                            <input type="radio" id="BTR" name="payment" value="BTR">
+                            <label for="BTR">Bankovní převod</label>
+                            <p class="order-form__feature-price"><%= constants.paymentCosts["BTR"] %>Kč</p>
+                        </div>
+                    </div>
+                    <!-- AGREES -->
+                    <div class="order-form__agree-row">
+                        <div class="order-form__agree-cell">
+                            <input type="checkbox" name="agree-gdpr" id="agree-gdpr">
+                            <label for="agree-gdpr">Souhlasím se zpracováním <a href="/ochrana-udaju">osobních údajů</a></label>
+                        </div>
+                        <div class="order-form__agree-cell">
+                            <input type="checkbox" name="agree-conditions" id="agree-conditions">
+                            <label for="agree-conditions">Souhlasím s <a href="/podminky">obchodními podmínkami</a></label>
+                        </div>
+                    </div>
+                    <!-- SUBMIT -->
+                    <button id="submit-order" type="submit" class="order-form__submit" name="order_submit" disabled>Odeslat</button>
+                </form>
+
+            </section>
+        <% } %>
+
+    </main>
+
+    <%- include('../includes/footer.ejs') %>
+<%- include('../includes/end.ejs') %>

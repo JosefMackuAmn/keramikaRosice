@@ -39,6 +39,7 @@ exports.getCategory = async (req, res, next) => {
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
+            url: 'shop/' + categoryName,
             products: []
         })
     }
@@ -70,6 +71,7 @@ exports.getSubcategory = async (req, res, next) => {
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
+            url: 'shop/' + categoryName + '/' + subcategoryName,
             products: []
         })
     }
@@ -81,6 +83,7 @@ exports.getSubcategory = async (req, res, next) => {
     if (!subcategory) {
         return res.status(400).render('eshop/shop', {
             title: 'Podkategorie nenalezena',
+            url: 'shop/' + categoryName + '/' + subcategoryName,
             products: []
         })
     }
