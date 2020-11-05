@@ -192,6 +192,34 @@ fcns.ready(() => {
         }
     }
 
+    /////DOB Price is 0 when OOD is selected
+    if(orderForm) {
+
+        const orderDelivery = document.getElementById('order-delivery');
+        const OODInput = document.getElementById('OOD');
+        const DOBpriceEl = document.getElementById('DOBprice');
+        const DOBpriceValue = DOBpriceEl.textContent;
+
+        if (OODInput.checked) {
+            DOBpriceEl.textContent = '0Kč'
+        } else {
+            DOBpriceEl.textContent = DOBpriceValue;
+        }
+
+        orderDelivery.addEventListener('input', () => {
+
+        if (OODInput.checked) {
+            DOBpriceEl.textContent = '0Kč'
+        } else {
+            DOBpriceEl.textContent = DOBpriceValue;
+        }
+
+        }
+        )
+
+    }
+    
+
     //// Managing cart items
     const cartItems = document.querySelectorAll('.cart-item');
 

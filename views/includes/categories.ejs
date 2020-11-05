@@ -1,0 +1,20 @@
+<section class="categories" id="categories-slider">
+    <p class="categories__bill categories__bill--left" id="arrow-left"><</p>
+    <container class="categories__content" id="categories-scrollable-container">
+        <container class="categories__content__inner">
+            <% categories.forEach((category, index) => { %>
+                <a href="/shop/<%= category.name %>" class="categories__category categories-category">
+                    <img src="/<%= category.images[0] %>" alt="<%= category.name %>" class="categories__photo">
+                    <%
+                        let displayedName = category.name;
+                        if (displayedName.length > 40) {
+                            displayedName = displayedName.substring(0, 37) + '...';
+                        }
+                    %>
+                    <p class="categories__name"><%= displayedName %></p>
+                </a>
+            <% }) %>
+        </container>
+    </container>
+    <p class="categories__bill categories__bill--right" id="arrow-right">></p>
+</section>

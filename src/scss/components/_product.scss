@@ -155,6 +155,24 @@
         transform: translateX(0);
       }
     }
+    &::before {
+      content: "i";
+      width: 2.5rem;
+      height: 2.5rem;
+      border: 3px solid $color-white;
+      border-radius: 50%;
+
+      color: $color-white;
+      font-weight: bold;
+
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      position: absolute;
+      top: 2rem;
+      right: 2rem;
+    }
   }
   &__price {
     margin-right: 2rem;
