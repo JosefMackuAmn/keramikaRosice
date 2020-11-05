@@ -8,13 +8,15 @@ exports.getIndex = async (req, res, next) => {
     
     res.render('pages/index', {
         title: 'Domů',
+        url: '',
         categories: allCatgories
     })
 }
 
 exports.getAbout = (req, res, next) => {
     res.render('pages/about', {
-        title: 'O mně'
+        title: 'O mně',
+        url: 'o-mne'
     })
 }
 
@@ -23,6 +25,7 @@ exports.getContact = async (req, res, next) => {
 
     res.render('pages/contact', {
         title: 'Kontakt',
+        url: 'kontakt',
         categories: allCatgories
     })
 }

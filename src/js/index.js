@@ -175,9 +175,7 @@ fcns.ready(() => {
         [agreeGDPR, agreeConditions].forEach(el => el.addEventListener('click', () => {
             el.blur();
         }))
-        console.log('here 0');
         agreeGDPR.addEventListener('change', () => {
-            console.log('here 4');
             fcns.refreshSubmitBtn(agreeGDPR, agreeConditions, submitToCartBtn);
         })
         agreeConditions.addEventListener('change', () => {

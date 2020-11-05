@@ -23,6 +23,7 @@ exports.getShop = async (req, res, next) => {
 
     res.render('eshop/shop', {
         title: 'E-shop',
+        url: 'shop',
         categoryName: undefined,
         categoryImage: undefined,
         subcategoryName: undefined,
@@ -51,6 +52,7 @@ exports.getCategory = async (req, res, next) => {
 
     res.render('eshop/shop', {
         title: categoryName,
+        url: 'shop/' + categoryName,
         categoryName: categoryName,
         categoryImage: categoryImage,
         subcategoryName: undefined,
@@ -91,6 +93,7 @@ exports.getSubcategory = async (req, res, next) => {
 
     res.render('eshop/shop', {
         title: subcategoryName,
+        url: 'shop/' + categoryName + '/' + subcategoryName,
         categoryName: categoryName,
         categoryImage: categoryImage,
         subcategoryName: subcategoryName,
@@ -111,6 +114,7 @@ exports.getCart = async (req, res, next) => {
 
     res.render('eshop/cart', {
         title: 'Košík',
+        url: 'kosik',
         cart: cart,
         constants: constants,
         stripePublicKey: process.env.STRIPE_PUBLIC_KEY
