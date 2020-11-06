@@ -57,6 +57,8 @@ $hamburger-hover-offset: .3rem;
             top: 50%;
     }
     &__nav {
+        overflow: hidden;
+
         position: relative;
         z-index: 2;
         
@@ -141,6 +143,7 @@ $hamburger-hover-offset: .3rem;
         }
     }
     &__nav-list {
+        overflow: hidden;
         list-style: none;
 
         display: flex;
@@ -191,7 +194,9 @@ $hamburger-hover-offset: .3rem;
         }
     }
     &__nav-item {
+        overflow: hidden;
         margin-right: 5rem;
+        
         transition: all .2s;
         
         &:hover {

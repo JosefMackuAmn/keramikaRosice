@@ -17,7 +17,7 @@ exports.getAbout = (req, res, next) => {
     res.render('pages/about', {
         title: 'O mně',
         url: 'o-mne'
-    })
+    });
 }
 
 exports.getContact = async (req, res, next) => {

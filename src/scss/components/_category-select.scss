@@ -3,6 +3,7 @@
     min-height: 80rem;
     margin-right: 4rem;
     background-color: $color-secondary;
+    overflow: hidden;
 
     flex-shrink: 0;
 
@@ -68,6 +69,7 @@
     }
     &__category-list {
         list-style: none;
+        overflow: hidden;
         padding: 2rem 0;
 
         @media screen and (max-width: $bp-eshop-mobile) {
@@ -129,6 +131,7 @@
         border: none;
         background-color: $color-primary;
         height: var(--category-select-mobile-button-height);
+        overflow: hidden;
         cursor: pointer;
         
         color: $color-white;
@@ -222,6 +225,7 @@
     &__category {
         margin-bottom: 1rem;
         padding: 2rem 5rem;
+        overflow: hidden;
 
         text-transform: capitalize;
 
@@ -281,6 +285,7 @@
     &__backdrop {
         width: 100%;
         height: 100vh;
+        overflow: hidden;
 
         display: none;
     
@@ -298,6 +303,7 @@
             animation: doNothing .2s;
         }
         &--hidden {
+            
         }
     }
 }

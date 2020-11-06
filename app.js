@@ -130,6 +130,7 @@ app.use('/admin', adminRoutes);
 app.get('/500', (req, res, next) => {
     res.status(500).render('500', {
         title: '500',
+        url: '500',
         msg: 'Server error'
     })
 }) // ------------------------ DOES THIS HAVE TO BE HERE? -----------
@@ -137,7 +138,8 @@ app.get('/500', (req, res, next) => {
 // Handling 404 case
 app.use((req, res, next) => {
     res.status(404).render('404', {
-        title: '404'
+        title: '404',
+        url: '404'
     });
 })
 
@@ -153,6 +155,7 @@ app.use((error, req, res, next) => {
     }
     res.status(errorStatus).render('500', {
         title: 'Error ' + errorStatus,
+        url: '500',
         msg: errorMessage
     })
 })
