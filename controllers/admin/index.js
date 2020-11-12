@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 
 const mongoose = require('mongoose');
 const { validationResult } = require('express-validator');
@@ -27,9 +28,12 @@ const getLogin = (req, res, next) => {
 
 const postLogin = (req, res, next) => {
     const password = req.body.password;
-    if (password !== process.env.ADMIN_PASSWORD) {
+
+    const hash = crypto.pbkdf2Sync(password, process.env.SESSION_SECRET_STRING, 16, 64, `sha512`).toString(`hex`);
+
+    if (hash !== process.env.ADMIN_PASSWORD) {
         return res.status(401).redirect('/');
-    } else if (password === process.env.ADMIN_PASSWORD) {
+    } else if (hash === process.env.ADMIN_PASSWORD) {
         req.session.isAdmin = true;
         return req.session.save(err => {
             console.log(err);

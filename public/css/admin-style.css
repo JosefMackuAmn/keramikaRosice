@@ -163,9 +163,14 @@ a:link {
   .item-list__options {
     margin-bottom: 4rem;
     display: flex;
-    flex-direction: row-reverse;
     justify-content: space-between;
     align-items: center; }
+    .item-list__options input {
+      height: 4rem;
+      width: 30rem;
+      padding: 1rem;
+      border: 2px solid black;
+      outline: none; }
   .item-list__content {
     width: 100%; }
   .item-list__heading {
@@ -208,6 +213,17 @@ a:link {
         border: 1px solid black; }
       .item-list__row__btn:hover {
         box-shadow: 0 1px 5px 1px rgba(255, 255, 255, 0.5); }
+  .item-list__switch-page {
+    width: 100%;
+    margin-top: 10rem;
+    display: flex;
+    align-items: center;
+    justify-content: center; }
+    .item-list__switch-page a {
+      font-weight: bold;
+      font-size: 2.2rem; }
+      .item-list__switch-page a:not(:last-child) {
+        margin-right: 10rem; }
 
 .login-form {
   width: 100%;

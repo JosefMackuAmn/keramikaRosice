@@ -17,9 +17,18 @@ const asyncHelpers = require('../util/asyncHelpers');
 const EmailTemplates = require('../templates/emails');
 
 exports.getShop = async (req, res, next) => {
+    const page = req.query.page || 1;
+
     const allCategories = await Category.find({});
     const allSubcategories = await Subcategory.find({});
-    const products = await Product.find({});
+    const products = await Product
+        .find({})
+        .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
+        .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
+
+    const numberOfProducts = await Product.countDocuments({});
+
+    const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
 
     res.render('eshop/shop', {
         title: 'E-shop',
@@ -29,24 +38,35 @@ exports.getShop = async (req, res, next) => {
         subcategoryName: undefined,
         products: products,
         categories: allCategories,
-        subcategories: allSubcategories
+        subcategories: allSubcategories,
+        isNextPage,
+        page
     })
 }
 
 exports.getCategory = async (req, res, next) => {
+    const page = req.query.page || 1;
+
     const categoryName = req.params.category.toLowerCase();
     const category = await Category.findOne({ name: categoryName });
     if (!category) {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
             url: 'shop/' + categoryName,
-            products: []
+            products: [],
+            isNextPage: false
         })
     }
     const categoryId = category._id;
     const categoryImage = category.images[0];
 
-    const categoryProducts = await Product.find({ categoryId: categoryId });
+    const categoryProducts = await Product
+        .find({ categoryId: categoryId })
+        .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
+        .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
+
+    const numberOfProducts = await Product.find({ categoryId: categoryId }).countDocuments({});
+    const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
     
     const allCategories = await Category.find({});
     const allSubcategories = await Subcategory.find({});
@@ -59,11 +79,15 @@ exports.getCategory = async (req, res, next) => {
         subcategoryName: undefined,
         products: categoryProducts,
         categories: allCategories,
-        subcategories: allSubcategories
+        subcategories: allSubcategories,
+        isNextPage,
+        page
     });
 }
 
 exports.getSubcategory = async (req, res, next) => {
+    const page = req.query.page || 1;
+
     const categoryName = req.params.category.toLowerCase();
     const subcategoryName = req.params.subcategory.toLowerCase();
     
@@ -72,7 +96,8 @@ exports.getSubcategory = async (req, res, next) => {
         return res.status(400).render('eshop/shop', {
             title: 'Kategorie nenalezena',
             url: 'shop/' + categoryName + '/' + subcategoryName,
-            products: []
+            products: [],
+            isNextPage: false
         })
     }
     const categoryId = category._id;
@@ -84,12 +109,19 @@ exports.getSubcategory = async (req, res, next) => {
         return res.status(400).render('eshop/shop', {
             title: 'Podkategorie nenalezena',
             url: 'shop/' + categoryName + '/' + subcategoryName,
-            products: []
+            products: [],
+            isNextPage: false
         })
     }
     const subcategoryId = subcategory._id;
 
-    const subcategoryProducts = await Product.find({ subcategoryId: subcategoryId });
+    const subcategoryProducts = await Product
+        .find({ subcategoryId: subcategoryId })
+        .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
+        .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
+
+    const numberOfProducts = await Product.find({ subcategoryId: subcategoryId }).countDocuments({});
+    const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
     
     const allCategories = await Category.find({});
     const allSubcategories = await Subcategory.find({});
@@ -102,7 +134,9 @@ exports.getSubcategory = async (req, res, next) => {
         subcategoryName: subcategoryName,
         products: subcategoryProducts,
         categories: allCategories,
-        subcategories: allSubcategories
+        subcategories: allSubcategories,
+        isNextPage,
+        page
     });
 }
 

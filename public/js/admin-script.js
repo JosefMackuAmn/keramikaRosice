@@ -396,6 +396,19 @@ const onSelectCategory = () => {
     }
 }
 
+/////
+// Search
+/////
+const searchHandler = e => {
+    // Submit on press of enter
+    if (e.keyCode === 13 || e.which === 13 || e.key === 13) {
+        const value = e.target.value;
+        const model = e.target.dataset.model;
+    
+        location.href = `/admin/${model}?page=1&search=${value}`;
+    }
+}
+
 ///////////////////////////////////
 ///// DEFINE STATE
 const state = {
@@ -508,6 +521,14 @@ ready(() => {
         putOrderBtn.addEventListener('click', () => {
             state.selectedElement = putOrderBtn;
             return putOrderHandler();
+        });
+    }
+
+    // Try to find #search-input
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('keydown', e => {
+            searchHandler(e);
         });
     }
 });

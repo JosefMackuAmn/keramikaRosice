@@ -11,11 +11,59 @@ const Subcategory = require('../../models/subcategory');
 ///////////////////////
 ///// Products
 exports.getProducts = async (req, res, next) => {
-    const allProducts = await Product.find({}).sort('-date').populate({ path: 'categoryId' }).populate({ path: 'subcategoryId' });
+    const page = req.query.page || 1;
+    const search = req.query.search || '';
+
+    const allProducts = await Product
+        .find({
+            $or: [
+                {
+                    name: {
+                        $regex: search,
+                        $options: 'i'
+                    }
+                },
+                {
+                    description: {
+                        $regex: search,
+                        $options: 'i'
+                    }
+                }
+            ]
+        })
+        .sort('-date')
+        .limit(+process.env.ADMIN_PRODUCTS_PER_PAGE)
+        .skip((page - 1) * +process.env.ADMIN_PRODUCTS_PER_PAGE)
+        .populate({ path: 'categoryId' })
+        .populate({ path: 'subcategoryId' })
+    
+    const numberOfProducts = await Product
+        .find({
+            $or: [
+                {
+                    name: {
+                        $regex: search,
+                        $options: 'i'
+                    }
+                },
+                {
+                    description: {
+                        $regex: search,
+                        $options: 'i'
+                    }
+                }
+            ]
+        })
+        .countDocuments({});
+
+    const isNextPage = page * process.env.ADMIN_PRODUCTS_PER_PAGE < numberOfProducts;
 
     res.render('admin/products', {
         title: 'Products',
-        products: allProducts
+        products: allProducts,
+        isNextPage,
+        page,
+        searchString: search
     });
 }
 

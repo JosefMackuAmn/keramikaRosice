@@ -141,7 +141,7 @@ app.use((req, res, next) => {
         title: '404',
         url: '404'
     });
-})
+});
 
 // Handling next(error) call
 app.use((error, req, res, next) => {
@@ -153,11 +153,12 @@ app.use((error, req, res, next) => {
             msg: errorMessage
         })
     }
+
     res.status(errorStatus).render('500', {
         title: 'Error ' + errorStatus,
         url: '500',
         msg: errorMessage
-    })
+    });
 })
 
 // Connect to MongoDB

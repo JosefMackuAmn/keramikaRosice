@@ -11,9 +11,16 @@
         margin-bottom: 4rem;
 
         display: flex;
-        flex-direction: row-reverse;
         justify-content: space-between;
         align-items: center;
+
+        & input {
+            height: 4rem;
+            width: 30rem;
+            padding: 1rem;
+            border: 2px solid $color-black;
+            outline: none;
+        }
     }
     &__content {
         width: 100%;
@@ -80,6 +87,24 @@
             }
             &:hover {
                 box-shadow: 0 1px 5px 1px $color-white-overlay;
+            }
+        }
+    }
+
+    &__switch-page {
+        width: 100%;
+        margin-top: 10rem;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        & a {
+            font-weight: bold;
+            font-size: $font-big;
+
+            &:not(:last-child) {
+                margin-right: 10rem;
             }
         }
     }

@@ -11,7 +11,7 @@
         <main class="main main--products">
 
             <div class="item-list__options">
-                <!-- <input type="text" placeholder="Hledat"> -->
+                <input type="text" name="search" id="search-input" data-model="products" placeholder="Hledat">
                 <a class="add-button" href="/admin/products/add">Nový produkt</a>
             </div>
 
@@ -38,6 +38,15 @@
                     <% }) %>
                 </tbody>
             </table>
+
+            <div class="item-list__switch-page">
+                <% if (page != 1) { %>
+                    <a href="/admin/products?page=<%= +page - 1 %>&search=<%= searchString %>"><- Předchozí strana</a>
+                <% } %>
+                <% if (isNextPage) { %>
+                    <a href="/admin/products?page=<%= +page + 1 %>&search=<%= searchString %>">Další strana -></a>
+                <% } %>
+            </div>
             
         </main>
 

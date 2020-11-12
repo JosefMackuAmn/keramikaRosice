@@ -104,6 +104,14 @@
                     } else { %>
                         <p>Žádné produkty nenalezeny</p>
                     <% } %>
+                    <div class="eshop__products__switch-page">
+                        <% if (page != 1) { %>
+                            <a href="/<%= url %>?page=<%= +page - 1 %>"><- Předchozí strana</a>
+                        <% } %>
+                        <% if (isNextPage) { %>
+                            <a href="/<%= url %>?page=<%= +page + 1 %>">Další strana -></a>
+                        <% } %>
+                    </div>
                 </div>
             </div>
         </section>
