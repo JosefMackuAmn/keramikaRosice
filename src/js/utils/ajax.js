@@ -54,7 +54,8 @@ export const orderSubmitHandler = e => {
     const zipCodeValue = fcns.validateInput(formELs.zipCode);
     const deliveryValue = fcns.validateInput(formELs.delivery);
     const paymentValue = fcns.validateInput(formELs.payment);
-    const packetaIdValue = fcns.validateInput(formELs.packetaId);
+    // If ZAS is chosen for delivery, validating packetaId
+    const packetaIdValue = deliveryValue === 'ZAS' ? fcns.validateInput(formELs.packetaId) : '';
 
     // If validation has failed (at least one element has class 'invalid'), returning
     
