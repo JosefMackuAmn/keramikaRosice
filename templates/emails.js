@@ -1,14 +1,14 @@
 class EmailTemplates {
     static newOrder({ id, payment }) {
-        let expedition = "<p>Zboží vám bude zasláno do 5 dnů po obdržení platby.</p>";
+        let expedition = "Po uhrazení objednávky, dle přiložené faktury, vám bude zasláno zboží nejpozději do 5 dnů po obdržení platby.";
         if (payment === "DOB") expedition = "";
 
         return [
             `Keramika Rosice: Nová objednávka`,
             `<h2>Objednávka #${id}</h2>
             <h3 style="font-size: 22px;">Keramika Rosice</h3><br/><br/>
-            <p>Přijali jsme vaši objednávku a v příloze zasíláme fakturu. Pečlivě si ji uschovejte, obvykle slouží i jako záruční list k zakoupenému zboží.</p>
-            ${expedition}`
+            <p>Přijali jsme vaši objednávku a v příloze zasíláme fakturu. ${expedition}</p>
+            <p>Fakturu si pečlivě uschovejte, obvykle slouží i jako záruční list k zakoupenému zboží.</p>`
         ];
     }
     static paymentSuccess({ id }) {

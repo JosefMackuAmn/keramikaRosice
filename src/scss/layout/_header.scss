@@ -10,6 +10,7 @@ $hamburger-hover-offset: .3rem;
 .header {
     padding-top: 3rem;
     background-color: transparent;
+    overflow: hidden;
 
     display: flex;
     justify-content: space-between;

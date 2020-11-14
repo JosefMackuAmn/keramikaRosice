@@ -206,14 +206,13 @@ fcns.ready(() => {
 
         orderDelivery.addEventListener('input', () => {
 
-        if (OODInput.checked) {
-            DOBpriceEl.textContent = '0Kč'
-        } else {
-            DOBpriceEl.textContent = DOBpriceValue;
-        }
+            if (OODInput.checked) {
+                DOBpriceEl.textContent = '0Kč'
+            } else {
+                DOBpriceEl.textContent = DOBpriceValue;
+            }
 
-        }
-        )
+        });
 
     }
     

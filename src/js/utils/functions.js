@@ -226,14 +226,15 @@ export const createCartHint = (state, text) => {
     cartHint.classList.add('cart-hint--visible');
     cartHint.classList.add(`cart-hint--${state}`);
     cartHint.innerHTML = `<div class="cart-hint__text">
-    ${text}
-    </div>
-    <div class="cart-hint__symbol cart-hint__symbol--${state}">
+        ${text}
+        </div>
+        <div class="cart-hint__symbol cart-hint__symbol--${state}">
 
-    </div>
-    <button class="close-button">
+        </div>
+        <button class="close-button">
 
-    </button>`;
+        </button>
+    `;
 
     body.appendChild(cartHint);
 
