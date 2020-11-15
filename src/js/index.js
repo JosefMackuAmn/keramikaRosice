@@ -35,7 +35,7 @@ fcns.ready(() => {
                 const mailSent = params.get('mailSent');
 
                 if(success === 'true' && mailSent === 'true') {
-                    fcns.createModal('Odesláno', 'Objednávka byla odeslána. <em> Byl vám zaslán mail, prosím, postupujte podle pokynů v něm. </em>', 'OK', true)
+                    fcns.createModal('Odesláno', 'Objednávka byla odeslána. <em>Byl vám zaslán mail s pokyny k platbě.</em>', 'OK', true)
                 }
 
                 if(success === 'true' && mailSent === 'false') {
