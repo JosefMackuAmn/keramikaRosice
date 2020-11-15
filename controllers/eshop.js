@@ -327,7 +327,7 @@ exports.postOrder = async (req, res, next) => {
                         currency: 'czk',
                         product_data: {
                             name: item.product.name,
-                            images: item.product.images.map(image => `https://testapp-4400.rostiapp.cz/${image}`)
+                            images: item.product.images.map(image => encodeURI(`https://www.keramika-rosice.cz/${image}`))
                         },
                         unit_amount: (item.product.price * 100)
                     },
@@ -362,8 +362,8 @@ exports.postOrder = async (req, res, next) => {
                 payment_method_types: ['card'],
                 line_items: stripeItems,
                 mode: 'payment',
-                success_url: `https://www.keramika-rosice.cz/?payment=success`,
-                cancel_url: `https://www.keramika-rosice.cz/?payment=canceled`
+                success_url: "https://www.keramika-rosice.cz/?payment=success",
+                cancel_url: "https://www.keramika-rosice.cz/?payment=canceled"
             });
             
             order.stripePaymentIntent = session.payment_intent;
@@ -372,7 +372,23 @@ exports.postOrder = async (req, res, next) => {
             return res.json({ id: session.id });
         }
 
-        return returnStripeSessionId();
+        return returnStripeSessionId()
+            .catch(err => {
+                const emailTemplate = EmailTemplates.paymentError(order);
+                transporter.sendMail({
+                    from: process.env.MAIL_USER,
+                    to: order.email,
+                    cc: process.env.MAIL_USER,
+                    subject: emailTemplate[0],
+                    html: emailTemplate[1]
+                }, (err, info) => {
+                    if (err) {
+                        console.log(err);
+                    }
+                });
+
+                next(err);
+            });
 
     });
 }

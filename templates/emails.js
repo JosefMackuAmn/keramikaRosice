@@ -1,7 +1,8 @@
 class EmailTemplates {
-    static newOrder({ id, payment }) {
+    static newOrder({ id, payment, delivery }) {
         let expedition = "Po uhrazení objednávky, dle přiložené faktury, vám bude zasláno zboží nejpozději do 5 dnů po obdržení platby.";
-        if (payment === "DOB") expedition = "";
+        if (payment === "DOB") expedition = "Zboží vám bude zasláno do 5 dnů.";
+        if (delivery === "OOD") expedition = "Do 5 dnů vás kontaktujeme a domluvíme se na osobním předání.";
 
         return [
             `Keramika Rosice: Nová objednávka`,

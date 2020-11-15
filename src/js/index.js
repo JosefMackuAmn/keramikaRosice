@@ -1,5 +1,5 @@
 import 'url-search-params-polyfill';
-import 'fetch-polyfill';
+//import 'fetch-polyfill';
 
 import state from './utils/state';
 import * as fcns from './utils/functions';
@@ -197,19 +197,25 @@ fcns.ready(() => {
         const OODInput = document.getElementById('OOD');
         const DOBpriceEl = document.getElementById('DOBprice');
         const DOBpriceValue = DOBpriceEl.textContent;
+        const DOBlabelEl = DOBpriceEl.parentElement.querySelector('label');
+        const DOBlabelValue = DOBlabelEl.textContent;
 
         if (OODInput.checked) {
-            DOBpriceEl.textContent = '0Kč'
+            DOBpriceEl.textContent = '0Kč';
+            DOBlabelEl.textContent = "Hotově při převzetí";
         } else {
             DOBpriceEl.textContent = DOBpriceValue;
+            DOBlabelEl.textContent = DOBlabelValue;
         }
 
         orderDelivery.addEventListener('input', () => {
 
             if (OODInput.checked) {
-                DOBpriceEl.textContent = '0Kč'
+                DOBpriceEl.textContent = '0Kč';
+                DOBlabelEl.textContent = "Hotově při převzetí";
             } else {
                 DOBpriceEl.textContent = DOBpriceValue;
+                DOBlabelEl.textContent = DOBlabelValue;
             }
 
         });

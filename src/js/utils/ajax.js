@@ -97,17 +97,21 @@ export const orderSubmitHandler = e => {
         // Fetch POST /objednavka, expecting json
         fetch('/objednavka', {
             method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            },
             body: formData
         }).then(res => {
+            if (!res.ok) throw new Error('Nastala chyba na serveru.');
             return res.json();
         }).then(session => {
             return stripe.redirectToCheckout({ sessionId: session.id });
         }).then(result => {
             if (result.error) {
-                fcns.createModal('Nastala chyba', 'Platba se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
+                fcns.createModal('Nastala chyba', 'Platba kartou se nezdařila. Prosím, zkuste jiný typ platby nebo mě kontaktujte na e-mailu keramikarosice@seznam.cz.', 'OK');
             }
         }).catch(err => {
-            fcns.createModal('Nastala chyba', 'Objednávka se nezdařila, prosím kontaktujte mě na e-mailu keramikarosice@seznam.cz', 'OK');
+            fcns.createModal('Nastala chyba', 'Platba kartou se nezdařila. Prosím, zkuste jiný typ platby nebo mě kontaktujte na e-mailu keramikarosice@seznam.cz.', 'OK');
         }).finally(() => {
             submitBtn.textContent = submitBtnText;
             submitBtn.classList.remove('loading');
