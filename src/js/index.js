@@ -190,9 +190,10 @@ fcns.ready(() => {
         }
     }
 
-    /////DOB Price is 0 when OOD is selected
+    /////DOB Price is 0 when OOD is selected, validating delivery and payment
     if(orderForm) {
 
+        const orderPayment = document.getElementById('order-payment');
         const orderDelivery = document.getElementById('order-delivery');
         const OODInput = document.getElementById('OOD');
         const DOBpriceEl = document.getElementById('DOBprice');
@@ -208,7 +209,9 @@ fcns.ready(() => {
             DOBlabelEl.textContent = DOBlabelValue;
         }
 
-        orderDelivery.addEventListener('input', () => {
+        orderDelivery.addEventListener('input', (event) => {
+
+            fcns.validateInput(formELs.delivery);
 
             if (OODInput.checked) {
                 DOBpriceEl.textContent = '0Kč';
@@ -217,8 +220,10 @@ fcns.ready(() => {
                 DOBpriceEl.textContent = DOBpriceValue;
                 DOBlabelEl.textContent = DOBlabelValue;
             }
-
         });
+        orderPayment.addEventListener('input', () => {
+            fcns.validateInput(formELs.payment);
+        })
 
     }
     

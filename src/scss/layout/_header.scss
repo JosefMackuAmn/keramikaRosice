@@ -144,7 +144,7 @@ $hamburger-hover-offset: .3rem;
         }
     }
     &__nav-list {
-        overflow: hidden;
+        //overflow-x: hidden;
         list-style: none;
 
         display: flex;
@@ -195,7 +195,8 @@ $hamburger-hover-offset: .3rem;
         }
     }
     &__nav-item {
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow: visible;
         margin-right: 5rem;
         
         transition: all .2s;
