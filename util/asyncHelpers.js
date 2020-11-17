@@ -5,6 +5,7 @@ const generateInvoice = require('./generateInvoice');
 const transporter = require('./mailing');
 
 const Order = require('../models/order');
+const Product = require('../models/product');
 const EmailTemplates = require('../templates/emails');
 
 exports.cancelOrder = async (orderId) => {
@@ -26,6 +27,8 @@ exports.cancelOrder = async (orderId) => {
     await generateInvoice(order, invoicePath);
 
     await order.save();
+
+    await updateProductCount('ADD', order);
 
     // Send notification about cancelled order
     const emailTemplate = EmailTemplates.canceledOrder(order);
@@ -103,4 +106,23 @@ exports.getVariableSymbol = async (date) => {
     await fs.promises.writeFile('constants.json', JSON.stringify(constants, null, 2));
 
     return `${newNumberString}${newYear}`;
+}
+
+const updateProductCount = exports.updateProductCount = async (action, { items }) => {
+    if (action !== 'ADD' && action !== 'REMOVE') throw new Error('action has to be a string of defined value');
+
+    // Update each product
+    await items.forEach(async item => {
+        let amount = item.amount;
+        if (action === 'REMOVE') {
+            amount = -amount;
+        }
+
+        await Product.findByIdAndUpdate(item.product._id, {
+            $inc: {
+                "amountInStock": amount
+            }
+        }, { new: true });
+    });
+
 }

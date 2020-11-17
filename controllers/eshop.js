@@ -284,13 +284,19 @@ exports.postOrder = async (req, res, next) => {
         packetaId: packetaId
     });
     
+    // Generate invoice name and path
     const invoiceName = 'invoice-' + order._id + '.pdf';
     const invoicePath = path.join('pdf', 'invoices', invoiceName);
     order.invoiceUrl = invoicePath;
 
+    // Generate and save invoice
     generateInvoice(order, invoicePath);
 
+    // Save order
     await order.save();
+
+    // Update product counts
+    await asyncHelpers.updateProductCount('REMOVE', order);
 
     req.session.cart = null;
 
