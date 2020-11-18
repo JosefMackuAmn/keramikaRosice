@@ -392,7 +392,6 @@ __webpack_require__.r(__webpack_exports__);
 ///// CALLING READY FUNCTION
 _utils_functions__WEBPACK_IMPORTED_MODULE_2__.ready(() => {
 
-    _utils_functions__WEBPACK_IMPORTED_MODULE_2__.createModal('Lol', 'lol', 'lol');
     /////
     // SHOW MODAL
     /////
