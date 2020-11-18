@@ -1309,7 +1309,7 @@ const createCartHint = (state, text) => {
 //CART
 /////
 const addToCart = (postCartData) => {
-
+    
     return _ajax__WEBPACK_IMPORTED_MODULE_2__.postCartHandler(postCartData)
     .then((updatedCart) => {
         createCartHint('success', `Produkt byl úspěšně přidán do košíku`);         
@@ -1334,9 +1334,10 @@ const removeFromCart = (postCartData) => {
 const updateCartItem = (cartItem, updatedCart) => {
 
     const cartItemObj = updatedCart.items.find(item => {
-        return item.product._id = cartItem.dataset.productid;
+        return item.product._id === cartItem.dataset.productid;
+        
     })
-
+   
     const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
     const priceEl = cartItem.querySelector('.cart-item__price');
 

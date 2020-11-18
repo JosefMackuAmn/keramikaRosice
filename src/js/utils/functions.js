@@ -255,7 +255,7 @@ export const createCartHint = (state, text) => {
 //CART
 /////
 export const addToCart = (postCartData) => {
-
+    
     return ajax.postCartHandler(postCartData)
     .then((updatedCart) => {
         createCartHint('success', `Produkt byl úspěšně přidán do košíku`);         
@@ -280,9 +280,10 @@ export const removeFromCart = (postCartData) => {
 export const updateCartItem = (cartItem, updatedCart) => {
 
     const cartItemObj = updatedCart.items.find(item => {
-        return item.product._id = cartItem.dataset.productid;
+        return item.product._id === cartItem.dataset.productid;
+        
     })
-
+   
     const amountEl = cartItem.querySelector('.cart-item__amount-box__amount');
     const priceEl = cartItem.querySelector('.cart-item__price');
 
