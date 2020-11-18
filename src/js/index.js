@@ -11,6 +11,7 @@ import { formELs }  from './utils/data';
 ///// CALLING READY FUNCTION
 fcns.ready(() => {
 
+    fcns.createModal('Lol', 'lol', 'lol');
     /////
     // SHOW MODAL
     /////
