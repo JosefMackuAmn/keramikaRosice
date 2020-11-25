@@ -431,6 +431,7 @@ exports.postCheckoutWebhook = async (req, res, next) => {
                 // Mark order as payed and send email
                 try {
                     const result = await asyncHelpers.paidOrderHandler(order);
+                    res.status(200).json({ received: true });
                 } catch (err) {
                     console.log(err);
                     res.status(500);
@@ -451,6 +452,7 @@ exports.postCheckoutWebhook = async (req, res, next) => {
             // Mark order as payed and send email
             try {
                 const result = await asyncHelpers.paidOrderHandler(order);
+                res.status(200).json({ received: true });
             } catch (err) {
                 console.log(err);
                 res.status(500);
@@ -477,13 +479,14 @@ exports.postCheckoutWebhook = async (req, res, next) => {
             }, (err, info) => {
                 if (err) {
                     console.log(err);
+                    res.status(500);
                 }
+                res.status(200).json({ received: true });
             });
 
             break;
         }
-        default: null;
+        default: res.status(400);
     }
 
-    return res.status(200);
 }

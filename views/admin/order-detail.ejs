@@ -6,7 +6,7 @@
     
     <div class="wrapper">
         
-        <% const adminTitle = 'Objednávka #' + order._id; %>
+        <% const adminTitle = 'Objednávka #' + order.variableSymbol; %>
         <%- include('./includes/header.ejs', { logout: true, adminTitle: adminTitle }) %>
 
         <main class="main main--order-detail">

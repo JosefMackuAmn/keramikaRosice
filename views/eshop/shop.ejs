@@ -35,7 +35,6 @@
                         <% categories.forEach(category => { %>
                             <li class="category-select__category <% if (category.name === categoryName) { %>category-select__category--selected<% } %>">
                                 <a href="/shop/<%= category.name %>"><h3 class="heading-3"><%= category.name %></h3></a>
-                                <button class="category-select__button <% if (category.name !== categoryName) { %>category-select__button--hide<% } else { %>category-select__button--show<% } %>"></button>
                                 <%
                                 
                                     const curSubcategories = [];
@@ -46,6 +45,7 @@
                                     });
 
                                     if (curSubcategories.length) { %>
+                                        <button class="category-select__button <% if (category.name !== categoryName) { %>category-select__button--hide<% } else { %>category-select__button--show<% } %>"></button>
                                         <ul class="category-select__subcategory-list <% if (category.name !== categoryName) { %>category-select__subcategory-list--hidden<% } %>">
                                             <% curSubcategories.forEach(subcategory => { %>
                                                 <a href="/shop/<%= category.name %>/<%= subcategory.name %>"><li class="category-select__subcategory <% if (subcategory.name === subcategoryName) { %>category-select__subcategory--selected<% } %>"><%= subcategory.name %></li></a>

@@ -30,7 +30,7 @@
                                     <div class="cart-item__amount-box">
                                         <button class="cart-item__amount-box__btn cart-item__amount-box__btn--remove">-</button>
                                         <p class="cart-item__amount-box__amount"><%= item.amount %>ks</p>
-                                        <button class="cart-item__amount-box__btn cart-item__amount-box__btn--add">+</button>
+                                        <button class="cart-item__amount-box__btn cart-item__amount-box__btn--add" data-instock="<%= item.product.amountInStock %>" >+</button>
                                     </div>
                                     <p class="cart-item__price"><%= (item.amount * item.product.price).toFixed(0) %>Kč</p>
                                 </div>

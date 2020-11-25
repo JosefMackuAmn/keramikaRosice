@@ -241,8 +241,12 @@ fcns.ready(() => {
             const addButton = cartItem.querySelector('.cart-item__amount-box__btn--add');
             const removeButton = cartItem.querySelector('.cart-item__amount-box__btn--remove');
             const removeAllButton = cartItem.querySelector('.close-button');
+            const amountInStock = parseInt(addButton.dataset.instock);
+            let amountInCart = parseInt(cartItem.querySelector('.cart-item__amount-box__amount').innerText);
 
             addButton.addEventListener('click', async () => {
+
+                if (amountInCart >= amountInStock) return;
 
                 const postCartData = {
                     action: 'ADD',
@@ -253,6 +257,7 @@ fcns.ready(() => {
                 
                 fcns.addToCart(postCartData).then((updatedCart) => {
                     fcns.updateCartItem(cartItem, updatedCart);
+                    amountInCart += 1;
                 });
             });
             removeButton.addEventListener('click', () => {
@@ -266,7 +271,7 @@ fcns.ready(() => {
                 
                 fcns.removeFromCart(postCartData).then((updatedCart) => {
                     fcns.updateCartItem(cartItem, updatedCart);
-
+                    amountInCart -= 1;
                     
                 });
             })
@@ -281,6 +286,7 @@ fcns.ready(() => {
 
                 fcns.removeFromCart(postCartData).then( (updatedCart) => {
                     fcns.updateCartItem(cartItem, updatedCart);
+                    amountInCart = 0;
                 })
 
             })
