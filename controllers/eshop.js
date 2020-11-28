@@ -246,7 +246,7 @@ exports.postOrder = async (req, res, next) => {
     }
 
     let paymentCost = consts.paymentCosts[payment];
-    if (delivery === "OOD") {
+    if (delivery === "OOD" && payment === "DOB") {
         paymentCost = 0;
     }
 
