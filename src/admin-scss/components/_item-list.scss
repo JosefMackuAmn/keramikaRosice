@@ -33,6 +33,11 @@
 
         & th {
             font-weight: 400;
+            min-width: 10rem;
+
+            &:last-child {
+                min-width: 24rem;
+            }
         }
     }
     &__row {

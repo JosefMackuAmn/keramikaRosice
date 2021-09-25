@@ -31,7 +31,7 @@ exports.getProducts = async (req, res, next) => {
                 }
             ]
         })
-        .sort('-date')
+        .sort('name')
         .limit(+process.env.ADMIN_PRODUCTS_PER_PAGE)
         .skip((page - 1) * +process.env.ADMIN_PRODUCTS_PER_PAGE)
         .populate({ path: 'categoryId' })
