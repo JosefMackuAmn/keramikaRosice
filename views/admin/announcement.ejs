@@ -1,0 +1,32 @@
+<%- include('./includes/head.ejs') %>
+</head>
+<body>
+
+    <%- include('./includes/navigation.ejs', { activeLink: 'announcement' }) %>
+    
+    <div class="wrapper">
+        
+        <%- include('./includes/header.ejs', { logout: true, adminTitle: 'Oznámení' }) %>
+
+        <main class="main main--categories">
+
+            <form action="/admin/announcement" enctype="multipart/form-data" class="announ-form" id="announ-form" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <div class="announ-form__text">
+                    <textarea name="announcement" id="announ-text" cols="30" rows="10"><%= announcement.text %></textarea>
+                </div>
+                <div class="announ-form__show">
+                    <input class="announ-form__show__checkbox" type="checkbox" name="show" id="announ-show" <% if (announcement.show) { %>checked<% } %>>
+                    <label for="announ-show" class="announ-form__show__label" >
+                        <div class="announ-form__show__btn--show announ-form__show__btn">Zobrazit</div>
+                        <div class="announ-form__show__btn--hide announ-form__show__btn">Skrýt</div>
+                    </label>
+                </div>
+                <input class="announ-form__submit" type="submit" value="ULOŽIT">
+            </form>
+            
+        </main>
+
+    </div>
+    
+<%- include('./includes/end.ejs') %>

@@ -16,15 +16,20 @@ fcns.ready(() => {
     /////
 
     const params = new URLSearchParams(window.location.search);
+    const announcementInput = document.getElementById('announcement');
+
+    let modalShown = false;
     
     if (params.has('payment')) {
 
         const payment = params.get('payment');
 
         if (payment === 'success') {
-            fcns.createModal('Úspěch', 'Platba proběhla úspěšně. Faktura k objednávce Vám přišla na e-mail.', 'OK')
+            fcns.createModal('Úspěch', 'Platba proběhla úspěšně. Faktura k objednávce Vám přišla na e-mail.', 'OK');
+            modalShown = true;
         } else if (payment === 'canceled') {
-            fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a kontaktuje Vás.', 'OK')
+            fcns.createModal('Storno', 'Platba byla přerušena, ale prodejce byl o Vaší objednávce informován a kontaktuje Vás.', 'OK');
+            modalShown = true;
         }
 
         if(payment === 'BTR') {
@@ -35,19 +40,23 @@ fcns.ready(() => {
                 const mailSent = params.get('mailSent');
 
                 if(success === 'true' && mailSent === 'true') {
-                    fcns.createModal('Odesláno', 'Objednávka byla odeslána. <em>Byl vám zaslán mail s pokyny k platbě.</em>', 'OK', true)
+                    fcns.createModal('Odesláno', 'Objednávka byla odeslána. <em>Byl vám zaslán mail s pokyny k platbě.</em>', 'OK', true);
+                    modalShown = true;
                 }
 
                 if(success === 'true' && mailSent === 'false') {
-                    fcns.createModal('Nepovedlo se odeslat e-mail', '<em> Objednávku jsme zaregistrovali, ale nepodařil se odeslat mail s informacemi k platbě. Prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true)
+                    fcns.createModal('Nepovedlo se odeslat e-mail', '<em> Objednávku jsme zaregistrovali, ale nepodařil se odeslat mail s informacemi k platbě. Prosím, kontaktujte mě na adrese keramikarosice@seznam.cz </em>', 'OK', true);
+                    modalShown = true;
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK');
+                    modalShown = true;
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK');
+                    modalShown = true;
                 }
 
             }
@@ -62,23 +71,33 @@ fcns.ready(() => {
                 const mailSent = params.get('mailSent');
 
                 if(success === 'true' && mailSent === 'true') {
-                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně. Faktura vám přišla na mail.', 'OK')
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně. Faktura vám přišla na mail.', 'OK');
+                    modalShown = true;
                 }
 
                 if(success === 'true' && mailSent === 'false') {
-                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK')
+                    fcns.createModal('Úspěch', 'Objednávka proběhla úspěšně', 'OK');
+                    modalShown = true;
                 }
 
                 if(success === 'false' && mailSent === 'true') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat.', 'OK');
+                    modalShown = true;
                 }
 
                 if(success === 'false' && mailSent === 'false') {
-                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat..', 'OK')
+                    fcns.createModal('Chyba', 'Nastala chyba, objednávku se nepodařilo odeslat..', 'OK');
+                    modalShown = true;
                 }
             }
             
         }
+    }
+    
+    if (announcementInput && !modalShown) {
+        const announcement = announcementInput.value;
+        fcns.createModal('Oznámení', announcement, 'OK');
+        modalShown = true;
     }
 
     /////

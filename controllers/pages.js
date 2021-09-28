@@ -2,14 +2,18 @@ const fs = require('fs');
 const path = require('path');
 
 const Category = require('../models/category');
+const Config = require('../models/config');
 
 exports.getIndex = async (req, res, next) => {
     const allCatgories = await Category.find({});
+
+    const { announcement } = await Config.getSingleton();
     
     res.render('pages/index', {
         title: 'Domů',
         url: '',
-        categories: allCatgories
+        categories: allCatgories,
+        announcement: announcement
     })
 }
 

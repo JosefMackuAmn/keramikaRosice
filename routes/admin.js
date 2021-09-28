@@ -160,6 +160,9 @@ router.post('/orders/cancel', isAuth, ash(adminController.postCancelOrder)); // 
 
 router.get('/invoice/:orderId', isAuth, ash(adminController.getInvoice));
 
+router.get('/announcement', isAuth, ash(adminController.getAnnouncement));
+router.post('/announcement', isAuth, ash(adminController.postAnnouncement));
+
 // Handling error cases in admin section
 router.use(isAuth, (error, req, res, next) => {
     console.log(error);

@@ -10,6 +10,7 @@ const productsAdminController = require('./products');
 const asyncHelpers = require('../../util/asyncHelpers');
 
 const Order = require('../../models/order');
+const Config = require('../../models/config');
 
 const getIndex = (req, res, next) => {
     res.render('admin/index', {
@@ -150,6 +151,36 @@ const getInvoice = async (req, res, next) => {
     fileStream.pipe(res);
 }
 
+const getAnnouncement = async (req, res, next) => {
+    const config = await Config.getSingleton();
+
+    res.render('admin/announcement', {
+        title: 'Announcement',
+        announcement: config.announcement
+    });
+}
+
+const postAnnouncement = async (req, res, next) => {
+    const { show, announcement } = req.body;
+
+    const config = await Config.getSingleton();
+
+    if (show === 'on') {
+        config.announcement.show = true;
+    } else {
+        config.announcement.show = false;        
+    }
+
+    config.announcement.text = announcement;
+
+    await config.save();
+
+    res.render('admin/announcement', {
+        title: 'Announcement',
+        announcement: config.announcement
+    })
+}
+
 module.exports = {
     ...categoriesAdminController,
     ...productsAdminController,
@@ -161,5 +192,7 @@ module.exports = {
     getOrderDetail,
     putOrder,
     getInvoice,
-    postCancelOrder
+    postCancelOrder,
+    getAnnouncement,
+    postAnnouncement
 }

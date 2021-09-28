@@ -24,5 +24,9 @@
                  
     </main>
 
+    <% if (announcement.show && announcement.text) { %>
+        <input type="hidden" id="announcement" value="<%= announcement.text %>">
+    <% } %>
+
     <%- include('../includes/footer.ejs') %>
 <%- include('../includes/end.ejs') %>
