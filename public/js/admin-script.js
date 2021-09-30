@@ -409,6 +409,15 @@ const searchHandler = e => {
     }
 }
 
+/////
+// Announcement
+/////
+const onChangesMarkUnsaved = () => {
+    const announSubmitBtn = document.getElementById('announ-form-submit');
+    announSubmitBtn.value = 'ULOŽIT';
+    announSubmitBtn.classList.remove('announ-form__submit--saved');
+}
+
 ///////////////////////////////////
 ///// DEFINE STATE
 const state = {
@@ -530,5 +539,16 @@ ready(() => {
         searchInput.addEventListener('keydown', e => {
             searchHandler(e);
         });
+    }
+
+    // Try to find #announ-form
+    const announForm = document.getElementById('announ-form');
+    if (announForm) {
+        const announTextarea = document.getElementById('announ-form-textarea');
+        const announLabel = document.getElementById('announ-form-label');
+
+        announTextarea.addEventListener('propertychange', onChangesMarkUnsaved);
+        announTextarea.addEventListener('input', onChangesMarkUnsaved);
+        announLabel.addEventListener('click', onChangesMarkUnsaved);
     }
 });
