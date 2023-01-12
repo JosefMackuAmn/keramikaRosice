@@ -327,15 +327,22 @@ fcns.ready(() => {
             btn.addEventListener('click', () => {
 
                 // Create object with action ('ADD' || 'REMOVE'), productId, csrf, amount
+                const selectElement = btn.parentElement.querySelector('select');
+                const productId = btn.dataset.productid;
+                const amount = selectElement.value;
                 const postCartData = {
                     action: 'ADD',
-                    productId: btn.dataset.productid,
+                    productId: productId,
                     csrf: btn.dataset.csrf,
-                    amount: btn.parentElement.querySelector('select').value
+                    amount: amount
                 }
 
                 fcns.addToCart(postCartData).then((updatedCart) => {
                     fcns.updateCartIcon(updatedCart);
+                    for (let i = 0; i < +amount; i++) {
+                        selectElement.removeChild(selectElement.lastElementChild);
+                    }
+
                 }).catch(err => console.log(err));
                 
             })

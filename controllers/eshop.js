@@ -18,15 +18,26 @@ const EmailTemplates = require('../templates/emails');
 
 exports.getShop = async (req, res, next) => {
     const page = req.query.page || 1;
+    const { cart } = req.session;
 
     const allCategories = await Category.find({});
     const allSubcategories = await Subcategory.find({});
     const products = await Product
-        .find({})
+        .find({ amountInStock: { $gt: 0 } })
         .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
         .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
 
-    const numberOfProducts = await Product.countDocuments({});
+    if (cart) {
+        const cartInstance = new Cart(cart.items, cart.total, cart.shippingCostId);
+        for (const product of products) {
+            const matchedProductInCart = cartInstance.getItemById(product);
+            if (matchedProductInCart) {
+                product.amountInStock -= matchedProductInCart.amount;
+            }
+        }
+    }
+
+    const numberOfProducts = await Product.countDocuments({ amountInStock: { $gt: 0 } });
 
     const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
 
@@ -46,6 +57,7 @@ exports.getShop = async (req, res, next) => {
 
 exports.getCategory = async (req, res, next) => {
     const page = req.query.page || 1;
+    const { cart } = req.session;
 
     const categoryName = req.params.category.toLowerCase();
     const category = await Category.findOne({ name: categoryName });
@@ -61,11 +73,21 @@ exports.getCategory = async (req, res, next) => {
     const categoryImage = category.images[0];
 
     const categoryProducts = await Product
-        .find({ categoryId: categoryId })
+        .find({ categoryId: categoryId, amountInStock: { $gt: 0 } })
         .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
         .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
 
-    const numberOfProducts = await Product.find({ categoryId: categoryId }).countDocuments({});
+    if (cart) {
+        const cartInstance = new Cart(cart.items, cart.total, cart.shippingCostId);
+        for (const product of categoryProducts) {
+            const matchedProductInCart = cartInstance.getItemById(product);
+            if (matchedProductInCart) {
+                product.amountInStock -= matchedProductInCart.amount;
+            }
+        }
+    }
+
+    const numberOfProducts = await Product.find({ categoryId: categoryId, amountInStock: { $gt: 0 } }).countDocuments({});
     const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
     
     const allCategories = await Category.find({});
@@ -87,6 +109,7 @@ exports.getCategory = async (req, res, next) => {
 
 exports.getSubcategory = async (req, res, next) => {
     const page = req.query.page || 1;
+    const { cart } = req.session;
 
     const categoryName = req.params.category.toLowerCase();
     const subcategoryName = req.params.subcategory.toLowerCase();
@@ -103,7 +126,6 @@ exports.getSubcategory = async (req, res, next) => {
     const categoryId = category._id;
     const categoryImage = category.images[0];
 
-
     const subcategory = await Subcategory.findOne({ name: subcategoryName, categoryId: categoryId });
     if (!subcategory) {
         return res.status(400).render('eshop/shop', {
@@ -116,11 +138,21 @@ exports.getSubcategory = async (req, res, next) => {
     const subcategoryId = subcategory._id;
 
     const subcategoryProducts = await Product
-        .find({ subcategoryId: subcategoryId })
+        .find({ subcategoryId: subcategoryId, amountInStock: { $gt: 0 } })
         .limit(+process.env.ESHOP_PRODUCTS_PER_PAGE)
         .skip((page - 1) * +process.env.ESHOP_PRODUCTS_PER_PAGE);
 
-    const numberOfProducts = await Product.find({ subcategoryId: subcategoryId }).countDocuments({});
+    if (cart) {
+        const cartInstance = new Cart(cart.items, cart.total, cart.shippingCostId);
+        for (const product of subcategoryProducts) {
+            const matchedProductInCart = cartInstance.getItemById(product);
+            if (matchedProductInCart) {
+                product.amountInStock -= matchedProductInCart.amount;
+            }
+        }
+    }
+
+    const numberOfProducts = await Product.find({ subcategoryId: subcategoryId, amountInStock: { $gt: 0 } }).countDocuments({});
     const isNextPage = page * process.env.ESHOP_PRODUCTS_PER_PAGE < numberOfProducts;
     
     const allCategories = await Category.find({});
@@ -196,7 +228,14 @@ exports.postCart = async (req, res, next) => {
                 msg: "amount property has to be passed along with 'ADD' action"
             })
         }
-        updatedCart.add(product, amount);
+        try {
+            updatedCart.add(product, amount);
+        } catch (e) {
+            // If there is not enough products
+            return res.status(422).json({
+                msg: "not enough products in stock"
+            });
+        }
     } else if (action === 'REMOVE') {
         updatedCart.remove(product, amount);
     } else {
@@ -236,14 +275,20 @@ exports.postOrder = async (req, res, next) => {
     const constants = await fs.promises.readFile('constants.json');
     const consts = JSON.parse(constants);
 
-    const date = new Date();
-    const variableSymbol = await asyncHelpers.getVariableSymbol(date);
-
     const cart = req.session.cart;
+    const cartInstance = new Cart(cart.items, cart.total, cart.shippingCostId);
+
+    const iepis = await cartInstance.isEnoughProductsInStock();
+    if (!iepis) {
+        return res.redirect('/kosik?success=false&mailSent=false');
+    }
 
     if (!cart || cart.items.length < 1) {
         return res.redirect('/kosik?success=false&mailSent=false');
     }
+
+    const date = new Date();
+    const variableSymbol = await asyncHelpers.getVariableSymbol(date);
 
     let paymentCost = consts.paymentCosts[payment];
     if (delivery === "OOD" && payment === "DOB") {

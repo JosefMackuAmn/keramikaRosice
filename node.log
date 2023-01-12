@@ -1,0 +1,5 @@
+
+> keramika-rosice@1.0.0 start /srv/app
+> node app.js
+
+App listening on port 8080
